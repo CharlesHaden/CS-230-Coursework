@@ -11,8 +11,8 @@ public class Main extends Application {
    Stage window;
    Scene mainMenu;
    Scene pauseMenu;
-   Scene profile;
-   Scene leaderboard;
+   Scene setup;
+   Scene leaderboardScreen;
    Scene inGameScreen;
 
     @Override
@@ -20,11 +20,10 @@ public class Main extends Application {
 
       //MAIN MENU
       Pane root = new Pane(); 
-      Text t = new Text();
-       t.setX(80);
-       t.setY(100);
-       t.setFont(new Font(50));
-       t.setText("Fast and Curious");
+      mainMenu = new Scene(root, 500, 550);
+      Text t = new Text(80, 100, "Fast and Curious");
+      t.setFont(new Font(50));
+      root.getChildren().add(t);    
 
       //CREATE BUTTONS
        Button playButton = new Button("Play");
@@ -40,13 +39,11 @@ public class Main extends Application {
        exitButton.setLayoutX(200);
        exitButton.setLayoutY(340);
        root.getChildren().add(exitButton);
-       root.getChildren().add(t);
        
-       mainMenu = new Scene(root, 500, 550);
        
        //SET BUTTON ACTIONS
        playButton.setOnAction(e -> window.setScene(inGameScreen));
-       leaderboardButton.setOnAction(e -> window.setScene(inGameScreen));
+       leaderboardButton.setOnAction(e -> window.setScene(leaderboardScreen));
        exitButton.setOnAction(new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
@@ -63,13 +60,16 @@ public class Main extends Application {
       game.getChildren().add(newButton); //ADDED BUTTON TO TEST NAVIGATION 
       
       //PAUSE MENU
-
-
-
+      
       //LEADERBOARD
+      
+      Pane leaderboard = new Pane();
+      leaderboardScreen = new Scene(leaderboard, 500, 550);
+      Button newButton2 = new Button("Return to Main Menu");
+      newButton2.setOnAction(e -> window.setScene(mainMenu));
+      leaderboard.getChildren().add(newButton2); //ADDED BUTTON TO TEST NAVIGATION 
 
-
-      //PROFILE
+      //SETUP/PROFILE
 
 
       //DEFAULT STARTUP SETTINGS
