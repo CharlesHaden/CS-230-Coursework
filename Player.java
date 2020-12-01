@@ -16,14 +16,13 @@ public class Player {
 	private ArrayList<Tile> playerHand = new ArrayList<Tile>();
 	private Profile playerProfile;
 	
-	public Player(int playerNum, String orientation, int score, int[][] lastMoves, int[] playerPosition, ArrayList<Tile> playerHand, Profile playerProfile) {
+	public Player(int playerNum, String orientation, int score, int[][] lastMoves, int[] playerPosition, ArrayList<Tile> playerHand) {
 		this.playerNum = playerNum;
 		this.orientation = orientation;
 		this.score = score;
 		this.lastMoves = lastMoves;
 		this.playerPosition = playerPosition;
 		this.playerHand = playerHand;
-		this.playerProfile = playerProfile;
 	}
 	
 	public int getPlayerNum() {
