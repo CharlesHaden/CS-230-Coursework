@@ -83,7 +83,7 @@ public class Player {
 		}
 	}
 	
-	public static void playTile(Tile tile) {
+	public void playTile(Tile tile) {
 		Boolean played = false;
 		
 		//Displays the action tiles in the players hand
