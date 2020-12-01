@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player {
+
 	private int playerNum;
 	private String orientation;
 	private int score;
@@ -213,4 +214,6 @@ public class Player {
 		return playerOnTile;
 	}
 	
+
+ 
 }
