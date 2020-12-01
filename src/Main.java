@@ -1,11 +1,15 @@
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.text.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+
  
 public class Main extends Application {
    Stage window;
@@ -16,7 +20,7 @@ public class Main extends Application {
    Scene inGameScreen;
 
     @Override
-    public void start(Stage window) {
+    public void start(Stage window) throws Exception {
 
       //MAIN MENU
       Pane root = new Pane(); 
@@ -32,12 +36,17 @@ public class Main extends Application {
 
        playButton.setLayoutX(200);
        playButton.setLayoutY(260);
+       playButton.setPrefSize(100,20);
        root.getChildren().add(playButton);
+
        leaderboardButton.setLayoutX(200);
        leaderboardButton.setLayoutY(300);
+       leaderboardButton.setPrefSize(100,20);
        root.getChildren().add(leaderboardButton);
+
        exitButton.setLayoutX(200);
        exitButton.setLayoutY(340);
+       exitButton.setPrefSize(100,20);
        root.getChildren().add(exitButton);
        
        
@@ -71,12 +80,20 @@ public class Main extends Application {
 
       //SETUP/PROFILE
 
+      
+
 
       //DEFAULT STARTUP SETTINGS
+
+      
+      //ICON
+      window.getIcons().add(new Image("cars.jpg"));
+
       window.setTitle("Fast and Curious!");
       window.setScene(mainMenu);
       window.show();
    }
+   
    public static void main(String[] args) {
         launch(args);
     }
