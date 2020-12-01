@@ -1,3 +1,4 @@
+
 /**
  * This works as the leader board for viewing the wins and losses of players with assigned profiles in the game.
  *
@@ -76,5 +77,6 @@ public class LeaderBoard {
 		}
 		return profileList;
 	}
+
 
 }
