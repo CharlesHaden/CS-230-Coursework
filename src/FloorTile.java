@@ -66,6 +66,10 @@ public abstract class FloorTile extends Tile {
         }
     }
 
+    public int getOrientation(){
+        return orientation;
+    }
+
     public boolean getIsFrozen(){
         return isFrozen;
     }
