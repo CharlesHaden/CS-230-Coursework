@@ -378,16 +378,16 @@ public class MainMenu {
     		
 			switch (tileType) {
 			case "Corner":
-				curTile = new CornerTile(orientation);
+				curTile = new CornerTile(orientation, fixed);
 				break;
 			case "Straight":
-				curTile = new StraightTile(orientation);
+				curTile = new StraightTile(orientation, fixed);
 				break;
 			case "Tshaped":
-				curTile = new Tshaped(orientation);
+				curTile = new Tshaped(orientation, fixed);
 				break;
 			case "Goal":
-				curTile = new GoalTile(orientation);
+				curTile = new GoalTile(orientation, fixed);
 				break;
 			default:
 				System.out.println("Index error (out of range).");
@@ -397,8 +397,6 @@ public class MainMenu {
     		curSegment ++;
 
     	}
-		curTile.setFixed(fixed);
-		
 		curBoard.setFloorTile(curTile, X, Y);
     }
     
