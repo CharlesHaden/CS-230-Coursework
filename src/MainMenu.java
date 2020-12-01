@@ -491,6 +491,9 @@ public class MainMenu {
     	
     	return(curProfile);
     }
+    public void playerProfileLink (Player playerLink,Profile profileLink){
+    	playerLink.setPlayerProfile(profileLink);
+	}
     
     /**
      * Starts the game
@@ -518,7 +521,9 @@ public class MainMenu {
     /**
      * Creates a new profile
      */
-    public void newProfile() {
+    public void newProfile(String name) {
+    	Profile profileAdd = new Profile(name, NUM_OF_PRESET_BOARDS);
+    	allProfiles.add(profileAdd);
 
     }
 
