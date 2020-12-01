@@ -12,6 +12,11 @@ public class TshapedTile extends FloorTile {
         openPath =  new boolean[] {false, true, true, true};
     }
 
+    public TshapedTile(int orientation, boolean fixed) {
+        super(orientation, fixed);
+        setOrientedOpenPath();
+    }
+
     public String getFloorTileType() {
         return "Tshaped";
     }
