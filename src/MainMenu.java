@@ -32,7 +32,6 @@ import java.util.ArrayList; // Import arrayList to allow flexible profile lists
  * Game: 		curBoard, curPlayers + getters (+getTurn)
  * FloorTile:	getOrientation
  * Player:		what profile is associated with the player
- * 
  */
 
 public class MainMenu {
