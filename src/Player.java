@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player {
+
 	private int playerNum;
 	private String orientation;
 	private int score;
 	private int[][] lastMoves;
 	private int[] playerPosition;
-	private static ArrayList<Tile> playerHand = new ArrayList<Tile>();
+	private ArrayList<Tile> playerHand = new ArrayList<Tile>();
+	private Profile playerProfile;
 	
 	public Player(int playerNum, String orientation, int score, int[][] lastMoves, int[] playerPosition, ArrayList<Tile> playerHand) {
 		this.playerNum = playerNum;
@@ -72,18 +74,26 @@ public class Player {
 		this.playerHand = playerHand;
 	}
 	
+	public Profile getPlayerProfile() {
+		return playerProfile;
+	}
+	
+	public void setPlayerProfile(Profile playerProfile) {
+		this.playerProfile = playerProfile;
+	}
+	
 	public void drawTile() {
-		Tile tile = Board.getTile();
+		Tile tile = Board.drawTile();
 		
 		if (tile.getTileType().equals("Floor")) {
-			Board.insertTile(tile);
+			Board.insertTile(tile);//might need to add where player wants to insert tile?
 		} 
 		else if (tile.getTileType().equals("Action")) {
 			playerHand.add(tile);
 		}
 	}
 	
-	public static void playTile(Tile tile) {
+	public void playTile(Tile tile) {
 		Boolean played = false;
 		
 		//Displays the action tiles in the players hand
@@ -102,8 +112,8 @@ public class Player {
 			for (Tile tiles : playerHand) { //WARNING: may loop through and remove several tiles of same type
 				//If they have the tile to play then it is removed from their hand and played
 				if (tiles.getActionTileType().equals(tileType)) {
+					tiles.action();
 					playerHand.remove(tiles);
-					Board.playActionTile(tileType);
 					played = true;
 				//If they haven't got that tile to play then they will have to choose again
 				} else {
@@ -125,50 +135,85 @@ public class Player {
 		lastMoves[0][1] = y;
 	}
 	
+	/**
+	 * Gets the arrow key pressed by the user and moves the player accordingly
+	 * @param e
+	 */
 	public void makeMove(KeyEvent e) {
-		//Do while player not moved
-		Tile currentTile = currentTile.getTile(playerPosition[0],playerPosition[1]);
+		boolean moved = false;
+		Tile currentTile = Board.getTile(playerPosition[0], playerPosition[1]);
 		Boolean[] currentTileOpenPath = currentTile.getOpenPath();
-		//Boolean[] currentTileOpenPath = Tile.getOpenPath();
-		int keyCode = e.getKeyCode();
-	    switch (keyCode) { 
-	        case KeyEvent.VK_UP:
-	        	//if current tiles open path = {X,TRUE,X,X}
-	        	//and above tiles open path = {TRUE,X,X,X} 
-	        	//where {up,down,left,right}
-	        	Tile upTile = upTile.getTile(playerPosition[0],playerPosition[1] + 1);
-	        	Boolean[] upTileOpenPath = upTile.getOpenPath();
-	        	if ((currentTileOpenPath[0] = true) && (upTileOpenPath[1] = true)) {
-	        		//y = y + 1
-		        	playerPosition[1] = playerPosition[1] + 1;
-	        	}
-	            break;
-	        case KeyEvent.VK_DOWN:
-	        	Tile downTile = downTile.getTile(playerPosition[0],playerPosition[1] - 1);
-	        	Boolean[] downTileOpenPath = downTile.getOpenPath();
-	        	if ((currentTileOpenPath[1] = true) && (downTileOpenPath[0] = true)) {
-	        		//y = y - 1
-		        	playerPosition[1] = playerPosition[1] - 1;
-	        	}
-	            break;
-	        case KeyEvent.VK_LEFT:
-	        	Tile leftTile = leftTile.getTile(playerPosition[0] - 1,playerPosition[1]);
-	        	Boolean[] leftTileOpenPath = leftTile.getOpenPath();
-	        	if ((currentTileOpenPath[2] = true) && (leftTileOpenPath[3] = true)) {
-	        		//x = x - 1
-		        	playerPosition[0] = playerPosition[0] - 1;
-	        	}
-	            break;
-	        case KeyEvent.VK_RIGHT:
-	        	Tile rightTile = rightTile.getTile(playerPosition[0] + 1,playerPosition[1]);
-	        	Boolean[] rightTileOpenPath = rightTile.getOpenPath();
-	        	if ((currentTileOpenPath[3] = true) && (rightTileOpenPath[2] = true)) {
-	        		//x = x + 1
-		        	playerPosition[0] = playerPosition[0] + 1;
-	        	}
-	            break;
-	     }
-
+		
+		do {
+			int keyCode = e.getKeyCode();
+		    switch (keyCode) { 
+		        case KeyEvent.VK_UP:
+		        	movePlayer(currentTileOpenPath, playerPosition[0], playerPosition[1] + 1, 0, 1);
+		            break;
+		        case KeyEvent.VK_DOWN:
+		        	movePlayer(currentTileOpenPath, playerPosition[0], playerPosition[1] - 1, 1, 0);
+		            break;
+		        case KeyEvent.VK_LEFT:
+		        	movePlayer(currentTileOpenPath, playerPosition[0] - 1, playerPosition[1], 2, 3);
+		            break;
+		        case KeyEvent.VK_RIGHT:
+		        	movePlayer(currentTileOpenPath, playerPosition[0] + 1, playerPosition[1], 3, 2);
+		            break;
+		     }
+		} while (moved == false);
+		
 	}
 	
+	/**
+	 * Changes the players position to the new position
+	 * @param currentTileOpenPath Boolean array where {0,1,2,3} {UP,DOWN,LEFT,RIGHT}
+	 * @param x The x coordinate of the next tile
+	 * @param y The y coordinate of the next tile
+	 * @param currentPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the current tile
+	 * @param nextPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the next tile
+	 * @return Returns true if the player was able to move
+	 */
+	public boolean movePlayer(Boolean[] currentTileOpenPath, int x, int y, int currentPath, int nextPath) {
+		Boolean moved = false;
+		Tile nextTile = Board.getTile(x, y);
+    	Boolean[] nextTileOpenPath = nextTile.getOpenPath();
+
+    	//If there is a clear path from the current tile to the next, and it is frozen or has a player, then player can move
+    	if ((currentTileOpenPath[currentPath] = true) && (nextTileOpenPath[nextPath] = true)) {
+    		if ((nextTile.getOnFire().equals(true)) || (checkForPlayers(x, y) == true)) {
+    			moved = false;
+    		} else {
+    			playerPosition[0] = x;
+	        	playerPosition[1] = y;
+	        	moved = true;
+    		}
+    	}
+		return moved;
+	}
+	
+	/**
+	 * Will check if there is a player on any of the surrounding tiles
+	 * @param x The x coordinate of the next tile
+	 * @param y The y coordinate of the next tile
+	 * @return Returns true if there is a player on any surrounding tile
+	 */
+	public boolean checkForPlayers(int x, int y) {
+		boolean playerOnTile = false;
+		Player players[] = Game.getPlayers(); //Gets the array of players from the game class
+		int i;
+  
+        for (i = 0; i < players.length; i++) { 
+        	int otherPlayerPosition[] = players[i].getPlayerPosition();
+        	if ((otherPlayerPosition[0] == x && otherPlayerPosition[1] == y)) {
+        		playerOnTile = true;
+        	} else {
+        		playerOnTile = false;
+        	}
+        } 
+		
+		return playerOnTile;
+	}
+	
+
+ 
 }
