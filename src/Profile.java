@@ -34,12 +34,10 @@ public class Profile {
     }
 
     /**
-     * Changes name
-     * @param name - name to be changed to.
+     * Changes the current name of a profile.
+     * @param name
      */
-
     public void changeName(String name) {
         this.name = name;
     }
 }
-
