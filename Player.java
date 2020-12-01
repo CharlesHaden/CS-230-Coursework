@@ -13,7 +13,7 @@ public class Player {
 	private int score;
 	private int[][] lastMoves;
 	private int[] playerPosition;
-	private static ArrayList<Tile> playerHand = new ArrayList<Tile>();
+	private ArrayList<Tile> playerHand = new ArrayList<Tile>();
 	
 	public Player(int playerNum, String orientation, int score, int[][] lastMoves, int[] playerPosition, ArrayList<Tile> playerHand) {
 		this.playerNum = playerNum;
