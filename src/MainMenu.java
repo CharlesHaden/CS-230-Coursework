@@ -173,7 +173,7 @@ public class MainMenu {
     	    // writes players
     	    for (int i = 0; i < (curGame.getPlayers()).length; i++){
     	    	curPlayer = curGame.getPlayers()[i];
-    	    	Writer.write(curPlayer.getPlayerNum() + ":" + curPlayer.getProfile().getName() + ":");
+    	    	Writer.write(curPlayer.getPlayerNum() + ":" + curPlayer.getPlayerProfile().getName() + ":");
     	    	for (int j = 0; j < (curPlayer.getPlayerHand()).size(); j++) { 
     	    		if (j != 0) {
     	    			Writer.write(",");
@@ -203,7 +203,7 @@ public class MainMenu {
     	int[] curSilkbag = new int[8];
     	
     	Game savedGame = new Game();
-		Board curBoard = new Board("");
+		Board curBoard = new Board(0,0,new int[0]);
     	try {
     		File file = new File ("SavedBoard.txt");
     		Scanner inputFromFile = new Scanner (file);
@@ -305,7 +305,8 @@ public class MainMenu {
     	}
     	for(int i = 0; i < allProfiles.size(); i++) {
     		if (allProfiles.get(i).getName() == playerName) {
-    			newPlayer = new Player(playerNum, "", 0, null, new int[]{X,Y}, playerHand, allProfiles.get(i));
+    			newPlayer = new Player(playerNum, "", 0, null, new int[]{X,Y}, playerHand);
+    			newPlayer.setPlayerProfile(allProfiles.get(i));
     		}
     		
     	}
@@ -330,7 +331,7 @@ public class MainMenu {
     	boolean fixed = true;
     	String tileType = "";
     	int orientation = 0;
-    	FloorTile curTile;
+    	FloorTile curTile = null;
     	
     	while (curSegment < 7) {
     		curAttribute = "";
@@ -384,7 +385,7 @@ public class MainMenu {
 				curTile = new StraightTile(orientation, fixed);
 				break;
 			case "Tshaped":
-				curTile = new Tshaped(orientation, fixed);
+				curTile = new TshapedTile(orientation, fixed);
 				break;
 			case "Goal":
 				curTile = new GoalTile(orientation, fixed);
@@ -459,7 +460,7 @@ public class MainMenu {
     /**
      * Reads individual lines from the txt file.
      * 
-     * @param Takes the current line from the file reader in a String format.
+     * @param curLine the current line from the file reader in a String format.
      * 
      * @return Returns the individual profiles of type Profile.
      */
@@ -518,6 +519,8 @@ public class MainMenu {
 
     /**
      * Creates a new profile
+	 * @param name name of the profile
+	 *  TO DO--- Unique identifier for each profile
      */
     public void newProfile(String name) {
     	Profile profileAdd = new Profile(name, NUM_OF_PRESET_BOARDS);
@@ -527,8 +530,15 @@ public class MainMenu {
 
     /**
      * deletes a profile
+	 * @param name name connected with profile
      */
-    public void deleteProfile() {
+    public void deleteProfile(String name) {
+    	for(int i = 0; i<allProfiles.size();i++){
+    		if(allProfiles.get(i).getName().equals(name)){
+    			allProfiles.remove(i);
+
+			}
+		}
 
     }
 

@@ -12,6 +12,11 @@ public class GoalTile extends FloorTile {
         openPath =  new boolean[] {true, true, true, true};
     }
 
+    public GoalTile(int orientation, boolean fixed) {
+        super(orientation, fixed);
+        setOrientedOpenPath();
+    }
+
     public String getFloorTileType() {
         return "Goal";
     }
