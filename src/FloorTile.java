@@ -72,4 +72,8 @@ public abstract class FloorTile extends Tile {
 
     public abstract String getFloorTileType();
 
+    public boolean getFixed(){
+        return fixed;
+    }
+
 }
