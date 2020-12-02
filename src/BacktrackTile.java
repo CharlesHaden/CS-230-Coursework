@@ -19,7 +19,7 @@ public class BacktrackTile extends ActionTile<Player>  {
         int[][] lastMoves = player.getLastMoves();
         int[] twoMovesAgo = {lastMoves[1][0], lastMoves[1][1]};
         //need a way to find out which tiles have fire or ice on them
-        if (Board.getTile(twoMovesAgo).getOnFire == true){
+        if (Board.getTile(twoMovesAgo[0],twoMovesAgo[1]).getOnFire() == true){
             return false;
         }
         else if (player.getLastMoves() == null){
