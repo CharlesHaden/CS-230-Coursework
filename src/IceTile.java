@@ -1,5 +1,5 @@
 /** 
- * 
+ * Sub-class of the ActionTile class that checks if the ice tile if playable, and plays it if it is.
  * 
  * @author Nim Man
  * @author Hyder Al-Hashimi
@@ -7,6 +7,11 @@
 
 public class IceTile extends ActionTile<int[]> {
 
+    /**
+     * Freezes tiles in a 3x3 radius around the chosen tile
+     *
+     * @param chosenTile specifies the chosen tile for the ice tile to be use on
+     */
     public void action(int[] chosenTile) {
         FloorTile[][] boardTiles = Board.getTiles();
         int col = chosenTile[0];
@@ -18,6 +23,12 @@ public class IceTile extends ActionTile<int[]> {
         }
     }
 
+    /**
+     * Checks to see if there is a 3x3 parameter around the chosenTile.
+     *
+     * @param chosenTile specifies the chosen tile for the ice tile to be use on
+     * @return boolean of whether tile is playable
+     */
     public boolean isPlayable(int[] chosenTile) {
         FloorTile[][] boardTiles = Board.getTiles();
         int col = chosenTile[0];
@@ -30,6 +41,11 @@ public class IceTile extends ActionTile<int[]> {
         return true;
     }
 
+    /**
+     * Returns the type of action tile
+     *
+     * @return string specifying this as an ice tile.
+     */
     public String getActionTileType(){
         return "Ice";
     }
