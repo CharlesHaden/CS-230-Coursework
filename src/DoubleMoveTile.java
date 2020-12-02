@@ -14,10 +14,7 @@ public class DoubleMoveTile extends ActionTile<Player> {
     } 
     
     public boolean isPlayable(Player player) {
-        if(player.canMove() == true) {
-            return true;
-        }
-        return false;
+      return true;
     }
 
     public String getActionTileType() {

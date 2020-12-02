@@ -2,10 +2,11 @@ import java.util.Random;
 
 public class Board {
 
-    private FloorTile[][] tileList;
-    private int[] silkBag;
-    private int height;
-    private int width;
+    private static FloorTile[][] tileList;
+    private static int[] silkBag;
+    private static int height;
+    private static int width;
+    private static Game curGame;
 
     public Board(int width, int height, int[] bag){
         tileList = new FloorTile[width][height];
@@ -14,11 +15,11 @@ public class Board {
         this.width = width;
     }
 
-    public void setFloorTile(FloorTile curTile, int x, int y){
+    public static void setFloorTile(FloorTile curTile, int x, int y){
         tileList[x][y] = curTile;
     }
 
-    public void buildBoard() {
+    public static void buildBoard() {
         FloorTile curTile;
         curTile = null;
 
@@ -35,7 +36,7 @@ public class Board {
         }
     }
 
-    private FloorTile selectFromSilkBag(){
+    private static FloorTile selectFromSilkBag(){
         FloorTile curTile;
         curTile = null;// because of switch statement
 
@@ -70,7 +71,7 @@ public class Board {
         return curTile;
     }
 
-    public boolean insertTile(FloorTile tileToInsert, int x, int y, boolean horizontal){
+    public static boolean insertTile(FloorTile tileToInsert, int x, int y, boolean horizontal){
         FloorTile silkBagTile;
         silkBagTile = null;
         FloorTile[][] tempTileList = tileList;
@@ -148,7 +149,7 @@ public class Board {
         else return false;
     }
 
-    public void addToSilkBag(Tile silkBagTile){
+    public static void addToSilkBag(Tile silkBagTile){
         String tileType = silkBagTile.getTileType();
 
         switch (tileType) {
@@ -169,7 +170,7 @@ public class Board {
         }
     }
 
-    public Tile getTileFromSilkBag(){
+    public static Tile getTileFromSilkBag(){
         Tile curTile;
         curTile = null;// because of switch statement
 
@@ -214,14 +215,22 @@ public class Board {
         }
         return curTile;
     }
-    public FloorTile[][] getTiles(){
+    public static FloorTile[][] getTiles(){
         return tileList;
     }
-    public int[] getSilkBag(){
+
+    public static int[] getSilkBag(){
         return silkBag;
     }
+    public static int getWidth(){
+        return width;
+    }
 
-    public Tile getTile(int x, int y){
+    public static int getHeight(){
+        return height;
+    }
+
+    public static FloorTile getTile(int x, int y){
         return tileList[x][y];
     }
 }
