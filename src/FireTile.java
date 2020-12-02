@@ -1,4 +1,6 @@
-/** 
+import java.util.ArrayList;
+
+/**
  * 
  * 
  * @author Nim Man
@@ -13,7 +15,7 @@ public class FireTile extends ActionTile<int[]> {
         int row = chosenTile[1];
         for (int x = col-1; x < col+2; x++) {
             for (int y = row - 1; y < row + 2; y++) {
-                Board.getTile((Board.getWidth()*y) + x).setOnFire(true);
+                Board.getTile(x,y).setOnFire(true);
             }
         }
     }
@@ -27,7 +29,7 @@ public class FireTile extends ActionTile<int[]> {
             System.out.println("This action cannot be made here.");
             return false;
         }
-        Player[] currentPlayers = Game.getPlayers();
+        ArrayList<Player> currentPlayers = Game.getPlayers();
         int[][] affectedTiles = new int[9][2];
         int i = 0;
         for (int x = col-1; x < col+2; x++) {

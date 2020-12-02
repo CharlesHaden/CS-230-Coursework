@@ -11,16 +11,15 @@ public class Player {
 
 	private int playerNum;
 	private String orientation;
-	private int score;
 	private int[][] lastMoves;
 	private int[] playerPosition;
 	private ArrayList<ActionTile> playerHand = new ArrayList<ActionTile>();
 	private Profile playerProfile;
 	
-	public Player(int playerNum, String orientation, int score, int[][] lastMoves, int[] playerPosition, ArrayList<ActionTile> playerHand) {
+	public Player(int playerNum, String orientation, int[][] lastMoves, int[] playerPosition, ArrayList<ActionTile> playerHand) {
 		this.playerNum = playerNum;
 		this.orientation = orientation;
-		this.score = score;
+
 		this.lastMoves = lastMoves;
 		this.playerPosition = playerPosition;
 		this.playerHand = playerHand;
@@ -41,15 +40,7 @@ public class Player {
 	public void setOrientation(String orientation) {
 		this.orientation = orientation;
 	}
-	
-	public int getScore() {
-		return score;
-	}
-	
-	public void setScore(int score) {
-		this.score = score;
-	}
-	
+
 	public int[][] getLastMoves() {
 		return lastMoves;
 	}
@@ -174,16 +165,16 @@ public class Player {
 			int keyCode = e.getKeyCode();
 		    switch (keyCode) { 
 		        case KeyEvent.VK_UP:
-		        	movePlayer(currentBoard, currentTileOpenPath, playerPosition[0], playerPosition[1] + 1, 0, 1);
+		        	moved = movePlayer(currentBoard, currentTileOpenPath, playerPosition[0], playerPosition[1] + 1, 0, 1);
 		            break;
 		        case KeyEvent.VK_DOWN:
-		        	movePlayer(currentBoard, currentTileOpenPath, playerPosition[0], playerPosition[1] - 1, 1, 0);
+		        	moved = movePlayer(currentBoard, currentTileOpenPath, playerPosition[0], playerPosition[1] - 1, 1, 0);
 		            break;
 		        case KeyEvent.VK_LEFT:
-		        	movePlayer(currentBoard, currentTileOpenPath, playerPosition[0] - 1, playerPosition[1], 2, 3);
+		        	moved = movePlayer(currentBoard, currentTileOpenPath, playerPosition[0] - 1, playerPosition[1], 2, 3);
 		            break;
 		        case KeyEvent.VK_RIGHT:
-		        	movePlayer(currentBoard, currentTileOpenPath, playerPosition[0] + 1, playerPosition[1], 3, 2);
+		        	moved = movePlayer(currentBoard, currentTileOpenPath, playerPosition[0] + 1, playerPosition[1], 3, 2);
 		            break;
 		     }
 		} while (moved == false);
@@ -225,11 +216,11 @@ public class Player {
 	 */
 	public boolean checkForPlayers(int x, int y) {
 		boolean playerOnTile = false;
-		Player players[] = Game.getPlayers(); //Gets the array of players from the game class
+		ArrayList<Player> players = Game.getPlayers(); //Gets the array of players from the game class
 		int i;
   
-        for (i = 0; i < players.length; i++) { 
-        	int otherPlayerPosition[] = players[i].getPlayerPosition();
+        for (i = 0; i < players.size(); i++) {
+        	int otherPlayerPosition[] = players.get(i).getPlayerPosition();
         	if ((otherPlayerPosition[0] == x && otherPlayerPosition[1] == y)) {
         		playerOnTile = true;
         	} else {

@@ -16,6 +16,7 @@ public abstract class FloorTile extends Tile {
     private int fireTurnsLeft;
     private int iceTurnsLeft;
     private boolean tempFixed;
+    protected Game curGame;
 
     public FloorTile(int orientation) {
         this.orientation = orientation;
@@ -55,7 +56,7 @@ public abstract class FloorTile extends Tile {
     protected void setOnFire(boolean onFire){
         this.isOnFire = onFire;
         if(isOnFire) {
-            fireTurnsLeft = Game.getPlayers().length * 2;
+            fireTurnsLeft = Game.getPlayers().size() * 2;
         }
     }
 
@@ -67,7 +68,7 @@ public abstract class FloorTile extends Tile {
         this.isFrozen = isFrozen;
         if (isFrozen) {
             tempFixed = true;
-            iceTurnsLeft = Game.getPlayers().length;
+            iceTurnsLeft = Game.getPlayers().size();
         } else {
             tempFixed = false;
         }
