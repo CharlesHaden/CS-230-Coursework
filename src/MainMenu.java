@@ -1,4 +1,3 @@
-
 /**
  * This works as the main menu for starting and saving games as well as creating and deleting profiles.
  *
@@ -13,26 +12,41 @@ import java.io.IOException;	// Import the IOException class to handle errors
 import java.util.Scanner;	// Import scanner to read in files
 import java.util.ArrayList; // Import arrayList to allow flexible profile lists
 
-public class MainMenu {
-    private Game curGame;
-    private ArrayList<Profile> allProfiles;
-    private Board[] presetBoards;
-    private LeaderBoard curLeaderBoard;
-    private final int NUM_OF_PRESET_BOARDS = 4;
-
-    /**
+public  class MainMenu {
+    private static Game curGame;
+    private static ArrayList<Profile> allProfiles;
+    private static Board[] presetBoards;
+    private static LeaderBoard curLeaderBoard;
+    private static final int NUM_OF_PRESET_BOARDS = 4;
+    private static ArrayList<Player> curGamePlayers;
+    private static Board loadedBoard;
+    
+	/**
      * Empty constructor for the MainMenu class.
      */
     public MainMenu() {
+    	
+	}
 
-    }
+    /**
+     * Used as a getter for the current board.
+     * 
+     * @return Return type is 'Board' and is the current Board.
+     */
+	public static Board getLoadedBoard() {
+		return loadedBoard;
+	}
+
+	public static void setLoadedBoard(Board newloadedBoard) {
+		loadedBoard = newloadedBoard;
+	}
 
     /**
      * Used as a getter for the current game.
      * 
      * @return Return type is 'Game' and is the current game.
      */
-    public Game getCurrentGame() {
+    public static Game getCurrentGame() {
         return curGame;
     }
 
@@ -41,41 +55,40 @@ public class MainMenu {
      * 
      * @return Return is an array of type Board.
      */
-    public Board[] getPresetBoards() {
+    public static Board[] getPresetBoards() {
         return presetBoards;
     }
 
     /**
 	 * Used as a setter for the array of preset boards.
 	 * 
-	 * @param presetBoards Stores the array presetBoards of type Board.
+	 * @param newPresetBoards Stores the array presetBoards of type Board.
 	 */
-    public void setPresetBoards(Board[] presetBoards) {
-        this.presetBoards = presetBoards;
+    public static void setPresetBoards(Board[] newPresetBoards) {
+        presetBoards = newPresetBoards;
     }
     
 	/**
 	 * Used as a setter for the current game.
 	 * 
-	 * @param curGame Stores the reference for the current game of type Game.
+	 * @param newCurGame Stores the reference for the current game of type Game.
 	 */
-    public void setCurrentGame(Game curGame) {
-        this.curGame = curGame;
+    public static void setCurrentGame(Game newCurGame) {
+        curGame = newCurGame;
     }
 
     /**
      * Opens a game state from a preset board save file.
      */
-    public void loadPresetBoard(int presetBoard) {
+    public static void loadPresetBoard(int presetBoard) {
+    	
+    	String[] playerPos; 
     	String curLine = "";
-    	int curPlayer = 0;
     	int curSegment = 0;
     	int[] curSilkbag = new int[8];
     	int X = 0;
     	int Y = 0;
     	
-    	Game savedGame = new Game();
-		Board curBoard = new Board("");
 		String fileName = ("SavedPresetBoard" + presetBoard + ".txt");
 		// assumes order of data is max row, max column
     	try {
@@ -95,11 +108,15 @@ public class MainMenu {
 					for (int i = 0; i < curLine.split(",").length; i++) {
 						curSilkbag[i] = Integer.parseInt(curLine.split(",")[i]);
 					}
-					curBoard = new Board(X, Y, curSilkbag);
+					new Board(X, Y, curSilkbag);
 				} else if (curSegment == 2) {
-					readTile(curLine, curBoard);
+					readTile(curLine);
 				} else {
-					// read player location and pass to ?
+					if (Integer.parseInt(curLine.split(":")[0]) < curGamePlayers.size()) {
+						playerPos = curLine.split(":")[1].split(",");
+						curGamePlayers.get(Integer.parseInt(curLine.split(":")[0])).setPlayerPosition(new int[] {Integer.parseInt(playerPos[0]),Integer.parseInt(playerPos[1])});
+					}
+
 				}
 				inputFromLine.close();
 			}
@@ -108,14 +125,13 @@ public class MainMenu {
 			System.out.println("FileNotFoundException");
 			e.printStackTrace();
 		}
-    	savedGame.setBoard(curBoard);
-    	curGame = savedGame;
+
     }
     
     /**
      * Saves the current game state to txt file
      */
-    public void saveBoard() {
+    public static void saveBoard() {
     	try {
     		// 	safely creating the files
     		File SavedBoard = new File ("SavedBoard.txt");
@@ -131,19 +147,19 @@ public class MainMenu {
     		
     	    // writing tiles
     		Player curPlayer;
-    	    Board curBoard = curGame.getBoard();
+
     	    String orientation = "";
     	    FloorTile curTile;
     	    
     	    for (int i = 0; i < 7; i++){
-    	    	Writer.write(curBoard.getSilkBag()[i] + ",");
+    	    	Writer.write(Board.getSilkBag()[i] + ",");
     	    }
     	    
     	    Writer.write(".../n");
     	    
-    	    for (int X = 0; X < (curBoard.getTiles()).length; X++){
-    	    	for (int Y = 0; Y < (curBoard.getTiles()[X]).length; Y++){
-    	    		curTile = curBoard.getTiles()[X][Y];
+    	    for (int X = 0; X < (Board.getTiles()).length; X++){
+    	    	for (int Y = 0; Y < (Board.getTiles()[X]).length; Y++){
+    	    		curTile = Board.getTiles()[X][Y];
     	    		// Translates the orientation from a int to a string as laid out in design.
     	  		  	switch (curTile.getOrientation()) {
     	  		  	case 0:
@@ -171,9 +187,9 @@ public class MainMenu {
     	    Writer.write(".../n");
     	      
     	    // writes players
-    	    for (int i = 0; i < (curGame.getPlayers()).length; i++){
-    	    	curPlayer = curGame.getPlayers()[i];
-    	    	Writer.write(curPlayer.getPlayerNum() + ":" + curPlayer.getProfile().getName() + ":");
+    	    for (int i = 0; i < (Game.getPlayers()).size(); i++){
+    	    	curPlayer = Game.getPlayers().get(i);
+    	    	Writer.write(curPlayer.getPlayerNum() + ":" + curPlayer.getPlayerProfile().getName() + ":");
     	    	for (int j = 0; j < (curPlayer.getPlayerHand()).size(); j++) { 
     	    		if (j != 0) {
     	    			Writer.write(",");
@@ -184,7 +200,7 @@ public class MainMenu {
     	    }
     	    // writes ... to show that the file is now onto turn
     	    Writer.write(".../n");
-    	    Writer.write(curGame.getTurn());
+    	    Writer.write(Game.getTurn());
     	      
     	    Writer.close();
     	} catch (IOException e) {
@@ -196,14 +212,12 @@ public class MainMenu {
     /**
      * Opens a game state from a save file.
      */
-    public void loadBoard() {
+    public static void loadBoard() {
     	String curLine = "";
-    	int curPlayer = 0;
+    	
+    	ArrayList<Player> curPlayers = new ArrayList<Player>();
     	int curSegment = 0;
     	int[] curSilkbag = new int[8];
-    	
-    	Game savedGame = new Game();
-		Board curBoard = new Board("");
     	try {
     		File file = new File ("SavedBoard.txt");
     		Scanner inputFromFile = new Scanner (file);
@@ -219,17 +233,17 @@ public class MainMenu {
 						curSilkbag[i] = Integer.parseInt(curLine.split(",")[i]);
 				    }
 				} else if (curSegment == 1) {
-					readTile(curLine, curBoard);
+					readTile(curLine);
 				} else if (curSegment == 2) {
-					savedGame.setPlayers(readPlayer(""), curPlayer);
-					curPlayer ++;
+					curPlayers.add(readPlayer(curLine));
 				} else {
-					while (savedGame.getTurn() != Integer.parseInt(curLine)) {
-						savedGame.newTurn();
+					while (Game.getTurn() != Integer.parseInt(curLine)) {
+						Game.newTurn();
 					}
 				}
 				inputFromLine.close();
 			}
+    		Game.setPlayers(curPlayers);
 			inputFromFile.close();
     	} catch(FileNotFoundException e){
 			System.out.println("FileNotFoundException");
@@ -242,7 +256,7 @@ public class MainMenu {
      * 
      * Side effects include changing tiles on the current board to the saved one.
      */
-    private Player readPlayer(String curLine) {
+    private static Player readPlayer(String curLine) {
     	
     	int index = 0;
     	String curAttribute;
@@ -254,9 +268,9 @@ public class MainMenu {
     	String playerName = "";
     	int X = 0;
     	int Y = 0;
-    	ArrayList<Tile> playerHand = new ArrayList<Tile>();
+    	ArrayList<ActionTile> playerHand = new ArrayList<ActionTile>();
     	
-    	Tile curTile = null;
+    	ActionTile curTile = null;
     	
     	while (curSegment < 7) {
     		curAttribute = "";
@@ -305,7 +319,8 @@ public class MainMenu {
     	}
     	for(int i = 0; i < allProfiles.size(); i++) {
     		if (allProfiles.get(i).getName() == playerName) {
-    			newPlayer = new Player(playerNum, "", 0, null, new int[]{X,Y}, playerHand, allProfiles.get(i));
+    			newPlayer = new Player(playerNum, "", new int[0][0], new int[]{X,Y}, playerHand);
+    			newPlayer.setPlayerProfile(allProfiles.get(i));
     		}
     		
     	}
@@ -319,7 +334,7 @@ public class MainMenu {
 	 * @param curLine is the current line assumed to contain the relevant data to create a tile and it's location.
 	 * @param curBoard is the current board being created for the saved game.
 	 */
-    private void readTile(String curLine, Board curBoard) {
+    private static void readTile(String curLine) {
 
     	int index = 0;
     	String curAttribute;
@@ -330,7 +345,7 @@ public class MainMenu {
     	boolean fixed = true;
     	String tileType = "";
     	int orientation = 0;
-    	FloorTile curTile;
+    	FloorTile curTile = null;
     	
     	while (curSegment < 7) {
     		curAttribute = "";
@@ -384,7 +399,7 @@ public class MainMenu {
 				curTile = new StraightTile(orientation, fixed);
 				break;
 			case "Tshaped":
-				curTile = new Tshaped(orientation, fixed);
+				curTile = new TshapedTile(orientation, fixed);
 				break;
 			case "Goal":
 				curTile = new GoalTile(orientation, fixed);
@@ -397,13 +412,13 @@ public class MainMenu {
     		curSegment ++;
 
     	}
-		curBoard.setFloorTile(curTile, X, Y);
+		Board.setFloorTile(curTile, X, Y);
     }
     
     /**
      * Saves the current profileList txt file
      */
-    public void saveProfile() {
+    public static void saveProfile() {
     	String writen;
     	try {
     		// safely creating the files
@@ -440,7 +455,7 @@ public class MainMenu {
     /**
      * Opens a profile list from a save file and turns them in to the current leaderboard's array of profiles.
      */
-    public void loadProfile() {
+    public static void loadProfile() {
     	try {
     		File file = new File ("SavedProfiles.txt");
     		Scanner inputFromFile = new Scanner (file);
@@ -455,15 +470,33 @@ public class MainMenu {
 			e.printStackTrace();
 		}
     }
-    
+
     /**
+     * Used as a getter for the current players in the game.
+     * 
+     * @return Return type is an ArrayList containing type 'Player'.
+     */
+	public static ArrayList<Player> getCurGamePlayers() {
+		return curGamePlayers;
+	}
+
+	/**
+	 * Used as a setter for the ArrayList of players for this game.
+	 * 
+	 * @param newCurGamePlayers Stores the ArrayList players to be involved in this game.
+	 */
+	public static void setCurGamePlayers(ArrayList<Player> newCurGamePlayers) {
+		curGamePlayers = newCurGamePlayers;
+	}
+
+	/**
      * Reads individual lines from the txt file.
      * 
-     * @param Takes the current line from the file reader in a String format.
+     * @param curLine the current line from the file reader in a String format.
      * 
      * @return Returns the individual profiles of type Profile.
      */
-    private Profile readProfileLine(String curLine) {
+    private static Profile readProfileLine(String curLine) {
     	
     	int index = 0;
     	String curAttribute;
@@ -489,23 +522,34 @@ public class MainMenu {
     	
     	return(curProfile);
     }
-    public void playerProfileLink (Player playerLink,Profile profileLink){
+    
+    /**
+     * Used to link the players to their correct profiles.
+     * 
+     * @param playerLink This is the player chosen to link with the profile.
+     * @param profileLink This is the profile chosen to link with the player.
+     */
+    public static void playerProfileLink (Player playerLink,Profile profileLink){
     	playerLink.setPlayerProfile(profileLink);
 	}
     
     /**
-     * Starts the game
+     * Used for generating the array of players for the current game.
+     * 
+     * @param numOfPlayers This is the number of players chosen to take part in this game.
      */
-    public void startGame() {
-
-    }
+	public static void curGenPlayers(int numOfPlayers){
+    	for(int i = 1; i <= numOfPlayers; i++ ){
+			curGamePlayers.add(new Player(i,"North",new int[0][0], new int[0],new ArrayList<ActionTile>()));
+		}
+	}
 
     /**
      * returns an array for the leader board
      *
      * @return String[] and array containing all the details for the player from the leader board separated by a ":".
      */
-    public String[] displayLeaderBoard() {
+    public static String[] displayLeaderBoard() {
     	ArrayList<Profile> curProfileList = curLeaderBoard.getProfileList();
     	String[] printToScreen = new String[curProfileList.size()];
     	int BoardNum = curLeaderBoard.getPresetBoard();
@@ -518,8 +562,10 @@ public class MainMenu {
 
     /**
      * Creates a new profile
+	 * @param name name of the profile
+	 *  TO DO--- Unique identifier for each profile
      */
-    public void newProfile(String name) {
+    public static void newProfile(String name) {
     	Profile profileAdd = new Profile(name, NUM_OF_PRESET_BOARDS);
     	allProfiles.add(profileAdd);
 
@@ -527,8 +573,15 @@ public class MainMenu {
 
     /**
      * deletes a profile
+	 * @param name name connected with profile
      */
-    public void deleteProfile() {
+    public static void deleteProfile(String name) {
+    	for(int i = 0; i<allProfiles.size();i++){
+    		if(allProfiles.get(i).getName().equals(name)){
+    			allProfiles.remove(i);
+
+			}
+		}
 
     }
 
