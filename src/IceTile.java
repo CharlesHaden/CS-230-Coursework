@@ -2,7 +2,7 @@
  * 
  * 
  * @author Nim Man
- * @author Hyder Al-Hashimi
+ * @author Hyder Al-Hashimi**
 */
 
 public class IceTile extends ActionTile<int[]> {
@@ -13,7 +13,7 @@ public class IceTile extends ActionTile<int[]> {
         int row = chosenTile[1];
         for (int x = col-1; x < col+2; x++) {
             for (int y = row - 1; y < row + 2; y++) {
-                Board.getTile((Board.getWidth()*y) + x).setIsFrozen(true);
+                Board.getTile(x,y).setIsFrozen(true);
             }
         }
     }
