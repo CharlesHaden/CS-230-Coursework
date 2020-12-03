@@ -23,7 +23,7 @@ public class Board {
      * @param height Height of board
      * @param bag Array of integers to represent the contents of the silk bag
      */
-    public Board(int width, int height, int[] bag){
+    public Board(int width, int height, int[] bag) {
         tileList = new FloorTile[width][height];
         silkBag = bag;
         this.height = height;
@@ -36,7 +36,7 @@ public class Board {
      * @param x the specified x position in the 2D array
      * @param y the specified y position in the 2D array
      */
-    public static void setFloorTile(FloorTile curTile, int x, int y){
+    public static void setFloorTile(FloorTile curTile, int x, int y) {
         tileList[x][y] = curTile;
     }
 
@@ -63,7 +63,7 @@ public class Board {
     /**
      * @return returns a FloorTile object by randomly selecting from silkBag, also specifies random orientation
      */
-    private static FloorTile selectFromSilkBag(){
+    private static FloorTile selectFromSilkBag() {
         FloorTile curTile;
         curTile = null;// because of switch statement
 
@@ -106,7 +106,7 @@ public class Board {
      * @param horizontal a boolean specifying whether the tiles are to be shifted horizonally or vertically along the board
      * @return a boolean specifying whether or not the tile was successfully inserted, depending on fixed/frozen tiles
      */
-    public static boolean insertTile(FloorTile tileToInsert, int x, int y, boolean horizontal){
+    public static boolean insertTile(FloorTile tileToInsert, int x, int y, boolean horizontal) {
         FloorTile silkBagTile;
         silkBagTile = null;
         FloorTile[][] tempTileList = tileList;
@@ -188,7 +188,7 @@ public class Board {
      * addToSilkBag inserts a new tile into silkBag, which has been pushed off the board by inserting a tile
      * @param silkBagTile The tile object to be added, which is then correlated to an increase in one of the array indexes of silkbag
      */
-    public static void addToSilkBag(Tile silkBagTile){
+    public static void addToSilkBag(Tile silkBagTile) {
         String tileType = silkBagTile.getTileType();
 
         switch (tileType) {
@@ -213,7 +213,7 @@ public class Board {
      * getTileFromSilkBag will return a random tile selected from silkBag, and then decrease the value of that index of silkBag by 1
      * @return returns a Tile object, can either be an action or a floor tile
      */
-    public static Tile getTileFromSilkBag(){
+    public static Tile getTileFromSilkBag() {
         Tile curTile;
         curTile = null;// because of switch statement
 
@@ -221,7 +221,7 @@ public class Board {
         int n = rand.nextInt(7);
         n += 1;
 
-        if (silkBag[n] > 0){
+        if (silkBag[n] > 0) {
 
             int orientation = rand.nextInt(3);
             orientation += 1;
@@ -263,7 +263,7 @@ public class Board {
      * Getter for the entire board
      * @return type 2D array of FloorTile objects
      */
-    public static FloorTile[][] getTiles(){
+    public static FloorTile[][] getTiles() {
         return tileList;
     }
 
@@ -271,7 +271,7 @@ public class Board {
      * getter for the silk bag array
      * @return type int array
      */
-    public static int[] getSilkBag(){
+    public static int[] getSilkBag() {
         return silkBag;
     }
 
@@ -280,7 +280,7 @@ public class Board {
      * getter for the width of the board
      * @return type int
      */
-    public static int getWidth(){
+    public static int getWidth() {
         return width;
     }
 
@@ -289,7 +289,7 @@ public class Board {
      * getter for the height of the board
      * @return type int
      */
-    public static int getHeight(){
+    public static int getHeight() {
         return height;
     }
 
@@ -298,7 +298,7 @@ public class Board {
      * getter for a tile specified by an x and y coordinate in tileList
      * @return type FloorTile object
      */
-    public static FloorTile getTile(int x, int y){
+    public static FloorTile getTile(int x, int y) {
         return tileList[x][y];
     }
 }
