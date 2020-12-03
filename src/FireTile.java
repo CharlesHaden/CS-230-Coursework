@@ -1,4 +1,6 @@
-/** 
+import java.util.ArrayList;
+
+/**
  * 
  * 
  * @author Nim Man
@@ -7,23 +9,19 @@
 
 public class FireTile extends ActionTile<int[]> {
 
-    private int turnPlayed;
-
     public void action(int[] chosenTile) {
-        FloorTile[][] boardTiles = Board.getTileList();
+        FloorTile[][] boardTiles = Board.getTiles();
         int col = chosenTile[0];
         int row = chosenTile[1];
         for (int x = col-1; x < col+2; x++) {
             for (int y = row - 1; y < row + 2; y++) {
-                //boardTiles[y][x].setOnFire(true);
-                Board.getTile((Board.getWidth()*y) + x).setOnFire(true);
-                setTurnPlayed();
+                Board.getTile(x,y).setOnFire(true);
             }
         }
     }
 
     public boolean isPlayable(int[] chosenTile) {
-        FloorTile[][] boardTiles = Board.getTileList();
+        FloorTile[][] boardTiles = Board.getTiles();
         int col = chosenTile[0];
         int row = chosenTile[1];
         if (col == 0 || col == Board.getWidth()-1 ||
@@ -31,7 +29,7 @@ public class FireTile extends ActionTile<int[]> {
             System.out.println("This action cannot be made here.");
             return false;
         }
-        Player[] currentPlayers = Game.getPlayers();
+        ArrayList<Player> currentPlayers = Game.getPlayers();
         int[][] affectedTiles = new int[9][2];
         int i = 0;
         for (int x = col-1; x < col+2; x++) {
@@ -55,7 +53,4 @@ public class FireTile extends ActionTile<int[]> {
         return "Fire";
     }
 
-    private void setTurnPlayed(){
-        this.turnPlayed = Game.getTurn();
-    }
 }

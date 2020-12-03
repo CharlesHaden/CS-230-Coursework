@@ -13,6 +13,10 @@ public abstract class FloorTile extends Tile {
     protected boolean orientedOpenPath[];
     private boolean isFrozen = false;
     private boolean isOnFire = false;
+    private int fireTurnsLeft;
+    private int iceTurnsLeft;
+    private boolean tempFixed;
+    protected Game curGame;
 
     public FloorTile(int orientation) {
         this.orientation = orientation;
@@ -51,6 +55,9 @@ public abstract class FloorTile extends Tile {
 
     protected void setOnFire(boolean onFire){
         this.isOnFire = onFire;
+        if(isOnFire) {
+            fireTurnsLeft = Game.getPlayers().size() * 2;
+        }
     }
 
     public boolean getOnFire(){
@@ -60,10 +67,15 @@ public abstract class FloorTile extends Tile {
     protected void setIsFrozen(boolean isFrozen){
         this.isFrozen = isFrozen;
         if (isFrozen) {
-            fixed = true;
+            tempFixed = true;
+            iceTurnsLeft = Game.getPlayers().size();
         } else {
-            fixed = false;
+            tempFixed = false;
         }
+    }
+
+    public int getOrientation() {
+        return orientation;
     }
 
     public boolean getIsFrozen(){
@@ -71,5 +83,31 @@ public abstract class FloorTile extends Tile {
     }
 
     public abstract String getFloorTileType();
+
+    public boolean getFixed() {
+        if(tempFixed){
+            return true;
+        }
+        return fixed;
+    }
+
+    public void checkActionTurns(FloorTile tile) {
+        if(getIsFrozen()){
+            if (iceTurnsLeft > 0){
+                iceTurnsLeft--;
+            }
+            if (iceTurnsLeft == 0){
+                setIsFrozen(false);
+            }
+        }
+        if(getOnFire()){
+            if (fireTurnsLeft > 0){
+                fireTurnsLeft--;
+            }
+            if (fireTurnsLeft == 0){
+                setIsFrozen(false);
+            }
+        }
+    }
 
 }
