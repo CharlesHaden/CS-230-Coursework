@@ -1,3 +1,8 @@
+/**
+ * Board class...
+ * @author Laurence
+ */
+
 import java.util.Random;
 
 public class Board {
@@ -8,6 +13,12 @@ public class Board {
     private static int width;
     private static Game curGame;
 
+    /**
+     * jksakjsksdasadsd
+     * @param width Width of board
+     * @param height
+     * @param bag
+     */
     public Board(int width, int height, int[] bag){
         tileList = new FloorTile[width][height];
         silkBag = bag;
