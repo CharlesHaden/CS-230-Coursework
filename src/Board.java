@@ -2,10 +2,6 @@ import java.util.Random;
 
 /**
  * Board class, stores and controls the current board data as a 2D array of tiles, as well as the silk bag
- * @author Laurence
- */
-
-/**
  * This class is responsible for providing getter and setter methods for the tile objects
  * at specified coordinates, as given by the array indexes of the 2 dimensional tileList array.
  * It also must allow for tiles to be inserted onto the board which which will shift all other tiles
@@ -13,6 +9,7 @@ import java.util.Random;
  * The silkBag array specified from MainMenu class will be an array of integers, with each index
  * correlating to a quantity of tiles of a given type. These index integers will be converted into
  * tile objects upon request in the getTileFromSilkBag() method.
+ * @author Laurence
  */
 
 public class Board {
