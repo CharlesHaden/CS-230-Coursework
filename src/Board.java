@@ -10,7 +10,6 @@ import java.util.Random;
  */
 
 public class Board {
-
     private static FloorTile[][] tileList;
     private static int[] silkBag;
     private static int height;
@@ -46,13 +45,9 @@ public class Board {
     public static void buildBoard() {
         FloorTile curTile;
         curTile = null;
-
-
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-
                 if (tileList[i][j] == null) {
-
                     curTile = selectFromSilkBag();
                     tileList[i][j] = (curTile);
                 }
@@ -66,16 +61,12 @@ public class Board {
     private static FloorTile selectFromSilkBag() {
         FloorTile curTile;
         curTile = null;// because of switch statement
-
         Random rand = new Random();
         int n = rand.nextInt(3);
         n += 1;
-
-        if (silkBag[n] > 0){
-
+        if (silkBag[n] > 0) {
             int orientation = rand.nextInt(3);
             orientation += 1;
-
             switch (n) {
                 case 0:
                     curTile = new CornerTile(orientation);
@@ -92,7 +83,6 @@ public class Board {
                 default:
                     System.out.println("Index error (out of range).");
             }
-
             silkBag[n] -= 1;
         }
         return curTile;
@@ -111,10 +101,8 @@ public class Board {
         silkBagTile = null;
         FloorTile[][] tempTileList = tileList;
         boolean frozenTileError = false;
-
         if (horizontal) {
             if (x == 0) {
-
                 //inserting from left
                 silkBagTile = tileList[width - 1][y];
                 for (int i = 1; i < width; i++) {
@@ -128,8 +116,7 @@ public class Board {
                         }
                     }
                 }
-            }
-            else if (x == width - 1) {
+            } else if (x == width - 1) {
                 //inserting from right
                 silkBagTile = tileList[0][y];
                 for (int i = 0; i < width; i++) {
@@ -144,15 +131,14 @@ public class Board {
                     }
                 }
             }
-        }
-        else{
+        } else {
             if (y == 0) {
                 //inserting from above
                 silkBagTile = tileList[x][height-1];
                 for (int i = 1; i < height; i++) {
                     if (tempTileList[x][height-i].getIsFrozen() || tempTileList[x][height-i].getFixed() == true) {
                         frozenTileError = true;
-                    }else{
+                    } else {
                         if (height - i == 0) {
                             tileList[x][0] = tileToInsert;
                         } else {
@@ -190,7 +176,6 @@ public class Board {
      */
     public static void addToSilkBag(Tile silkBagTile) {
         String tileType = silkBagTile.getTileType();
-
         switch (tileType) {
             case "Corner":
                 silkBag[0] += 1;
@@ -216,16 +201,12 @@ public class Board {
     public static Tile getTileFromSilkBag() {
         Tile curTile;
         curTile = null;// because of switch statement
-
         Random rand = new Random();
         int n = rand.nextInt(7);
         n += 1;
-
         if (silkBag[n] > 0) {
-
             int orientation = rand.nextInt(3);
             orientation += 1;
-
             switch (n) {
                 case 0:
                     curTile = new CornerTile(orientation);
