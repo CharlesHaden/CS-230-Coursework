@@ -5,6 +5,15 @@
  * @author Mathew Clarke
  */
 
+/**
+ * The Main menu class works to manage:
+ * Profiles, creation and removal, along with saving to allow wins and losses to be stored throughout the games.
+ * Pick the current loaded board in play (whether in progress or a new preset board).
+ * Save in progress boards.
+ * Assist other classes with things such as generating players to fit the requirements and creating the fixed tiles for the preset boards.
+ * 
+ */
+
 import java.io.File;		// Import the file class
 import java.io.FileNotFoundException;
 import java.io.FileWriter;	// Import the FileWriter class
@@ -13,13 +22,10 @@ import java.util.Scanner;	// Import scanner to read in files
 import java.util.ArrayList; // Import arrayList to allow flexible profile lists
 
 public  class MainMenu {
-    private static Game curGame;
     private static ArrayList<Profile> allProfiles;
-    private static Board[] presetBoards;
     private static LeaderBoard curLeaderBoard;
     private static final int NUM_OF_PRESET_BOARDS = 4;
     private static ArrayList<Player> curGamePlayers;
-    private static Board loadedBoard;
     
 	/**
      * Empty constructor for the MainMenu class.
@@ -27,62 +33,15 @@ public  class MainMenu {
     public MainMenu() {
     	
 	}
-
-    /**
-     * Used as a getter for the current board.
-     * 
-     * @return Return type is 'Board' and is the current Board.
-     */
-	public static Board getLoadedBoard() {
-		return loadedBoard;
-	}
-
-	public static void setLoadedBoard(Board newloadedBoard) {
-		loadedBoard = newloadedBoard;
-	}
-
-    /**
-     * Used as a getter for the current game.
-     * 
-     * @return Return type is 'Game' and is the current game.
-     */
-    public static Game getCurrentGame() {
-        return curGame;
-    }
-
-    /**
-     * Used as a getter for the preset boards.
-     * 
-     * @return Return is an array of type Board.
-     */
-    public static Board[] getPresetBoards() {
-        return presetBoards;
-    }
-
-    /**
-	 * Used as a setter for the array of preset boards.
-	 * 
-	 * @param newPresetBoards Stores the array presetBoards of type Board.
-	 */
-    public static void setPresetBoards(Board[] newPresetBoards) {
-        presetBoards = newPresetBoards;
-    }
     
-	/**
-	 * Used as a setter for the current game.
-	 * 
-	 * @param newCurGame Stores the reference for the current game of type Game.
-	 */
-    public static void setCurrentGame(Game newCurGame) {
-        curGame = newCurGame;
-    }
-
     /**
      * Opens a game state from a preset board save file.
      */
     public static void loadPresetBoard(int presetBoard) {
     	
+    	
     	String[] playerPos; 
+    	int[] intPlayerPos;
     	String curLine = "";
     	int curSegment = 0;
     	int[] curSilkbag = new int[8];
@@ -114,7 +73,8 @@ public  class MainMenu {
 				} else {
 					if (Integer.parseInt(curLine.split(":")[0]) < curGamePlayers.size()) {
 						playerPos = curLine.split(":")[1].split(",");
-						curGamePlayers.get(Integer.parseInt(curLine.split(":")[0])).setPlayerPosition(new int[] {Integer.parseInt(playerPos[0]),Integer.parseInt(playerPos[1])});
+						intPlayerPos = new int[] {Integer.parseInt(playerPos[0]),Integer.parseInt(playerPos[1])};
+						curGamePlayers.get(Integer.parseInt(curLine.split(":")[0])).setPlayerPosition(intPlayerPos);
 					}
 
 				}
@@ -579,10 +539,8 @@ public  class MainMenu {
     	for(int i = 0; i<allProfiles.size();i++){
     		if(allProfiles.get(i).getName().equals(name)){
     			allProfiles.remove(i);
-
 			}
 		}
-
     }
 
 }
