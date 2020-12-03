@@ -6,6 +6,8 @@
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.awt.event.KeyAdapter;
+
 
 public class Player {
 
@@ -13,7 +15,7 @@ public class Player {
 	private String orientation;
 	private int[][] lastMoves;
 	private int[] playerPosition;
-	private ArrayList<ActionTile> playerHand = new ArrayList<ActionTile>();
+	private ArrayList<ActionTile> playerHand = new ArrayList<>();
 	private Profile playerProfile;
 	
 	public Player(int playerNum, String orientation, int[][] lastMoves, int[] playerPosition, ArrayList<ActionTile> playerHand) {
@@ -73,18 +75,18 @@ public class Player {
 		this.playerProfile = playerProfile;
 	}
 	
-	public void drawTile(Board currentBoard) {
-		Tile tile = currentBoard.getTileFromSilkBag();
+	public void drawTile() {
+		Tile tile = Board.getTileFromSilkBag();
 		
-		if (tile.getTileType().equals("Floor")) {
+		if (tile.getTileType().equals("Floor Tile")) {
 			FloorTile floorTile = (FloorTile) tile;
 			//NEED TO GET WHERE PLAYER WANTS TO INSERT TILE
 			int x;
 			int y;
 			boolean horizontal = true;
-			currentBoard.insertTile(floorTile, x, y, horizontal);
+			Board.insertTile(floorTile, x, y, horizontal);
 		} 
-		else if (tile.getTileType().equals("Action")) {
+		else if (tile.getTileType().equals("Action Tile")) {
 			ActionTile actionTile = (ActionTile) tile;
 			playerHand.add(actionTile);
 		}
@@ -117,15 +119,15 @@ public class Player {
 					}
 					else if (tiles.getActionTileType().equals("Fire")) {
 						//NEED TO GET CHOSEN TILE
-						int row;
-						int col;
+						int row = 0;
+						int col = 0;
 						int[] chosenTile = {row,col};
 						tiles.action(chosenTile);
 					}
 					else if (tiles.getActionTileType().equals("Ice")) {
 						//NEED TO GET CHOSEN TILE
-						int row;
-						int col;
+						int row = 0;
+						int col = 0;
 						int[] chosenTile = {row,col};
 						tiles.action(chosenTile);
 					}
@@ -151,35 +153,42 @@ public class Player {
 		lastMoves[0][0] = x;
 		lastMoves[0][1] = y;
 	}
+
+	public void makeMove() {
+		//Add buttons for the arrow keys and pass to make move
+	}
+	
 	
 	/**
 	 * Gets the arrow key pressed by the user and moves the player accordingly
 	 * @param e
 	 */
-	public void makeMove(Board currentBoard, KeyEvent e) {
+	public void makeMove(KeyEvent e) {
 		boolean moved = false;
-		FloorTile currentTile = (FloorTile) currentBoard.getTile(playerPosition[0], playerPosition[1]);
+		FloorTile currentTile = (FloorTile) Board.getTile(playerPosition[0], playerPosition[1]);
 		boolean[] currentTileOpenPath = currentTile.getOpenPath();
-		
+
 		do {
 			int keyCode = e.getKeyCode();
-		    switch (keyCode) { 
-		        case KeyEvent.VK_UP:
-		        	moved = movePlayer(currentBoard, currentTileOpenPath, playerPosition[0], playerPosition[1] + 1, 0, 1);
-		            break;
-		        case KeyEvent.VK_DOWN:
-		        	moved = movePlayer(currentBoard, currentTileOpenPath, playerPosition[0], playerPosition[1] - 1, 1, 0);
-		            break;
-		        case KeyEvent.VK_LEFT:
-		        	moved = movePlayer(currentBoard, currentTileOpenPath, playerPosition[0] - 1, playerPosition[1], 2, 3);
-		            break;
-		        case KeyEvent.VK_RIGHT:
-		        	moved = movePlayer(currentBoard, currentTileOpenPath, playerPosition[0] + 1, playerPosition[1], 3, 2);
-		            break;
-		     }
+			switch (keyCode) { 
+			case KeyEvent.VK_UP:
+				moved = movePlayer(currentTileOpenPath, playerPosition[0], playerPosition[1] + 1, 0, 1);
+				break;
+			case KeyEvent.VK_DOWN:
+				moved = movePlayer(currentTileOpenPath, playerPosition[0], playerPosition[1] - 1, 1, 0);
+				break;
+			case KeyEvent.VK_LEFT:
+				moved = movePlayer(currentTileOpenPath, playerPosition[0] - 1, playerPosition[1], 2, 3);
+				break;
+			case KeyEvent.VK_RIGHT:
+				moved = movePlayer(currentTileOpenPath, playerPosition[0] + 1, playerPosition[1], 3, 2);
+				break;
+			}
 		} while (moved == false);
-		
+
 	}
+	
+	
 	
 	/**
 	 * Changes the players position to the new position
@@ -190,9 +199,9 @@ public class Player {
 	 * @param nextPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the next tile
 	 * @return Returns true if the player was able to move
 	 */
-	public boolean movePlayer(Board currentBoard, boolean[] currentTileOpenPath, int x, int y, int currentPath, int nextPath) {
+	public boolean movePlayer(boolean[] currentTileOpenPath, int x, int y, int currentPath, int nextPath) {
 		Boolean moved = false;
-		FloorTile nextTile = (FloorTile) currentBoard.getTile(x, y);
+		FloorTile nextTile = (FloorTile) Board.getTile(x, y);
     	boolean[] nextTileOpenPath = nextTile.getOpenPath();
 
     	//If there is a clear path from the current tile to the next, and it is frozen or has a player, then player can move
