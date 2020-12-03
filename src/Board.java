@@ -1,5 +1,5 @@
 /**
- * Board class...
+ * Board class, stores and controls the current board data as a 2D array of tiles, as well as the silk bag
  * @author Laurence
  */
 
@@ -14,10 +14,10 @@ public class Board {
     private static Game curGame;
 
     /**
-     * jksakjsksdasadsd
-     * @param width Width of board
-     * @param height
-     * @param bag
+     * Constructor for Board class, width and height are used as variables in the class as well as to create the 2D array of floor tiles
+     * @param width Width of board,
+     * @param height Height of board
+     * @param bag Array of integers to represent the contents of the silk bag
      */
     public Board(int width, int height, int[] bag){
         tileList = new FloorTile[width][height];
@@ -26,10 +26,19 @@ public class Board {
         this.width = width;
     }
 
+    /**
+     * Used to set a specified position in the 2D array to a new tile
+     * @param curTile the specified FloorTile object
+     * @param x the specified x position in the 2D array
+     * @param y the specified y position in the 2D array
+     */
     public static void setFloorTile(FloorTile curTile, int x, int y){
         tileList[x][y] = curTile;
     }
 
+    /**
+     * buildBoard() fills in all of the null values in the 2D array, tileList, using data from silkBag
+     */
     public static void buildBoard() {
         FloorTile curTile;
         curTile = null;
@@ -47,6 +56,9 @@ public class Board {
         }
     }
 
+    /**
+     * @return returns a FloorTile object by randomly selecting from silkBag, also specifies random orientation
+     */
     private static FloorTile selectFromSilkBag(){
         FloorTile curTile;
         curTile = null;// because of switch statement
@@ -82,6 +94,14 @@ public class Board {
         return curTile;
     }
 
+    /**
+     * insertTile is a method used to push new tiles onto the board, which in turn, shifts other tiles along, using for loops
+     * @param tileToInsert the specified FloorTile object to insert into the 2D array, tileList
+     * @param x the x position from which the tile is to be inserted
+     * @param y the y position from which the tile is to be inserted
+     * @param horizontal a boolean specifying whether the tiles are to be shifted horizonally or vertically along the board
+     * @return a boolean specifying whether or not the tile was successfully inserted, depending on fixed/frozen tiles
+     */
     public static boolean insertTile(FloorTile tileToInsert, int x, int y, boolean horizontal){
         FloorTile silkBagTile;
         silkBagTile = null;
@@ -160,6 +180,10 @@ public class Board {
         else return false;
     }
 
+    /**
+     * addToSilkBag inserts a new tile into silkBag, which has been pushed off the board by inserting a tile
+     * @param silkBagTile The tile object to be added, which is then correlated to an increase in one of the array indexes of silkbag
+     */
     public static void addToSilkBag(Tile silkBagTile){
         String tileType = silkBagTile.getTileType();
 
@@ -181,6 +205,10 @@ public class Board {
         }
     }
 
+    /**
+     * getTileFromSilkBag will return a random tile selected from silkBag, and then decrease the value of that index of silkBag by 1
+     * @return returns a Tile object, can either be an action or a floor tile
+     */
     public static Tile getTileFromSilkBag(){
         Tile curTile;
         curTile = null;// because of switch statement
@@ -226,21 +254,46 @@ public class Board {
         }
         return curTile;
     }
+
+    /**
+     * Getter for the entire board
+     * @return type 2D array of FloorTile objects
+     */
     public static FloorTile[][] getTiles(){
         return tileList;
     }
 
+    /**
+     * getter for the silk bag array
+     * @return type int array
+     */
     public static int[] getSilkBag(){
         return silkBag;
     }
+
+
+    /**
+     * getter for the width of the board
+     * @return type int
+     */
     public static int getWidth(){
         return width;
     }
 
+
+    /**
+     * getter for the height of the board
+     * @return type int
+     */
     public static int getHeight(){
         return height;
     }
 
+
+    /**
+     * getter for a tile specified by an x and y coordinate in tileList
+     * @return type FloorTile object
+     */
     public static FloorTile getTile(int x, int y){
         return tileList[x][y];
     }
