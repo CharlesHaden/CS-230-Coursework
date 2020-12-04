@@ -6,6 +6,15 @@
  * @author Mathew Clarke
  */
 
+/**
+ * The Main menu class works to manage:
+ * Profiles, creation and removal, along with saving to allow wins and losses to be stored throughout the games.
+ * Pick the current loaded board in play (whether in progress or a new preset board).
+ * Save in progress boards.
+ * Assist other classes with things such as generating players to fit the requirements and creating the fixed tiles for the preset boards.
+ * 
+ */
+
 import java.io.File;		// Import the file class
 import java.io.FileNotFoundException;
 import java.io.FileWriter;	// Import the FileWriter class
@@ -14,81 +23,32 @@ import java.util.Scanner;	// Import scanner to read in files
 import java.util.ArrayList; // Import arrayList to allow flexible profile lists
 
 public  class MainMenu {
-    private static Game curGame;
     private static ArrayList<Profile> allProfiles;
-    private static Board[] presetBoards;
     private static LeaderBoard curLeaderBoard;
     private static final int NUM_OF_PRESET_BOARDS = 4;
     private static ArrayList<Player> curGamePlayers;
-    private static Board loadedBoard;
-
-    public MainMenu() {
-    	Game Game1 = new Game(null);
-
-	}
-
-	public static Board getLoadedBoard() {
-		return loadedBoard;
-	}
-
-	public static void setLoadedBoard(Board newloadedBoard) {
-		loadedBoard = newloadedBoard;
-	}
-
+    
 	/**
      * Empty constructor for the MainMenu class.
      */
-
-
-    /**
-     * Used as a getter for the current game.
-     * 
-     * @return Return type is 'Game' and is the current game.
-     */
-    public static Game getCurrentGame() {
-        return curGame;
-    }
-
-    /**
-     * Used as a getter for the preset boards.
-     * 
-     * @return Return is an array of type Board.
-     */
-    public static Board[] getPresetBoards() {
-        return presetBoards;
-    }
-
-    /**
-	 * Used as a setter for the array of preset boards.
-	 * 
-	 * @param newPresetBoards Stores the array presetBoards of type Board.
-	 */
-    public static void setPresetBoards(Board[] newPresetBoards) {
-        presetBoards = newPresetBoards;
-    }
+    public MainMenu() {
+    	
+	}
     
-	/**
-	 * Used as a setter for the current game.
-	 * 
-	 * @param newCurGame Stores the reference for the current game of type Game.
-	 */
-    public static void setCurrentGame(Game newCurGame) {
-        curGame = newCurGame;
-    }
-
     /**
      * Opens a game state from a preset board save file.
      */
     public static void loadPresetBoard(int presetBoard) {
+    	
+    	
+    	String[] playerPos; 
+    	int[] intPlayerPos;
     	String curLine = "";
-    	int curPlayer = 0;
     	int curSegment = 0;
     	int[] curSilkbag = new int[8];
     	int X = 0;
     	int Y = 0;
     	
-
-		Board curBoard = new Board(0,0,new int[0]);
 		String fileName = ("SavedPresetBoard" + presetBoard + ".txt");
 		// assumes order of data is max row, max column
     	try {
@@ -108,12 +68,15 @@ public  class MainMenu {
 					for (int i = 0; i < curLine.split(",").length; i++) {
 						curSilkbag[i] = Integer.parseInt(curLine.split(",")[i]);
 					}
-					curBoard = new Board(X, Y, curSilkbag);
+					new Board(X, Y, curSilkbag);
 				} else if (curSegment == 2) {
-					readTile(curLine, curBoard);
+					readTile(curLine);
 				} else {
-					// read player location and pass to ?
-
+					if (Integer.parseInt(curLine.split(":")[0]) < curGamePlayers.size()) {
+						playerPos = curLine.split(":")[1].split(",");
+						intPlayerPos = new int[] {Integer.parseInt(playerPos[0]),Integer.parseInt(playerPos[1])};
+						curGamePlayers.get(Integer.parseInt(curLine.split(":")[0])).setPlayerPosition(intPlayerPos);
+					}
 
 				}
 				inputFromLine.close();
@@ -212,7 +175,8 @@ public  class MainMenu {
      */
     public static void loadBoard() {
     	String curLine = "";
-    	int curPlayer = 0;
+    	
+    	ArrayList<Player> curPlayers = new ArrayList<Player>();
     	int curSegment = 0;
     	int[] curSilkbag = new int[8];
     	try {
@@ -232,8 +196,7 @@ public  class MainMenu {
 				} else if (curSegment == 1) {
 					readTile(curLine);
 				} else if (curSegment == 2) {
-					Game.setPlayers(readPlayer(curLine));
-					curPlayer ++;
+					curPlayers.add(readPlayer(curLine));
 				} else {
 					while (Game.getTurn() != Integer.parseInt(curLine)) {
 						Game.newTurn();
@@ -241,6 +204,7 @@ public  class MainMenu {
 				}
 				inputFromLine.close();
 			}
+    		Game.setPlayers(curPlayers);
 			inputFromFile.close();
     	} catch(FileNotFoundException e){
 			System.out.println("FileNotFoundException");
@@ -331,7 +295,7 @@ public  class MainMenu {
 	 * @param curLine is the current line assumed to contain the relevant data to create a tile and it's location.
 	 * @param curBoard is the current board being created for the saved game.
 	 */
-    private static void readTile(String curLine, Board curBoard) {
+    private static void readTile(String curLine) {
 
     	int index = 0;
     	String curAttribute;
@@ -409,7 +373,7 @@ public  class MainMenu {
     		curSegment ++;
 
     	}
-		curBoard.setFloorTile(curTile, X, Y);
+		Board.setFloorTile(curTile, X, Y);
     }
     
     /**
@@ -468,10 +432,20 @@ public  class MainMenu {
 		}
     }
 
+    /**
+     * Used as a getter for the current players in the game.
+     * 
+     * @return Return type is an ArrayList containing type 'Player'.
+     */
 	public static ArrayList<Player> getCurGamePlayers() {
 		return curGamePlayers;
 	}
 
+	/**
+	 * Used as a setter for the ArrayList of players for this game.
+	 * 
+	 * @param newCurGamePlayers Stores the ArrayList players to be involved in this game.
+	 */
 	public static void setCurGamePlayers(ArrayList<Player> newCurGamePlayers) {
 		curGamePlayers = newCurGamePlayers;
 	}
@@ -509,16 +483,27 @@ public  class MainMenu {
     	
     	return(curProfile);
     }
+    
+    /**
+     * Used to link the players to their correct profiles.
+     * 
+     * @param playerLink This is the player chosen to link with the profile.
+     * @param profileLink This is the profile chosen to link with the player.
+     */
     public static void playerProfileLink (Player playerLink,Profile profileLink){
     	playerLink.setPlayerProfile(profileLink);
 	}
+    
+    /**
+     * Used for generating the array of players for the current game.
+     * 
+     * @param numOfPlayers This is the number of players chosen to take part in this game.
+     */
 	public static void curGenPlayers(int numOfPlayers){
     	for(int i = 1; i <= numOfPlayers; i++ ){
 			curGamePlayers.add(new Player(i,"North",new int[0][0], new int[0],new ArrayList<ActionTile>()));
 		}
 	}
-    
-
 
     /**
      * returns an array for the leader board
@@ -555,10 +540,8 @@ public  class MainMenu {
     	for(int i = 0; i<allProfiles.size();i++){
     		if(allProfiles.get(i).getName().equals(name)){
     			allProfiles.remove(i);
-
 			}
 		}
-
     }
 
 }
