@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.text.*;
 import javafx.scene.control.Button;
@@ -71,10 +72,7 @@ public class Main extends Application {
       });
 
       //INGAME SCREEN
-      
-      Pane game = new Pane();
-      inGameScreen = new Scene(game, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
-      
+
       Image imageDecline = new Image("pause.png");
       Button pauseButton = new Button();
       ImageView imageDeclineView = new ImageView(imageDecline);
@@ -83,7 +81,43 @@ public class Main extends Application {
       pauseButton.setGraphic(imageDeclineView);
       pauseButton.setPrefSize(100,20);
       pauseButton.setOnAction(e -> window.setScene(pauseMenu));
+      
+
+      Image straightTile = new Image("straight.PNG");
+      Image cornerTile = new Image("corner.PNG");
+      Image tShapedTile = new Image("tshaped.PNG");
+      Image goalTile = new Image("goal.PNG");
+
+      FloorTile[][] curboard = Board.getTiles();
+      Group game = new Group();
+      for (int i = 0; i < Board.getHeight() ; i++ ) {
+         for (int j = 0; i < Board.getWidth(); j++) {
+            ImageView imageview = new ImageView();
+            if (curboard[i][j].getFloorTileType() == "Straight") {
+               imageview.setImage(straightTile);
+            } else if (curboard[i][j].getFloorTileType() == "Corner") {
+               imageview.setImage(cornerTile);
+            } else if (curboard[i][j].getFloorTileType() == "Tshaped") {
+               imageview.setImage(tShapedTile);
+            } else {
+               imageview.setImage(goalTile);
+            }
+            
+            imageview.setX(10+(i*10));
+            imageview.setY(10+(j*10));
+            imageview.setFitHeight(10); 
+            imageview.setFitWidth(10); 
+            imageview.setPreserveRatio(true);
+            game.getChildren().add(imageview);
+            
+         }
+      }
+   
+      
+      
+      inGameScreen = new Scene(game, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
       game.getChildren().add(pauseButton);
+
 
       //PAUSE MENU
 
@@ -163,6 +197,7 @@ public class Main extends Application {
       window.setScene(mainMenu);
       window.show();
    }
+
    
    
    public static void main(String[] args) {
