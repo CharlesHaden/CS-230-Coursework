@@ -15,18 +15,21 @@ public class Board {
     private static int height;
     private static int width;
     private static Game curGame;
+    private static int boardNumber;
 
     /**
      * Constructor for Board class, width and height are used as variables in the class as well as to create the 2D array of floor tiles
      * @param width Width of board,
      * @param height Height of board
      * @param bag Array of integers to represent the contents of the silk bag
+     * @param boardNumber Specifies which board we are currently using
      */
-    public Board(int width, int height, int[] bag) {
+    public Board(int width, int height, int[] bag, int boardNumber) {
         tileList = new FloorTile[width][height];
         silkBag = bag;
         this.height = height;
         this.width = width;
+        this.boardNumber = boardNumber;
     }
 
     /**
@@ -272,6 +275,14 @@ public class Board {
      */
     public static int getHeight() {
         return height;
+    }
+
+    /**
+     * getter for the board number
+     * @return type int
+     */
+    public static int getBoardNumber() {
+        return boardNumber;
     }
 
 
