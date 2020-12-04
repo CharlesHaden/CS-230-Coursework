@@ -1,4 +1,6 @@
-* This works as the main menu for starting and saving games as well as creating and deleting profiles.
+
+/**
+ * This works as the main menu for starting and saving games as well as creating and deleting profiles.
  *
  * @author Charles Haden
  * @author Mathew Clarke
@@ -38,7 +40,6 @@ public  class MainMenu {
      */
     public static void loadPresetBoard(int presetBoard) {
     	
-    	
     	String[] playerPos; 
     	int[] intPlayerPos;
     	String curLine = "";
@@ -55,36 +56,49 @@ public  class MainMenu {
     		while (inputFromFile.hasNextLine()) {
 				Scanner inputFromLine = new Scanner (inputFromFile.nextLine());
 				curLine = inputFromLine.nextLine();
+				
 				if (curLine == "...") {
 					curSegment ++;
-				}
-				
-				if (curSegment == 0) {
-					X = Integer.parseInt(curLine.split(",")[0]);
-					Y = Integer.parseInt(curLine.split(",")[1]);
-				} else if (curSegment == 1) {
-					for (int i = 0; i < curLine.split(",").length; i++) {
-						curSilkbag[i] = Integer.parseInt(curLine.split(",")[i]);
-					}
-					new Board(X, Y, curSilkbag);
-				} else if (curSegment == 2) {
-					readTile(curLine);
+					
 				} else {
-					if (Integer.parseInt(curLine.split(":")[0]) < curGamePlayers.size()) {
-						playerPos = curLine.split(":")[1].split(",");
-						intPlayerPos = new int[] {Integer.parseInt(playerPos[0]),Integer.parseInt(playerPos[1])};
-						curGamePlayers.get(Integer.parseInt(curLine.split(":")[0])).setPlayerPosition(intPlayerPos);
+				
+					switch (curSegment) {
+					case 0:
+						for (int i = 0; i < curLine.split(",").length-1; i++) {
+							curSilkbag[i] = Integer.parseInt(curLine.split(",")[i]);
+						}
+						break;
+						
+					case 1:
+						X = Integer.parseInt(curLine.split(",")[0]);
+						Y = Integer.parseInt(curLine.split(",")[1]);
+						new Board(X, Y, curSilkbag, presetBoard);
+						break;
+						
+					case 2:
+						readTile(curLine);
+						break;
+						
+					case 3:
+						if (Integer.parseInt(curLine.split(":")[0]) < curGamePlayers.size()) {
+							playerPos = curLine.split(":")[1].split(",");
+							intPlayerPos = new int[] {Integer.parseInt(playerPos[0]),Integer.parseInt(playerPos[1])};
+							curGamePlayers.get(Integer.parseInt(curLine.split(":")[0])).setPlayerPosition(intPlayerPos);
+						}
+						break;
+						
+					default:
+						System.out.println("Index error (out of range).");
+						
 					}
-
+					inputFromLine.close();
 				}
-				inputFromLine.close();
 			}
 			inputFromFile.close();
     	} catch(FileNotFoundException e){
 			System.out.println("FileNotFoundException");
 			e.printStackTrace();
 		}
-
     }
     
     /**
@@ -113,6 +127,10 @@ public  class MainMenu {
     	    for (int i = 0; i < 7; i++){
     	    	Writer.write(Board.getSilkBag()[i] + ",");
     	    }
+    	    
+    	    Writer.write(".../n");
+    	    
+    	    Writer.write(Board.getBoardNumber() + "/n");
     	    
     	    Writer.write(".../n");
     	    
@@ -181,8 +199,11 @@ public  class MainMenu {
     	ArrayList<Player> curPlayers = new ArrayList<Player>();
     	int curSegment = 0;
     	int[] curSilkbag = new int[8];
+    	int presetBoardNum = 0;
+    	int turn = 0;
+    	
     	try {
-    		File file = new File ("C:\\Users\\matth\\eclipse-workspace\\CS230_CW2\\src\\SavedBoard.txt");
+    		File file = new File ("SavedBoard.txt");
     		Scanner inputFromFile = new Scanner (file);
     		while (inputFromFile.hasNextLine()) {
 				Scanner inputFromLine = new Scanner (inputFromFile.nextLine());
@@ -191,43 +212,62 @@ public  class MainMenu {
 				if (curLine.equals("...")) {
 					curSegment ++;
 					
-				} else if (curSegment == 0) {
-					for(int i = 0; i < curLine.split(",").length-1; i++){
-						curSilkbag[i] = Integer.parseInt(curLine.split(",")[i]);
-				    }
-					
-				} else if (curSegment == 1) {
-					int width = Integer.parseInt(curLine.split(",")[0]);
-					int height = Integer.parseInt(curLine.split(",")[1]);
-					new Board(width,height,curSilkbag);
-					
-				} else if (curSegment == 2) {
-					readTile(curLine);
-					
-				} else if (curSegment == 3) {
-					curPlayers.add(readPlayer(curLine));
-					
-				} else {
-					while (Game.getTurn() != Integer.parseInt(curLine)) {
-						Game.newTurn();
+				} else  {
+					switch (curSegment) {
+					case 0:
+						for(int i = 0; i < curLine.split(",").length-1; i++){
+							curSilkbag[i] = Integer.parseInt(curLine.split(",")[i]);
+						}
+						break;
+						
+					case 1:
+						presetBoardNum = Integer.parseInt(curLine);
+						break;
+						
+					case 2:
+						int width = Integer.parseInt(curLine.split(",")[0]);
+						int height = Integer.parseInt(curLine.split(",")[1]);
+						new Board(width,height,curSilkbag,presetBoardNum);
+						break;
+						
+					case 3:
+						readTile(curLine);
+						break;
+						
+					case 4:
+						curPlayers.add(readPlayer(curLine));
+						break;
+						
+					case 5:
+						turn = Integer.parseInt(curLine);
+						break;
+						
+					default:
+						System.out.println("Index error (out of range).");
 					}
 					
 				}
 				inputFromLine.close();
 			}
-    		Game.setPlayers(curPlayers);
+    		
+    		new Game(curPlayers);
+    		
+    		while (Game.getTurn() != turn) {
+				Game.newTurn();
+			}
+    		
 			inputFromFile.close();
     	} catch(FileNotFoundException e){
 			System.out.println("FileNotFoundException");
 			e.printStackTrace();
 		}
     }
-
+    
     /**
      * Reads individual lines from the txt file and adds them to the current board.
      * 
      * Side effects include changing tiles on the current board to the saved one.
-     */
+     */   
     private static Player readPlayer(String curLine) {
     	
     	int index = 0;
@@ -251,8 +291,7 @@ public  class MainMenu {
     			curAttribute = curAttribute + curLine.charAt(index);
     			index ++;
     		}
-    		System.out.println("curSegmento:" + curSegment);
-    		System.out.println("curAttribute:" + curAttribute);
+
     		switch (curSegment) {
 			case 0:
 				playerNum = Integer.parseInt(curAttribute);
@@ -262,30 +301,36 @@ public  class MainMenu {
 				break;
 			case 2:
 				for (int i = 0; i < curAttribute.split(",").length; i++) {
-					System.out.println(i);
 					switch (curAttribute.split(",")[i]) {
+					
 					case "Ice":
 						curTile = new IceTile();
 						break;
+						
 					case "Fire":
 						curTile = new FireTile();
 						break;
+						
 					case "Double":
 						curTile = new DoubleMoveTile();
 						break;
+						
 					case "Backtrack":
 						curTile = new BacktrackTile();
 						break;
+						
 					default:
 						System.out.println("Index error (out of range).");
 					}
 					playerHand.add(curTile);
 				}
 				break;
+				
 			case 3:
 				X = Integer.parseInt(curAttribute.split(",")[0]);
 				Y = Integer.parseInt(curAttribute.split(",")[1]);
 				break;
+				
 			default:
 				System.out.println("Index error (out of range).");
     		}
@@ -517,6 +562,7 @@ public  class MainMenu {
     	for(int i = 1; i <= numOfPlayers; i++ ){
 			curGamePlayers.add(new Player(i,"North",new int[0][0], new int[0],new ArrayList<ActionTile>()));
 		}
+    	new Game(curGamePlayers);
 	}
 
     /**
@@ -559,3 +605,4 @@ public  class MainMenu {
     }
 
 }
+
