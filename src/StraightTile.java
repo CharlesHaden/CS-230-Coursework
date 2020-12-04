@@ -8,12 +8,11 @@
 public class StraightTile extends FloorTile {
 
     public StraightTile(int orientation) {
-        super(orientation);
-        openPath =  new boolean[] {true, false, true, false};
+        super(orientation, new boolean[] {true, false, true, false});
     }
 
     public StraightTile(int orientation, boolean fixed) {
-        super(orientation, fixed);
+        super(orientation, fixed, new boolean[] {true, false, true, false});
         setOrientedOpenPath();
     }
 
