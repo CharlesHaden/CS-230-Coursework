@@ -72,6 +72,12 @@ public class Main extends Application {
              System.exit(0);
             }
       });
+      //MESSAGE OF THE DAY
+      MessageOfTheDay newMessage = new MessageOfTheDay(); 
+      Text messageOtD = new Text(10, 500, newMessage.getMessage());
+      messageOtD.setFont(new Font(12));
+      root.getChildren().add(messageOtD); 
+
 
       //INGAME SCREEN
 
@@ -90,10 +96,10 @@ public class Main extends Application {
       Image tShapedTile = new Image("tshaped.PNG");
       Image goalTile = new Image("goal.PNG");
 
-      StraightTile[][] curboard = new StraightTile[10][10];
+      FloorTile[][] curboard = new FloorTile[10][10];
       for (int i = 0; i < 10; i++) {
          for (int j = 0; j < 10; j++) {
-            StraightTile curTile = new StraightTile(1);
+            FloorTile curTile = new CornerTile(3);
             curboard[i][j] = (curTile);
          }
      }
@@ -112,8 +118,15 @@ public class Main extends Application {
             } else {
                imageview.setImage(goalTile);
             }
-            
-            imageview.setX(20+(i*40));
+            if (curboard[i][j].getOrientation() == 1) {
+               imageview.setRotate(imageview.getRotate() + 90);
+            } else if (curboard[i][j].getOrientation() == 2) {
+                  imageview.setRotate(imageview.getRotate() + 180);
+               } else if (curboard[i][j].getOrientation() == 3) {
+                  imageview.setRotate(imageview.getRotate() + 270);
+               } 
+
+            imageview.setX(50+(i*40));
             imageview.setY(70+(j*40));
             imageview.setFitHeight(40); 
             imageview.setFitWidth(40); 
