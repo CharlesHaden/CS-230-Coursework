@@ -1,5 +1,5 @@
 /**
- * Abstract class floor tile stores each floor tiles attributes
+ *
  *
  * @author Nim Man
  * @author Hyder Al-Hashimi
@@ -15,6 +15,7 @@ public abstract class FloorTile extends Tile {
     private boolean isOnFire = false;
     private int fireTurnsLeft;
     private int iceTurnsLeft;
+    private boolean tempFixed;
 
     public FloorTile(int orientation) {
         this.orientation = orientation;
@@ -28,10 +29,7 @@ public abstract class FloorTile extends Tile {
         setOrientedOpenPath();
     }
 
-    /**
-     * Orientates the floor tile, adjusting its open path.
-     */
-    private void setOrientedOpenPath() {
+    public void setOrientedOpenPath() {
         for(int i = 0; i < orientation; i++) {
             boolean first = openPath[0];
             int j;
@@ -67,8 +65,11 @@ public abstract class FloorTile extends Tile {
 
     protected void setIsFrozen(boolean isFrozen){
         this.isFrozen = isFrozen;
-        if (getIsFrozen()) {
+        if (isFrozen) {
+            tempFixed = true;
             iceTurnsLeft = Game.getPlayers().length;
+        } else {
+            tempFixed = false;
         }
     }
 
@@ -82,23 +83,13 @@ public abstract class FloorTile extends Tile {
 
     public abstract String getFloorTileType();
 
-    /**
-     * Gets if tile is fixed due to being frozen or instantiated as fixed.
-     *
-     * @return whether the floor tile is fixed
-     */
     public boolean getFixed() {
-        if(getIsFrozen()){
+        if(tempFixed){
             return true;
         }
         return fixed;
     }
 
-    /**
-     * Decrements the turns left on an action tile used on the floor tile, and removes effect when turns left finish.
-     *
-     * @param tile floor tile to decrement and check
-     */
     public void checkActionTurns(FloorTile tile) {
         if(getIsFrozen()){
             if (iceTurnsLeft > 0){

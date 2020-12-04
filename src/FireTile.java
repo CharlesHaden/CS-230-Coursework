@@ -1,5 +1,5 @@
 /** 
- * Sub-class of the ActionTile class that checks if the fire tile if playable, and plays it if it is.
+ * 
  * 
  * @author Nim Man
  * @author Hyder Al-Hashimi
@@ -7,11 +7,6 @@
 
 public class FireTile extends ActionTile<int[]> {
 
-    /**
-     * Sets tiles in a 3x3 radius around the chosen tile on fire
-     *
-     * @param chosenTile specifies the chosen tile for the ice tile to be use on
-     */
     public void action(int[] chosenTile) {
         FloorTile[][] boardTiles = Board.getTiles();
         int col = chosenTile[0];
