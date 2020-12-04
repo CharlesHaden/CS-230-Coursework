@@ -2,6 +2,8 @@
  * 
  * 
  * @author Nim Man
+ * @author HyderAlhashimi
+ * @author Laurence
 */
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -88,10 +90,18 @@ public class Main extends Application {
       Image tShapedTile = new Image("tshaped.PNG");
       Image goalTile = new Image("goal.PNG");
 
-      FloorTile[][] curboard = Board.getTiles();
+      StraightTile[][] curboard = new StraightTile[10][10];
+      for (int i = 0; i < 10; i++) {
+         for (int j = 0; j < 10; j++) {
+            StraightTile curTile = new StraightTile(1);
+            curboard[i][j] = (curTile);
+         }
+     }
+
+      //FloorTile[][] curboard = Board.getTiles();
       Group game = new Group();
-      for (int i = 0; i < Board.getHeight() ; i++ ) {
-         for (int j = 0; i < Board.getWidth(); j++) {
+      for (int i = 0; i < 10 ; i++ ) {
+         for (int j = 0; j < 10; j++) {
             ImageView imageview = new ImageView();
             if (curboard[i][j].getFloorTileType() == "Straight") {
                imageview.setImage(straightTile);
@@ -103,10 +113,10 @@ public class Main extends Application {
                imageview.setImage(goalTile);
             }
             
-            imageview.setX(10+(i*10));
-            imageview.setY(10+(j*10));
-            imageview.setFitHeight(10); 
-            imageview.setFitWidth(10); 
+            imageview.setX(20+(i*40));
+            imageview.setY(70+(j*40));
+            imageview.setFitHeight(40); 
+            imageview.setFitWidth(40); 
             imageview.setPreserveRatio(true);
             game.getChildren().add(imageview);
             

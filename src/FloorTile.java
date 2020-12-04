@@ -14,9 +14,10 @@ public abstract class FloorTile extends Tile {
     private boolean isFrozen = false;
     private boolean isOnFire = false;
 
-    public FloorTile(int orientation) {
+    public FloorTile(int orientation, boolean[] openPath) {
         this.orientation = orientation;
         this.fixed = false;
+        this.openPath = openPath;
         setOrientedOpenPath();
     }
 
