@@ -1,5 +1,4 @@
-/**
- * This works as the main menu for starting and saving games as well as creating and deleting profiles.
+* This works as the main menu for starting and saving games as well as creating and deleting profiles.
  *
  * @author Charles Haden
  * @author Mathew Clarke
@@ -22,10 +21,10 @@ import java.util.Scanner;	// Import scanner to read in files
 import java.util.ArrayList; // Import arrayList to allow flexible profile lists
 
 public  class MainMenu {
-    private static ArrayList<Profile> allProfiles;
+    private static ArrayList<Profile> allProfiles = new ArrayList<Profile>();
     private static LeaderBoard curLeaderBoard;
     private static final int NUM_OF_PRESET_BOARDS = 4;
-    private static ArrayList<Player> curGamePlayers;
+    private static ArrayList<Player> curGamePlayers = new ArrayList<Player>();
     
 	/**
      * Empty constructor for the MainMenu class.
@@ -94,7 +93,7 @@ public  class MainMenu {
     public static void saveBoard() {
     	try {
     		// 	safely creating the files
-    		File SavedBoard = new File ("SavedBoard.txt");
+    		File SavedBoard = new File ("file://SavedBoard.txt");
     		if (SavedBoard.exists()) {
     			if(!SavedBoard.delete()) {
     				System.out.println("File present, but unable to delete.");
@@ -114,6 +113,10 @@ public  class MainMenu {
     	    for (int i = 0; i < 7; i++){
     	    	Writer.write(Board.getSilkBag()[i] + ",");
     	    }
+    	    
+    	    Writer.write(".../n");
+    	    
+    	    Writer.write(Board.getWidth() + "," + Board.getHeight() + "/n");
     	    
     	    Writer.write(".../n");
     	    
@@ -179,27 +182,36 @@ public  class MainMenu {
     	int curSegment = 0;
     	int[] curSilkbag = new int[8];
     	try {
-    		File file = new File ("SavedBoard.txt");
+    		File file = new File ("C:\\Users\\matth\\eclipse-workspace\\CS230_CW2\\src\\SavedBoard.txt");
     		Scanner inputFromFile = new Scanner (file);
     		while (inputFromFile.hasNextLine()) {
 				Scanner inputFromLine = new Scanner (inputFromFile.nextLine());
 				curLine = inputFromLine.nextLine();
-				if (curLine == "...") {
+
+				if (curLine.equals("...")) {
 					curSegment ++;
-				}
-				
-				if (curSegment == 0) {
-					for(int i = 0; i < curLine.split(",").length; i++){
+					
+				} else if (curSegment == 0) {
+					for(int i = 0; i < curLine.split(",").length-1; i++){
 						curSilkbag[i] = Integer.parseInt(curLine.split(",")[i]);
 				    }
+					
 				} else if (curSegment == 1) {
-					readTile(curLine);
+					int width = Integer.parseInt(curLine.split(",")[0]);
+					int height = Integer.parseInt(curLine.split(",")[1]);
+					new Board(width,height,curSilkbag);
+					
 				} else if (curSegment == 2) {
+					readTile(curLine);
+					
+				} else if (curSegment == 3) {
 					curPlayers.add(readPlayer(curLine));
+					
 				} else {
 					while (Game.getTurn() != Integer.parseInt(curLine)) {
 						Game.newTurn();
 					}
+					
 				}
 				inputFromLine.close();
 			}
@@ -232,13 +244,15 @@ public  class MainMenu {
     	
     	ActionTile curTile = null;
     	
-    	while (curSegment < 7) {
+    	while (curSegment < 4) {
     		curAttribute = "";
-    		
-    		while(curLine.charAt(index) != ':' && index < curLine.length()) {
+    		while(index < curLine.length() && curLine.charAt(index) != ':') {
+    			
     			curAttribute = curAttribute + curLine.charAt(index);
     			index ++;
     		}
+    		System.out.println("curSegmento:" + curSegment);
+    		System.out.println("curAttribute:" + curAttribute);
     		switch (curSegment) {
 			case 0:
 				playerNum = Integer.parseInt(curAttribute);
@@ -248,6 +262,7 @@ public  class MainMenu {
 				break;
 			case 2:
 				for (int i = 0; i < curAttribute.split(",").length; i++) {
+					System.out.println(i);
 					switch (curAttribute.split(",")[i]) {
 					case "Ice":
 						curTile = new IceTile();
@@ -266,6 +281,7 @@ public  class MainMenu {
 					}
 					playerHand.add(curTile);
 				}
+				break;
 			case 3:
 				X = Integer.parseInt(curAttribute.split(",")[0]);
 				Y = Integer.parseInt(curAttribute.split(",")[1]);
@@ -305,12 +321,10 @@ public  class MainMenu {
     	boolean fixed = true;
     	String tileType = "";
     	int orientation = 0;
-    	FloorTile curTile = null;
     	
-    	while (curSegment < 7) {
+    	while (curSegment < 4) {
     		curAttribute = "";
-    		
-    		while(curLine.charAt(index) != ':' && index < curLine.length()) {
+    		while(index < curLine.length() && curLine.charAt(index) != ':') {
     			curAttribute = curAttribute + curLine.charAt(index);
     			index ++;
     		}
@@ -351,28 +365,29 @@ public  class MainMenu {
 				System.out.println("Index error (out of range).");
     		}
     		
-			switch (tileType) {
-			case "Corner":
-				curTile = new CornerTile(orientation, fixed);
-				break;
-			case "Straight":
-				curTile = new StraightTile(orientation, fixed);
-				break;
-			case "Tshaped":
-				curTile = new TshapedTile(orientation, fixed);
-				break;
-			case "Goal":
-				curTile = new GoalTile(orientation, fixed);
-				break;
-			default:
-				System.out.println("Index error (out of range).");
-			}
-			
 			index ++;
     		curSegment ++;
 
     	}
-		Board.setFloorTile(curTile, X, Y);
+		switch (tileType) {
+		case "Corner":
+			Board.setFloorTile(new CornerTile(orientation, fixed), X, Y);
+			break;
+		case "Straight":
+			Board.setFloorTile(new StraightTile(orientation, fixed), X, Y);
+			break;
+		case "Tshaped":
+			Board.setFloorTile(new TshapedTile(orientation, fixed), X, Y);
+			break;
+		case "Goal":
+			Board.setFloorTile(new GoalTile(orientation, fixed), X, Y);
+			break;
+		default:
+			System.out.println("Index error (out of range).");
+		}
+
+    	
+		
     }
     
     /**
