@@ -3,7 +3,7 @@ import java.io.*;
 
 public class MessageOfTheDay {
 
-    public void getMessage() throws Exception {
+    public void getMessage() throws IOException{
         URL url = new URL("http://cswebcat.swansea.ac.uk/puzzle");
         try {
             URLConnection con = url.openConnection();
@@ -11,12 +11,13 @@ public class MessageOfTheDay {
             String inputLine = in.readLine();
             in.close();
             solvePuzzle(inputLine);
-        } catch (Exception e) {
-            System.out.println("wrong");
+        } catch (IOException e) {
+            System.out.println (e.toString());
+            System.out.println("Could not connect to URL to obtain puzzle");
         }
     }
 
-    public void solvePuzzle(String msg) {
+    public void solvePuzzle(String msg) throws IOException{
         char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
         String puzzleString = msg;
         char[] puzzleStringChar = puzzleString.toCharArray();
@@ -55,7 +56,7 @@ public class MessageOfTheDay {
         return 0;
     }
 
-    public String completeMessage(String msg) throws MalformedURLException {
+    public String completeMessage(String msg) throws IOException {
         URL url = new URL("http://cswebcat.swansea.ac.uk/message?solution=" + msg);
         try {
             URLConnection con = url.openConnection();
@@ -64,9 +65,11 @@ public class MessageOfTheDay {
             in.close();
             System.out.println(inputLine);
             return inputLine;
-        } catch (Exception e) {
-            return null;
+        } catch (IOException e) {
+            System.out.println (e.toString());
+            System.out.println("Could not connect to URL to obtain message");
         }
+        return null;
     }
 
 }

@@ -7,23 +7,19 @@
 
 public class FireTile extends ActionTile<int[]> {
 
-    private int turnPlayed;
-
     public void action(int[] chosenTile) {
-        FloorTile[][] boardTiles = Board.getTileList();
+        FloorTile[][] boardTiles = Board.getTiles();
         int col = chosenTile[0];
         int row = chosenTile[1];
         for (int x = col-1; x < col+2; x++) {
             for (int y = row - 1; y < row + 2; y++) {
-                //boardTiles[y][x].setOnFire(true);
                 Board.getTile((Board.getWidth()*y) + x).setOnFire(true);
-                setTurnPlayed();
             }
         }
     }
 
     public boolean isPlayable(int[] chosenTile) {
-        FloorTile[][] boardTiles = Board.getTileList();
+        FloorTile[][] boardTiles = Board.getTiles();
         int col = chosenTile[0];
         int row = chosenTile[1];
         if (col == 0 || col == Board.getWidth()-1 ||
@@ -55,7 +51,4 @@ public class FireTile extends ActionTile<int[]> {
         return "Fire";
     }
 
-    private void setTurnPlayed(){
-        this.turnPlayed = Game.getTurn();
-    }
 }

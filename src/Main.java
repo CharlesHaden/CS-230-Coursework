@@ -71,6 +71,7 @@ public class Main extends Application {
           public void handle(ActionEvent event) {
              System.exit(0);
             }
+
       });
       //MESSAGE OF THE DAY
       MessageOfTheDay newMessage = new MessageOfTheDay(); 
