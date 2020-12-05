@@ -1,11 +1,3 @@
-/**
- *
- *
- * @author Nim Man
- * @author HyderAlhashimi
- * @author Laurence Burns-Mill
- * @author Matthew Clarke
- */
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,7 +12,14 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 
-
+/**
+ *
+ *
+ * @author Nim Man
+ * @author HyderAlhashimi
+ * @author Laurence Burns-Mill
+ * @author Matthew Clarke
+ */
 
 public class Main extends Application {
     // Constants for the main window
@@ -123,7 +122,7 @@ public class Main extends Application {
 
         //INGAME SCREEN
 
-        Image imageDecline = new Image("pause.png");
+        Image imageDecline = new Image("/pause.png");
         Button pauseButton = new Button();
         ImageView imageDeclineView = new ImageView(imageDecline);
         imageDeclineView.setFitHeight(20);
@@ -186,7 +185,7 @@ public class Main extends Application {
         rotateRight.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-               // imageview.setRotate(imageview.getRotate() + 90);
+
             }
         });
 
@@ -219,7 +218,7 @@ public class Main extends Application {
                 if (Board.getTile(i, j).getIsFrozen()) {
                     tileType = "frozen" + tileType;
                 }
-                imageview.setImage(new Image(tileType + ".png"));
+                imageview.setImage(new Image("file:" + tileType + ".png"));
                 if (Board.getTile(i, j).getOrientation() == 1) {
                     imageview.setRotate(imageview.getRotate() + 90);
                 } else if (Board.getTile(i, j).getOrientation() == 2) {
