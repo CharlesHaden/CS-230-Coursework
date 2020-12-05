@@ -92,7 +92,7 @@ public class Board {
      * @param tileToInsert the specified FloorTile object to insert into the 2D array, tileList
      * @param x the x position from which the tile is to be inserted
      * @param y the y position from which the tile is to be inserted
-     * @param horizontal a boolean specifying whether the tiles are to be shifted horizonally or vertically along the board
+     * @param horizontal a boolean specifying whether the tiles are to be shifted horizontally or vertically along the board
      * @return a boolean specifying whether or not the tile was successfully inserted, depending on fixed/frozen tiles
      */
     public static boolean insertTile(FloorTile tileToInsert, int x, int y, boolean horizontal) {
@@ -168,6 +168,57 @@ public class Board {
         }
         else return false;
     }
+
+    /**
+     * This method is designed to check whether or not a row or a column can have tiles inserted into it
+     * for the purposes of displaying insert buttons onto the screen.
+     * @param x the x coordinate of the board corresponding to the button
+     * @param y the x coordinate of the board corresponding to the button
+     * @param horizontal a boolean specifying whether the tiles are to be shifted horizontally or vertically along the board
+     * @return boolean specifying whether an insert button is to be displayed
+     */
+    public static boolean checkInsert(int x, int y, boolean horizontal) {
+        boolean frozenTileError = false;
+        FloorTile[][] tempTileList = tileList;
+        if (horizontal) {
+            if (x == 0) {
+                //inserting from left
+                for (int i = 1; i < width; i++) {
+                    if (tempTileList[width - i][y].getIsFrozen() || tempTileList[width - i][y].getFixed() == true){
+                        frozenTileError = true;
+                    }
+                }
+            } else if (x == width - 1) {
+                //inserting from right
+                for (int i = 0; i < width; i++) {
+                    if (tempTileList[i][y].getIsFrozen() || tempTileList[i][y].getFixed() == true) {
+                        frozenTileError = true;
+                    }
+                }
+            }
+        } else {
+            if (y == 0) {
+                for (int i = 1; i < height; i++) {
+                    if (tempTileList[x][height-i].getIsFrozen() || tempTileList[x][height-i].getFixed() == true) {
+                        frozenTileError = true;
+                    }
+                }
+            } else if (y == height - 1) {
+                //inserting from below
+                for (int i = 0; i < height; i++) {
+                    if (tempTileList[x][i].getIsFrozen() || tempTileList[x][i].getFixed() == true) {
+                        frozenTileError = true;
+                    }
+                }
+            }
+        }
+        if (frozenTileError == false) { // gotta add this for fixed tiles too
+            return true;
+        }
+        else return false;
+    }
+
+
 
     /**
      * addToSilkBag inserts a new tile into silkBag, which has been pushed off the board by inserting a tile
