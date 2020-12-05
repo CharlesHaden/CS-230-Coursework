@@ -258,7 +258,7 @@ public class Player {
     	boolean[] nextTileOpenPath = nextTile.getOrientedOpenPath();
 
 		if ((currentTileOpenPath[currentPath] = true) && (nextTileOpenPath[nextPath] = true)) {
-			if ((nextTile.getOnFire() == false) || (checkForPlayers(x, y) == false)) {
+			if ((nextTile.getOnFire() == false) && (checkForPlayers(x, y) == false)) {
 				return true;
 			}
 		} else {
