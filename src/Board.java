@@ -50,6 +50,7 @@ public class Board {
             for (int j = 0; j < height; j++) {
                 if (tileList[i][j] == null) {
                     tileList[i][j] = selectFromSilkBag();
+
                 }
             }
         }
@@ -63,6 +64,8 @@ public class Board {
         curTile = null;// because of switch statement
         Random rand = new Random();
         int n = rand.nextInt(3);
+
+
         if (silkBag[n] > 0) {
             int orientation = rand.nextInt(3);
             orientation += 1;
@@ -198,7 +201,9 @@ public class Board {
         int n = rand.nextInt(6);
         n += 1;
         if (silkBag[n] > 0) {
+
             int orientation = rand.nextInt(2);
+
             orientation += 1;
             switch (n) {
                 case 0:
