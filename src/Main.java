@@ -24,7 +24,7 @@ import javafx.scene.image.ImageView;
 
 public class Main extends Application {
     // Constants for the main window
-    private static final int MAIN_WINDOW_WIDTH = 700;
+    private static final int MAIN_WINDOW_WIDTH = 720;
     private static final int MAIN_WINDOW_HEIGHT = 600;
     private static final String WINDOW_TITLE = "Fast and Curious!";
     Stage window;
@@ -92,7 +92,6 @@ public class Main extends Application {
 
         //SET BUTTON ACTIONS
         playButton.setOnAction(e -> window.setScene(setup));
-        //loadButton.setOnAction(e -> MainMenu.loadBoard());
         newProf.setOnAction(e -> window.setScene(createProfile));
         loadButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -139,36 +138,41 @@ public class Main extends Application {
         insertPrompt.setPrefWidth(400);
         Label availableAction = new Label("Available Actions:");
         availableAction.setFont(new Font(20));
-        availableAction.setLayoutX(500);
+        availableAction.setLayoutX(530);
         availableAction.setLayoutY(440);
         availableAction.setPrefWidth(400);
 
         Label playerTurnLabel = new Label("Player's turn");
         playerTurnLabel.setFont(new Font(30));
-        playerTurnLabel.setLayoutX(490);
+        playerTurnLabel.setLayoutX(520);
         playerTurnLabel.setLayoutY(100);
         playerTurnLabel.setPrefWidth(400);
 
         Button drawTile = new Button("Draw Tile");
         drawTile.setPrefSize(90, 20);
-        drawTile.setLayoutX(490);
+        drawTile.setLayoutX(520);
         drawTile.setLayoutY(200);
 
         Button playAction = new Button("Play Action");
         playAction.setPrefSize(90, 20);
-        playAction.setLayoutX(580);
+        playAction.setLayoutX(610);
         playAction.setLayoutY(200);
         playAction.setDisable(true);
         Button movePlayerButton = new Button("Move player");
         movePlayerButton.setPrefSize(90, 20);
-        movePlayerButton.setLayoutX(580);
+        movePlayerButton.setLayoutX(610);
         movePlayerButton.setLayoutY(400);
         movePlayerButton.setDisable(true);
         Button insertTileButton = new Button("Insert Tile");
         insertTileButton.setPrefSize(90, 20);
-        insertTileButton.setLayoutX(490);
+        insertTileButton.setLayoutX(520);
         insertTileButton.setLayoutY(400);
         insertTileButton.setDisable(true);
+        Button storeActionButton = new Button("Store Action");
+        storeActionButton.setPrefSize(90, 20);
+        storeActionButton.setLayoutX(565);
+        storeActionButton.setLayoutY(374);
+        storeActionButton.setDisable(true);
         
         Button endTurnButton = new Button("End turn");
         endTurnButton.setPrefSize(90, 20);
@@ -181,7 +185,7 @@ public class Main extends Application {
         arrowLview.setFitHeight(20);
         arrowLview.setFitWidth(20);
         rotateLeft.setPrefSize(20, 20);
-        rotateLeft.setLayoutX(490);
+        rotateLeft.setLayoutX(520);
         rotateLeft.setLayoutY(300);
         rotateLeft.setGraphic(arrowLview);
 
@@ -191,14 +195,74 @@ public class Main extends Application {
         arrowRview.setFitHeight(20);
         arrowRview.setFitWidth(20);
         rotateRight.setPrefSize(20, 20);
-        rotateRight.setLayoutX(640);
+        rotateRight.setLayoutX(660);
         rotateRight.setLayoutY(300);
         rotateRight.setGraphic(arrowRview);
+
+        
 
         //////
 
         MainMenu.loadPresetBoard(0);
         Group game = new Group();
+        
+ //       insertArrowView.setFitHeight(20);
+ //       insertArrowView.setFitWidth(20);
+
+        for (int g = 0; g < Board.getWidth(); g++) {
+           Image insertArrowImage = new Image("insertionArrowVert.png");
+           ImageView insertArrowView = new ImageView(insertArrowImage);
+           insertArrowView.setRotate(insertArrowView.getRotate()-180);
+           insertArrowView.setFitHeight(30);
+           insertArrowView.setFitWidth(10);
+
+           Button insertButton = new Button();
+           insertButton.setLayoutX(57+(g*40));
+           insertButton.setLayoutY(35);
+           insertButton.setPrefSize(20,30);
+           insertButton.setGraphic(insertArrowView);
+           insertButton.setOnAction(e -> System.out.println("sup"));
+           game.getChildren().add(insertButton);
+
+           ImageView insertArrowView2 = new ImageView(insertArrowImage);
+           //insertArrowView2.setRotate(insertArrowView2.getRotate()+90);
+           insertArrowView2.setFitHeight(30);
+           insertArrowView2.setFitWidth(10);
+
+           Button insertButton2 = new Button();
+           insertButton2.setLayoutX(57+(g*40));
+           insertButton2.setLayoutY((Board.getHeight()*40)+70);
+           insertButton2.setPrefSize(20,30);
+           insertButton2.setGraphic(insertArrowView2);
+           game.getChildren().add(insertButton2);
+         
+      }
+        for (int g = 0; g < Board.getHeight(); g++) {
+           Image insertArrowImage = new Image("insertionArrow.png");
+           ImageView insertArrowView = new ImageView(insertArrowImage);
+           insertArrowView.setRotate(insertArrowView.getRotate()+180);
+           insertArrowView.setFitHeight(10);
+           insertArrowView.setFitWidth(30);
+           
+           Button insertButton = new Button();
+           insertButton.setLayoutX(10);
+           insertButton.setLayoutY(78+(g*40));
+           insertButton.setPrefSize(30,20);
+           insertButton.setGraphic(insertArrowView);
+           game.getChildren().add(insertButton);
+
+           ImageView insertArrowView2 = new ImageView(insertArrowImage);
+           insertArrowView2.setFitHeight(10);
+           insertArrowView2.setFitWidth(30);
+
+           Button insertButton2 = new Button();
+           insertButton2.setLayoutX((Board.getWidth()*40)+49);
+           insertButton2.setLayoutY(78+(g*40));
+           insertButton2.setPrefSize(30,20);
+           insertButton2.setGraphic(insertArrowView2);
+           game.getChildren().add(insertButton2);
+         
+      }
 
         for (int i = 0; i < Board.getHeight(); i++ ) {
             for (int j = 0; j < Board.getWidth(); j++) {
@@ -247,17 +311,17 @@ public class Main extends Application {
         game.getChildren().add(drawTile);
         game.getChildren().add(movePlayerButton);
         game.getChildren().add(insertTileButton);
+        game.getChildren().add(storeActionButton);
         game.getChildren().add(playAction);
         game.getChildren().add(availableAction);
         game.getChildren().add(playerTurnLabel);
-        game.getChildren().add(insertPrompt);
+        //game.getChildren().add(insertPrompt);
         game.getChildren().add(rotateRight);
         game.getChildren().add(rotateLeft);
         drawTile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //drawTile.setDisable(true);
-                playAction.setDisable(false);
+                drawTile.setDisable(true);
                 Tile drawnTile = Board.getTileFromSilkBag();
                 ImageView imageview = new ImageView();
                 if (drawnTile.getTileType().equals("Floor")){
@@ -273,12 +337,13 @@ public class Main extends Application {
                     imageview.setImage(new Image(drawnActionTile.getActionTileType().toLowerCase().replaceAll(" ", "") + ".png"));
                     insertPrompt.setText("Store the action and Move player");
                     insertTileButton.setDisable(true);
+                    storeActionButton.setDisable(false);
                     movePlayerButton.setDisable(false);
                     rotateLeft.setDisable(true);
                     rotateRight.setDisable(true);
                   }
 
-                imageview.setX(549);
+                imageview.setX(574);
                 imageview.setY(283);
                 imageview.setFitHeight(70);
                 imageview.setFitWidth(70);
@@ -299,9 +364,29 @@ public class Main extends Application {
                       
             }
         });
+        
+        endTurnButton.setOnAction(new EventHandler<ActionEvent>() {
+         @Override
+         public void handle(ActionEvent event) {
+            game.getChildren().remove(imageview);
+            drawTile.setDisable(false);
+            
+  }
+});
+        storeActionButton.setOnAction(new EventHandler<ActionEvent>() {
+         @Override
+         public void handle(ActionEvent event) {
+            game.getChildren().remove(imageview);
+            storeActionButton.setDisable(true);
+            // ADD IMAGE TO BOTTOM //
+  }
+});
+
+
 
             }
         });
+        
 
         //PAUSE MENU
 
@@ -460,7 +545,7 @@ public class Main extends Application {
         //ICON
         window.getIcons().add(new Image("logo.png"));
         window.setTitle(WINDOW_TITLE);
-        window.setScene(mainMenu);
+        window.setScene(inGameScreen);
         window.show();
     }
 
