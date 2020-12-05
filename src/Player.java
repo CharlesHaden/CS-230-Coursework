@@ -17,7 +17,7 @@ public class Player {
 	private int[] playerPosition;
 	private ArrayList<ActionTile> playerHand = new ArrayList<>();
 	private Profile playerProfile;
-	private Boolean backtrackUsed; //Add getters and setters
+	private Boolean backtrackUsed;
 	
 	/**
 	 * Constructs a player
