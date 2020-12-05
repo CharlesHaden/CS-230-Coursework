@@ -8,13 +8,11 @@
 public class CornerTile extends FloorTile {
 
     public CornerTile(int orientation) {
-        super(orientation);
-        openPath =  new boolean[] {false, true, true, false};
+        super(orientation, new boolean[] {false, true, true, false});
     }
 
     public CornerTile(int orientation, boolean fixed) {
-        super(orientation, fixed);
-        setOrientedOpenPath();
+        super(orientation, fixed, new boolean[] {false, true, true, false});
     }
 
     public String getFloorTileType() {

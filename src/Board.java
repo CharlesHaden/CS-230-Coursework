@@ -46,13 +46,11 @@ public class Board {
      * buildBoard() fills in all of the null values in the 2D array, tileList, using data from silkBag
      */
     public static void buildBoard() {
-        FloorTile curTile;
-        curTile = null;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 if (tileList[i][j] == null) {
-                    curTile = selectFromSilkBag();
-                    tileList[i][j] = (curTile);
+                    tileList[i][j] = selectFromSilkBag();
+
                 }
             }
         }
@@ -66,7 +64,8 @@ public class Board {
         curTile = null;// because of switch statement
         Random rand = new Random();
         int n = rand.nextInt(3);
-        n += 1;
+
+
         if (silkBag[n] > 0) {
             int orientation = rand.nextInt(3);
             orientation += 1;
@@ -79,9 +78,6 @@ public class Board {
                     break;
                 case 2:
                     curTile = new TshapedTile(orientation);
-                    break;
-                case 3:
-                    curTile = new GoalTile(orientation);
                     break;
                 default:
                     System.out.println("Index error (out of range).");
@@ -189,9 +185,6 @@ public class Board {
             case "Tshaped":
                 silkBag[2] += 1;
                 break;
-            case "Goal":
-                silkBag[3] += 1;
-                break;
             default:
                 System.out.println("Index error (out of range).");
         }
@@ -205,10 +198,12 @@ public class Board {
         Tile curTile;
         curTile = null;// because of switch statement
         Random rand = new Random();
-        int n = rand.nextInt(7);
+        int n = rand.nextInt(6);
         n += 1;
         if (silkBag[n] > 0) {
-            int orientation = rand.nextInt(3);
+
+            int orientation = rand.nextInt(2);
+
             orientation += 1;
             switch (n) {
                 case 0:
@@ -221,18 +216,15 @@ public class Board {
                     curTile = new TshapedTile(orientation);
                     break;
                 case 3:
-                    curTile = new GoalTile(orientation);
-                    break;
-                case 4:
                     curTile = new IceTile();
                     break;
-                case 5:
+                case 4:
                     curTile = new FireTile();
                     break;
-                case 6:
+                case 5:
                     curTile = new DoubleMoveTile();
                     break;
-                case 7:
+                case 6:
                     curTile = new BacktrackTile();
                     break;
                 default:
