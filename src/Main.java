@@ -1,3 +1,4 @@
+
 /**
  *
  *
@@ -6,6 +7,8 @@
  * @author Laurence Burns-Mill
  * @author Matthew Clarke
  */
+
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -98,7 +101,9 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 window.setScene(loadGameScreen);
-                //MainMenu.loadBoard();
+
+                MainMenu.loadBoard();
+
             }
         });
         leaderboardButton.setOnAction(e -> window.setScene(leaderboardScreen));
@@ -123,7 +128,9 @@ public class Main extends Application {
 
         //INGAME SCREEN
 
+
         Image imageDecline = new Image("pause.png");
+
         Button pauseButton = new Button();
         ImageView imageDeclineView = new ImageView(imageDecline);
         imageDeclineView.setFitHeight(20);
@@ -132,7 +139,9 @@ public class Main extends Application {
         pauseButton.setPrefSize(100,20);
         pauseButton.setOnAction(e -> window.setScene(pauseMenu));
 
+
         Label insertPrompt = new Label("Draw a tile");
+
         insertPrompt.setFont(new Font(10));
         insertPrompt.setLayoutX(540);
         insertPrompt.setLayoutY(370);
@@ -140,7 +149,9 @@ public class Main extends Application {
         Label availableAction = new Label("Available Actions:");
         availableAction.setFont(new Font(20));
         availableAction.setLayoutX(500);
+
         availableAction.setLayoutY(440);
+
         availableAction.setPrefWidth(400);
 
         Label playerTurnLabel = new Label("Player's turn");
@@ -159,6 +170,7 @@ public class Main extends Application {
         playAction.setLayoutX(580);
         playAction.setLayoutY(200);
         playAction.setDisable(true);
+
         Button movePlayerButton = new Button("Move player");
         movePlayerButton.setPrefSize(90, 20);
         movePlayerButton.setLayoutX(580);
@@ -170,6 +182,7 @@ public class Main extends Application {
         insertTileButton.setLayoutY(400);
         insertTileButton.setDisable(true);
         
+
         Button endTurnButton = new Button("End turn");
         endTurnButton.setPrefSize(90, 20);
         endTurnButton.setLayoutX(580);
@@ -195,7 +208,8 @@ public class Main extends Application {
         rotateRight.setLayoutY(300);
         rotateRight.setGraphic(arrowRview);
 
-        //////
+
+ 
 
         MainMenu.loadPresetBoard(0);
         Group game = new Group();
@@ -223,7 +237,9 @@ public class Main extends Application {
                 if (Board.getTile(i, j).getIsFrozen()) {
                     tileType = "frozen" + tileType;
                 }
+
                 imageview.setImage(new Image(tileType + ".png"));
+
                 if (Board.getTile(i, j).getOrientation() == 1) {
                     imageview.setRotate(imageview.getRotate() + 90);
                 } else if (Board.getTile(i, j).getOrientation() == 2) {
@@ -238,6 +254,7 @@ public class Main extends Application {
                 imageview.setFitWidth(40);
                 imageview.setPreserveRatio(true);
                 game.getChildren().add(imageview);
+
             }
         }
 
@@ -452,6 +469,7 @@ public class Main extends Application {
                 window.setScene(mainMenu);
 
             }
+
 
         });
         deletePane.getChildren().add(deleteConfirm);

@@ -72,7 +72,8 @@ public class Player {
 	public void setPlayerProfile(Profile playerProfile) {
 		this.playerProfile = playerProfile;
 	}
-	
+
+	/**
 	public void drawTile(Board currentBoard) {
 		Tile tile = currentBoard.getTileFromSilkBag();
 		
@@ -89,7 +90,7 @@ public class Player {
 			playerHand.add(actionTile);
 		}
 	}
-	
+
 	public void playTile(ActionTile tile) {
 		Boolean played = false;
 		
@@ -142,7 +143,7 @@ public class Player {
 		
 		input.close();
 	}
-	
+	 **/
 	public void updateLastMoves(int x, int y) {
 		//changes one position ago to two positions ago
 		lastMoves[1][0] = lastMoves[0][0];
