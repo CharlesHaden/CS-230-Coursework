@@ -1,3 +1,14 @@
+
+/**
+ *
+ *
+ * @author Nim Man
+ * @author HyderAlhashimi
+ * @author Laurence Burns-Mill
+ * @author Matthew Clarke
+ */
+
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,14 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 
-/**
- *
- *
- * @author Nim Man
- * @author HyderAlhashimi
- * @author Laurence Burns-Mill
- * @author Matthew Clarke
- */
+
 
 public class Main extends Application {
     // Constants for the main window
@@ -97,7 +101,9 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 window.setScene(loadGameScreen);
+
                 MainMenu.loadBoard();
+
             }
         });
         leaderboardButton.setOnAction(e -> window.setScene(leaderboardScreen));
@@ -122,7 +128,9 @@ public class Main extends Application {
 
         //INGAME SCREEN
 
-        Image imageDecline = new Image("/pause.png");
+
+        Image imageDecline = new Image("pause.png");
+
         Button pauseButton = new Button();
         ImageView imageDeclineView = new ImageView(imageDecline);
         imageDeclineView.setFitHeight(20);
@@ -131,7 +139,9 @@ public class Main extends Application {
         pauseButton.setPrefSize(100,20);
         pauseButton.setOnAction(e -> window.setScene(pauseMenu));
 
-        Label insertPrompt = new Label("Insert tile into board");
+
+        Label insertPrompt = new Label("Draw a tile");
+
         insertPrompt.setFont(new Font(10));
         insertPrompt.setLayoutX(540);
         insertPrompt.setLayoutY(370);
@@ -139,7 +149,9 @@ public class Main extends Application {
         Label availableAction = new Label("Available Actions:");
         availableAction.setFont(new Font(20));
         availableAction.setLayoutX(500);
-        availableAction.setLayoutY(420);
+
+        availableAction.setLayoutY(440);
+
         availableAction.setPrefWidth(400);
 
         Label playerTurnLabel = new Label("Player's turn");
@@ -158,6 +170,19 @@ public class Main extends Application {
         playAction.setLayoutX(580);
         playAction.setLayoutY(200);
         playAction.setDisable(true);
+
+        Button movePlayerButton = new Button("Move player");
+        movePlayerButton.setPrefSize(90, 20);
+        movePlayerButton.setLayoutX(580);
+        movePlayerButton.setLayoutY(400);
+        movePlayerButton.setDisable(true);
+        Button insertTileButton = new Button("Insert Tile");
+        insertTileButton.setPrefSize(90, 20);
+        insertTileButton.setLayoutX(490);
+        insertTileButton.setLayoutY(400);
+        insertTileButton.setDisable(true);
+        
+
         Button endTurnButton = new Button("End turn");
         endTurnButton.setPrefSize(90, 20);
         endTurnButton.setLayoutX(580);
@@ -182,15 +207,9 @@ public class Main extends Application {
         rotateRight.setLayoutX(640);
         rotateRight.setLayoutY(300);
         rotateRight.setGraphic(arrowRview);
-        rotateRight.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-            }
-        });
 
 
-        //////
+ 
 
         MainMenu.loadPresetBoard(0);
         Group game = new Group();
@@ -218,7 +237,9 @@ public class Main extends Application {
                 if (Board.getTile(i, j).getIsFrozen()) {
                     tileType = "frozen" + tileType;
                 }
-                imageview.setImage(new Image("file:" + tileType + ".png"));
+
+                imageview.setImage(new Image(tileType + ".png"));
+
                 if (Board.getTile(i, j).getOrientation() == 1) {
                     imageview.setRotate(imageview.getRotate() + 90);
                 } else if (Board.getTile(i, j).getOrientation() == 2) {
@@ -233,6 +254,7 @@ public class Main extends Application {
                 imageview.setFitWidth(40);
                 imageview.setPreserveRatio(true);
                 game.getChildren().add(imageview);
+
             }
         }
 
@@ -240,27 +262,38 @@ public class Main extends Application {
         game.getChildren().add(pauseButton);
         game.getChildren().add(endTurnButton);
         game.getChildren().add(drawTile);
-        game.getChildren().add(availableAction);
+        game.getChildren().add(movePlayerButton);
+        game.getChildren().add(insertTileButton);
         game.getChildren().add(playAction);
+        game.getChildren().add(availableAction);
         game.getChildren().add(playerTurnLabel);
+        game.getChildren().add(insertPrompt);
         game.getChildren().add(rotateRight);
         game.getChildren().add(rotateLeft);
         drawTile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                drawTile.setDisable(true);
+                //drawTile.setDisable(true);
                 playAction.setDisable(false);
-                game.getChildren().add(insertPrompt);
                 Tile drawnTile = Board.getTileFromSilkBag();
                 ImageView imageview = new ImageView();
                 if (drawnTile.getTileType().equals("Floor")){
                     FloorTile drawnFloorTile = (FloorTile) drawnTile;
                     imageview.setImage(new Image(drawnFloorTile.getFloorTileType().toLowerCase() + ".png"));
+                    insertPrompt.setText("Insert tile into board");
+                    insertTileButton.setDisable(false);
+                    rotateLeft.setDisable(false);
+                    rotateRight.setDisable(false);
+
                 } else  {
-                    ActionTile drawnFloorTile = (ActionTile) drawnTile;
-                    imageview.setImage(new Image(drawnFloorTile.getActionTileType().toLowerCase()
-                            .replaceAll(" ", "") + ".png"));
-                }
+                    ActionTile drawnActionTile = (ActionTile) drawnTile;
+                    imageview.setImage(new Image(drawnActionTile.getActionTileType().toLowerCase().replaceAll(" ", "") + ".png"));
+                    insertPrompt.setText("Store the action and Move player");
+                    insertTileButton.setDisable(true);
+                    movePlayerButton.setDisable(false);
+                    rotateLeft.setDisable(true);
+                    rotateRight.setDisable(true);
+                  }
 
                 imageview.setX(549);
                 imageview.setY(283);
@@ -268,6 +301,21 @@ public class Main extends Application {
                 imageview.setFitWidth(70);
                 imageview.setPreserveRatio(true);
                 game.getChildren().add(imageview);
+                
+                rotateRight.setOnAction(new EventHandler<ActionEvent>() {
+                   @Override
+                   public void handle(ActionEvent event) {
+                      imageview.setRotate(imageview.getRotate() - 90);
+
+            }
+        });
+                rotateLeft.setOnAction(new EventHandler<ActionEvent>() {
+                   @Override
+                   public void handle(ActionEvent event) {
+                      imageview.setRotate(imageview.getRotate() + 90);
+                      
+            }
+        });
 
             }
         });
@@ -365,11 +413,11 @@ public class Main extends Application {
         returnButton.setOnAction(e -> window.setScene(mainMenu));
         profilePane.getChildren().add(returnButton);
 
-        TextField enterName = new TextField();
-        enterName.setPromptText("Enter your name:");
-        enterName.setLayoutX(230);
-        enterName.setLayoutY(MAIN_WINDOW_HEIGHT/2);
-        profilePane.getChildren().add(enterName);
+        TextField textfield = new TextField();
+        textfield.setPromptText("Enter your name:");
+        textfield.setLayoutX(230);
+        textfield.setLayoutY(MAIN_WINDOW_HEIGHT/2);
+        profilePane.getChildren().add(textfield);
 
         Label createProfLabel = new Label("Create a new profile");
         createProfLabel.setFont(new Font(30));
@@ -383,7 +431,7 @@ public class Main extends Application {
         profileConfirm.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                MainMenu.newProfile(enterName.getText());
+                MainMenu.newProfile(textfield.getText());
                 window.setScene(mainMenu);
 
             }
@@ -421,6 +469,7 @@ public class Main extends Application {
                 window.setScene(mainMenu);
 
             }
+
 
         });
         deletePane.getChildren().add(deleteConfirm);

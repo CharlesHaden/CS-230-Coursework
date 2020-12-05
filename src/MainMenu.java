@@ -11,7 +11,7 @@
  * Pick the current loaded board in play (whether in progress or a new preset board).
  * Save in progress boards.
  * Assist other classes with things such as generating players to fit the requirements and creating the fixed tiles for the preset boards.
- *
+ * 
  */
 
 import java.io.File;		// Import the file class
@@ -22,6 +22,7 @@ import java.util.Scanner;	// Import scanner to read in files
 import java.util.ArrayList; // Import arrayList to allow flexible profile lists
 
 public  class MainMenu {
+
 	private static ArrayList<Profile> allProfiles = new ArrayList<Profile>();
 	private static LeaderBoard curLeaderBoard;
 	private static final int NUM_OF_PRESET_BOARDS = 4;
@@ -48,6 +49,7 @@ public  class MainMenu {
 		int Y = 0;
 
 		String fileName = ("src/SavedPresetBoard" + presetBoard + ".txt");
+
 		// assumes order of data is max row, max column
 		try {
 			File file = new File (fileName);
@@ -58,7 +60,6 @@ public  class MainMenu {
 
 				if (curLine.equals("...")) {
 					curSegment ++;
-
 				} else {
 					switch (curSegment) {
 						case 0:
@@ -85,6 +86,7 @@ public  class MainMenu {
 						default:
 							System.out.println("Index error (out of range).");
 
+
 					}
 					inputFromLine.close();
 				}
@@ -96,6 +98,7 @@ public  class MainMenu {
 			e.printStackTrace();
 		}
 	}
+
 
 	/**
 	 * Saves the current game state to txt file
@@ -202,12 +205,12 @@ public  class MainMenu {
 			File file = new File ("SavedBoard.txt");
 			Scanner inputFromFile = new Scanner (file);
 			while (inputFromFile.hasNextLine()) {
+
 				Scanner inputFromLine = new Scanner (inputFromFile.nextLine());
 				curLine = inputFromLine.nextLine();
 
 				if (curLine.equals("...")) {
 					curSegment ++;
-
 				} else  {
 					switch (curSegment) {
 						case 0:
@@ -240,17 +243,18 @@ public  class MainMenu {
 
 						default:
 							System.out.println("Index error (out of range).");
+
 					}
 
 				}
 				inputFromLine.close();
 			}
-
 			new Game(curPlayers);
 
 			while (Game.getTurn() != turn) {
 				Game.newTurn();
 			}
+
 
 			inputFromFile.close();
 		} catch(FileNotFoundException e){
@@ -351,6 +355,7 @@ public  class MainMenu {
 	 * @param curLine is the current line assumed to contain the relevant data to create a tile and it's location.
 	 * @param curBoard is the current board being created for the saved game.
 	 */
+
 	private static void readTile(String curLine) {
 
 		int index = 0;
@@ -373,6 +378,7 @@ public  class MainMenu {
 				case 0:
 					X = Integer.parseInt(curAttribute.split(",")[0]);
 					Y = Integer.parseInt(curAttribute.split(",")[1]);
+
 					break;
 				case 1:
 					tileType = curAttribute;
@@ -444,6 +450,7 @@ public  class MainMenu {
 					System.out.println("File present, but unable to delete.");
 				}
 			}
+
 			if (!SavedProfiles.createNewFile()) {
 				System.out.println("File already present.");
 			}
@@ -476,6 +483,7 @@ public  class MainMenu {
 			File file = new File ("SavedProfiles.txt");
 			Scanner inputFromFile = new Scanner (file);
 			while (inputFromFile.hasNextLine()) {
+
 				Scanner inputFromLine = new Scanner (inputFromFile.nextLine());
 				readProfileLine(inputFromLine.nextLine());
 				inputFromLine.close();
@@ -492,6 +500,7 @@ public  class MainMenu {
 	 *
 	 * @return Return type is an ArrayList containing type 'Player'.
 	 */
+
 	public static ArrayList<Player> getCurGamePlayers() {
 		return curGamePlayers;
 	}
@@ -506,6 +515,7 @@ public  class MainMenu {
 	}
 
 	/**
+
 	 * Reads individual lines from the txt file.
 	 *
 	 * @param curLine the current line from the file reader in a String format.
@@ -554,6 +564,7 @@ public  class MainMenu {
 	 *
 	 * @param numOfPlayers This is the number of players chosen to take part in this game.
 	 */
+
 	public static void curGenPlayers(int numOfPlayers){
 		for(int i = 1; i <= numOfPlayers; i++ ){
 			curGamePlayers.add(new Player(i,"North",new int[0][0], new int[0],new ArrayList<ActionTile>()));
