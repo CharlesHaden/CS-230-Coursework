@@ -189,10 +189,9 @@ public class Player {
 		//Add buttons for the arrow keys and pass to make move
 	}
 	
-	
 	/**
 	 * Gets the arrow key pressed by the user and moves the player accordingly
-	 * String direction
+	 * @param direction
 	 */
 	public void makeMove(String direction) {
 		boolean moved = false;
@@ -217,9 +216,7 @@ public class Player {
 		} while (moved == false);
 
 	}
-	
-	
-	
+
 	/**
 	 * Changes the players position to the new position
 	 * @param currentTileOpenPath Boolean array where {0,1,2,3} {UP,DOWN,LEFT,RIGHT}
