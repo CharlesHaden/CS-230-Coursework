@@ -186,7 +186,7 @@ public class Main extends Application {
         rotateRight.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                imageview.setRotate(imageview.getRotate() + 90);
+               // imageview.setRotate(imageview.getRotate() + 90);
             }
         });
 
