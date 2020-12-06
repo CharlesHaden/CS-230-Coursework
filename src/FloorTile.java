@@ -1,5 +1,5 @@
 /**
- * Floor tiles are what make up the game board, with 4 different shapes, Tshaped, goal, straight and corner,
+ * Floor tiles are what make up the game board, with 4 different shapes, sub-classes Tshaped, goal, straight and corner,
  * each with different open paths and orientations. Orientation is tracked by an integer up to 3, each being a
  * rotation 90 degrees clockwise. An open path is an array of 4 booleans, with starting from North and going clockwise,
  * with true showing a open path in that direction. Action tiles played on the floor tiles as well as turns left for
@@ -24,8 +24,8 @@ public abstract class FloorTile extends Tile {
     /**
      * Constructor for a non-fixed tile.
      *
-     * @param orientation Orientation of tile on board.
-     * @param openPath Open path of specific floor tile shape.
+     * @param orientation orientation of tile on board.
+     * @param openPath open path of specific floor tile shape.
      */
     public FloorTile(int orientation, boolean[] openPath) {
         this.orientation = orientation;
@@ -51,7 +51,7 @@ public abstract class FloorTile extends Tile {
     /**
      * Gets the un-oriented open paths.
      *
-     * @return Array of open paths.
+     * @return array of open paths.
      */
     public boolean[] getOpenPath(){
         return openPath;
@@ -78,7 +78,7 @@ public abstract class FloorTile extends Tile {
     /**
      * Gets the whether the tile is on fire.
      *
-     * @return Whether the tile is on fire or not.
+     * @return whether the tile is on fire or not.
      */
     public boolean getOnFire(){
         return isOnFire;
@@ -87,7 +87,7 @@ public abstract class FloorTile extends Tile {
     /**
      * Gets the whether the tile is on frozen.
      *
-     * @return Whether the tile is on frozen or not.
+     * @return whether the tile is on frozen or not.
      */
     public boolean getIsFrozen(){
         return isFrozen;
@@ -96,7 +96,7 @@ public abstract class FloorTile extends Tile {
     /**
      * Get the orientation of tile.
      *
-     * @return The orientation of tile.
+     * @return the orientation of tile.
      */
     public int getOrientation() {
         return orientation;
@@ -116,11 +116,9 @@ public abstract class FloorTile extends Tile {
 
     /**
      * Decrements the turns left for each action, removing the status whe the duration is done.
-     *
-     * @param tile The tile to be checked.
      */
-    public void checkActionTurns(FloorTile tile) {
-        if (tile.getIsFrozen()) {
+    public void checkActionTurns() {
+        if (getIsFrozen()) {
             if (iceTurnsLeft > 0) {
                 iceTurnsLeft--;
             }
@@ -128,7 +126,7 @@ public abstract class FloorTile extends Tile {
                 setIsFrozen(false);
             }
         }
-        if (tile.getOnFire()) {
+        if (getOnFire()) {
             if (fireTurnsLeft > 0) {
                 fireTurnsLeft--;
             }
@@ -148,7 +146,7 @@ public abstract class FloorTile extends Tile {
     /**
      * Freezes the floor tile.
      *
-     * @param isFrozen Whether the tile is being frozen or unfrozen.
+     * @param isFrozen whether the tile is being frozen or unfrozen.
      */
     protected void setIsFrozen(boolean isFrozen){
         this.isFrozen = isFrozen;
@@ -160,12 +158,12 @@ public abstract class FloorTile extends Tile {
     /**
      * Sets the floor tile on fire.
      *
-     * @param onFire Whether the tile is being set on fire or off.
+     * @param onFire whether the tile is being set on fire or off.
      */
     protected void setOnFire(boolean onFire) {
         this.isOnFire = onFire;
         if(isOnFire) {
-            //fireTurnsLeft = Game.getPlayers().size() * FIRE_TURN_ROTATIONS;
+            fireTurnsLeft = Game.getPlayers().size() * FIRE_TURN_ROTATIONS;
         }
     }
 
