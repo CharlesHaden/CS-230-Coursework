@@ -2,11 +2,11 @@
 ...
 10,10
 ...
-0,0:Straight:true:North
-0,3:Straight:true:East
-2,0:Corner:true:South
-2,3:Straight:true:East
-5,5:Goal:true:East
+2,2:Straight:true:North
+7,2:Straight:true:East
+2,7:Corner:true:South
+7,7:Straight:true:East
+4,5:Goal:true:East
 ...
 1:0,0
 2:9,0
