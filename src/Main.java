@@ -308,7 +308,30 @@ public class Main extends Application {
 
                     }
                 });
+                movePlayerButton.setOnAction(new EventHandler<ActionEvent>(){
+                    @Override
+                    public void handle(ActionEvent event) {
+                        Button moveLeftButton = new Button("Left");
+                        Button moveRightButton = new Button("Right");
+                        Button moveUpButton = new Button("Up");
+                        Button moveDownButton = new Button("Down");
+                        moveLeftButton.setLayoutX(330);
+                        moveLeftButton.setLayoutY(550);
+                        moveLeftButton.setPrefSize(60, 20);
+                        moveDownButton.setLayoutX(400);
+                        moveDownButton.setLayoutY(550);
+                        moveDownButton.setPrefSize(60, 20);
+                        moveRightButton.setLayoutX(470);
+                        moveRightButton.setLayoutY(550);
+                        moveRightButton.setPrefSize(60, 20);
+                        moveUpButton.setLayoutX(400);
+                        moveUpButton.setLayoutY(520);
+                        moveUpButton.setPrefSize(60, 20);
 
+                        game.getChildren().addAll(moveDownButton,moveLeftButton,moveRightButton,moveUpButton);
+
+                    }
+                });
                 endTurnButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
