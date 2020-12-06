@@ -182,7 +182,7 @@ public class Main extends Application {
         availableAction.setLayoutY(440);
         availableAction.setPrefWidth(400);
 
-        Label playerTurnLabel = new Label("Player's turn");
+        Label playerTurnLabel = new Label("Player " + 1 + "'s turn");
         playerTurnLabel.setFont(new Font(30));
         playerTurnLabel.setLayoutX(520);
         playerTurnLabel.setLayoutY(100);
@@ -243,8 +243,7 @@ public class Main extends Application {
         Group board = new Group();
         Group player = new Group();
         //////
-        MainMenu.curGenPlayers(4);
-        MainMenu.loadPresetBoard(1);
+
 
         updateBoard(board);
         updatePlayer(player);
@@ -411,20 +410,6 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 noplayersText.setText("2 players selected");
-            }
-        });
-
-        threePlayer.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                noplayersText.setText("3 players selected");
-            }
-        });
-
-        twoPlayer.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                noplayersText.setText("2 players selected");
                 threePlayer.setDisable(true);
                 fourPlayer.setDisable(true);
                 for (int count = 1; count < 3; count++) {
@@ -439,11 +424,10 @@ public class Main extends Application {
                     carButton.setPrefSize(80,80);
                     carButton.setGraphic(chooseCarView);
                     gameSetup.getChildren().add(carButton);
-
                 }
+                MainMenu.curGenPlayers(2);
             }
         });
-
         threePlayer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -464,6 +448,7 @@ public class Main extends Application {
                     gameSetup.getChildren().add(carButton);
 
                 }
+                MainMenu.curGenPlayers(3);
             }
         });
 
@@ -485,8 +470,8 @@ public class Main extends Application {
                     carButton.setPrefSize(80,80);
                     carButton.setGraphic(chooseCarView);
                     gameSetup.getChildren().add(carButton);
-
                 }
+                MainMenu.curGenPlayers(4);
             }
         });
 
@@ -510,7 +495,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 selectBoardText.setText("Preset board 1 selected");
-                MainMenu.loadPresetBoard(0);
+                MainMenu.loadPresetBoard(1);
             }
 
         });
@@ -518,7 +503,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 selectBoardText.setText("Preset board 2 selected");
-                MainMenu.loadPresetBoard(1);
+                MainMenu.loadPresetBoard(2);
             }
 
         });
@@ -526,7 +511,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 selectBoardText.setText("Preset board 3 selected");
-                MainMenu.loadPresetBoard(2);
+                MainMenu.loadPresetBoard(3);
             }
 
         });
@@ -652,7 +637,7 @@ public class Main extends Application {
         //ICON
         window.getIcons().add(new Image("logo.png"));
         window.setTitle(WINDOW_TITLE);
-        window.setScene(inGameScreen);
+        window.setScene(mainMenu);
         window.show();
     }
 
@@ -760,11 +745,11 @@ public class Main extends Application {
             insertButton2.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    Board.insertTile(Board.getHeight() - 1, finalG, true);
+                    Board.insertTile(Board.getWidth() - 1, finalG, true);
                     updateBoard(board);
                 }
             });
-            insertButton2.setDisable(!Board.checkInsert(Board.getHeight() - 1, finalG, true));
+            insertButton2.setDisable(!Board.checkInsert(Board.getWidth() - 1, finalG, true));
             board.getChildren().add(insertButton2);
 
         }

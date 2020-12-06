@@ -18,6 +18,7 @@ public class Board {
     private static int boardNumber;
     private FloorTile tempFloorTile;
 
+
     /**
      * Constructor for Board class, width and height are used as variables in the class as well as to create the 2D array of floor tiles
      * @param width Width of board,
@@ -94,24 +95,30 @@ public class Board {
      */
     public static boolean insertTile(int x, int y, boolean horizontal) {
         //FloorTile tileToInsert = Game.getCurPlayer().getTempFloorTile();
-        FloorTile tileToInsert = new CornerTile(2);
+        FloorTile tileToInsert = new StraightTile(2);
         FloorTile silkBagTile;
         silkBagTile = null;
-        FloorTile[][] tempTileList = tileList;
+        FloorTile[][] tempTileList = new FloorTile[width][height];
+        // for loop for generating tempTileList without shadowing tileList
+        for (int i = 0; i < width; i++){
+            for (int j = 0; j < height; j++){
+                tempTileList[i][j] = getTile(i, j);
+            }
+        }
         boolean frozenTileError = false;
         if (horizontal) {
             if (x == 0) {
                 //inserting from left
                 silkBagTile = tileList[width - 1][y];
                 for (int i = 0; i < width; i++) {
-                    if (tempTileList[width - (i + 1)][y].getIsFrozen() ||
-                            tempTileList[width - (i + 1)][y].getFixed() == true){
+                    if (tileList[width - (i + 1)][y].getIsFrozen() ||
+                            tileList[width - (i + 1)][y].getFixed()){
                         frozenTileError = true;
                     } else {
                         if (width - (i + 1) == 0) {
-                            tileList[0][y] = tileToInsert;
+                            tempTileList[0][y] = tileToInsert;
                         } else {
-                            tileList[width - (i + 1)][y] = tileList[width - (i + 2)][y];
+                            tempTileList[width - (i + 1)][y] = tileList[width - (i + 2)][y];
                         }
                     }
                 }
@@ -119,13 +126,13 @@ public class Board {
                 //inserting from right
                 silkBagTile = tileList[0][y];
                 for (int i = 0; i < width; i++) {
-                    if (tempTileList[i][y].getIsFrozen() || tempTileList[i][y].getFixed() == true) {
+                    if (tileList[i][y].getIsFrozen() || tileList[i][y].getFixed()) {
                         frozenTileError = true;
                     } else {
                         if (i == width - 1) {
-                            tileList[width - 1][y] = tileToInsert;
+                            tempTileList[width - 1][y] = tileToInsert;
                         } else {
-                            tileList[i][y] = tileList[i + 1][y];
+                            tempTileList[i][y] = tileList[i + 1][y];
                         }
                     }
                 }
@@ -135,14 +142,14 @@ public class Board {
                 //inserting from above
                 silkBagTile = tileList[x][height-1];
                 for (int i = 0; i < height; i++) {
-                    if (tempTileList[x][height - (i + 1)].getIsFrozen()
-                            || tempTileList[x][height - (i + 1)].getFixed() == true) {
+                    if (tileList[x][height - (i + 1)].getIsFrozen()
+                            || tileList[x][height - (i + 1)].getFixed()) {
                         frozenTileError = true;
                     } else {
                         if (height - (i + 1) == 0) {
-                            tileList[x][0] = tileToInsert;
+                            tempTileList[x][0] = tileToInsert;
                         } else {
-                            tileList[x][height - (i + 1)] = tileList[x][height - (i + 2)];
+                            tempTileList[x][height - (i + 1)] = tileList[x][height - (i + 2)];
                         }
                     }
                 }
@@ -150,13 +157,13 @@ public class Board {
                 //inserting from below
                 silkBagTile = tileList[x][0];
                 for (int i = 0; i < height; i++) {
-                    if (tempTileList[x][i].getIsFrozen() || tempTileList[x][i].getFixed() == true) {
+                    if (tileList[x][i].getIsFrozen() || tileList[x][i].getFixed()) {
                         frozenTileError = true;
                     } else {
                         if (i == height - 1) {
-                            tileList[x][height - 1] = tileToInsert;
+                            tempTileList[x][height - 1] = tileToInsert;
                         } else {
-                            tileList[x][i] = tileList[x][i + 1];
+                            tempTileList[x][i] = tileList[x][i + 1];
                         }
                     }
                 }
@@ -164,10 +171,14 @@ public class Board {
         }
         if (frozenTileError == false) { // gotta add this for fixed tiles too
             tileList = tempTileList;
+            System.out.println(silkBagTile.getFloorTileType());
+
             addToSilkBag(silkBagTile);
             return true;
+        } else {
+            return false;
         }
-        else return false;
+
     }
 
     /**
@@ -180,19 +191,20 @@ public class Board {
      */
     public static boolean checkInsert(int x, int y, boolean horizontal) {
         boolean frozenTileError = false;
-        FloorTile[][] tempTileList = tileList;
+
         if (horizontal) {
             if (x == 0) {
                 //inserting from left
                 for (int i = 1; i < width; i++) {
-                    if (tempTileList[width - i][y].getIsFrozen() || tempTileList[width - i][y].getFixed() == true){
+                    if (tileList[width - (i + 1)][y].getIsFrozen() ||
+                            tileList[width - (i + 1)][y].getFixed() == true) {
                         frozenTileError = true;
                     }
                 }
             } else if (x == width - 1) {
                 //inserting from right
                 for (int i = 0; i < width; i++) {
-                    if (tempTileList[i][y].getIsFrozen() || tempTileList[i][y].getFixed() == true) {
+                    if (tileList[i][y].getIsFrozen() || tileList[i][y].getFixed()) {
                         frozenTileError = true;
                     }
                 }
@@ -200,14 +212,15 @@ public class Board {
         } else {
             if (y == 0) {
                 for (int i = 1; i < height; i++) {
-                    if (tempTileList[x][height-i].getIsFrozen() || tempTileList[x][height-i].getFixed() == true) {
+                    if (tileList[x][height - (i + 1)].getIsFrozen()
+                            || tileList[x][height - (i + 1)].getFixed()) {
                         frozenTileError = true;
                     }
                 }
             } else if (y == height - 1) {
                 //inserting from below
                 for (int i = 0; i < height; i++) {
-                    if (tempTileList[x][i].getIsFrozen() || tempTileList[x][i].getFixed() == true) {
+                    if (tileList[x][i].getIsFrozen() || tileList[x][i].getFixed()) {
                         frozenTileError = true;
                     }
                 }
