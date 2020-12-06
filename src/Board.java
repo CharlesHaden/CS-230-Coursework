@@ -171,8 +171,6 @@ public class Board {
         }
         if (frozenTileError == false) { // gotta add this for fixed tiles too
             tileList = tempTileList;
-            System.out.println(silkBagTile.getFloorTileType());
-
             addToSilkBag(silkBagTile);
             return true;
         } else {
