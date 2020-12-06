@@ -15,7 +15,7 @@ public class DoubleMoveTile extends ActionTile<Player> {
 
     public void action(Player player) {
         if (isPlayable(player)) {
-            player.makeMove(); //need to add some event
+           //player.makeMove(); //need to add some event
         }
     }
 
