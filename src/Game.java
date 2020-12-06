@@ -75,10 +75,11 @@ public class Game {
 		if (Board.getTile(curPlayer.getPlayerPosition()[0],
 				curPlayer.getPlayerPosition()[1]).getFloorTileType() == "Goal") {
 			Profile curPlayerProfile = curPlayer.getPlayerProfile();
-			curPlayerProfile.setWins(curPlayerProfile.getWins(curBoardNum) + 1, curBoardNum);
+			curPlayerProfile.setWins(curPlayerProfile.getAllWins()[curBoardNum] + 1, curBoardNum);
 			for (Player player : players) {
 				if (player != curPlayer) {
-					player.getPlayerProfile().setLosses(curPlayerProfile.getLosses(curBoardNum) + 1, curBoardNum);
+					player.getPlayerProfile().setLosses(
+							curPlayerProfile.getAllLosses()[curBoardNum] + 1, curBoardNum);
 				}
 			}
 			return true;

@@ -1,17 +1,14 @@
 /**
  * This works as the main menu for starting and saving games as well as creating and deleting profiles.
+ *  The Main menu class works to manage:
+ *  Profiles, creation and removal, along with saving to allow wins and losses to be stored throughout the games.
+ *  Pick the current loaded board in play (whether in progress or a new preset board).
+ *  Save in progress boards.
+ *  Assist other classes with things such as generating players to fit the requirements and creating the
+ *  fixed tiles for the preset boards.
  *
  * @author Charles Haden
  * @author Mathew Clarke
- */
-
-/**
- * The Main menu class works to manage:
- * Profiles, creation and removal, along with saving to allow wins and losses to be stored throughout the games.
- * Pick the current loaded board in play (whether in progress or a new preset board).
- * Save in progress boards.
- * Assist other classes with things such as generating players to fit the requirements and creating the fixed tiles for the preset boards.
- * 
  */
 
 import java.io.File;		// Import the file class
@@ -453,7 +450,7 @@ public  class MainMenu {
 				Profile curProfile = curProfileList.get(i);
 				writen = (curProfile.getName());
 				for (int j = 0; j < (curProfileList).size(); j++){
-					writen += (":" + curProfile.getWins(j) + "," + curProfile.getLosses(j));
+					writen += (":" + curProfile.getAllWins()[j] + "," + curProfile.getAllLosses()[j]);
 				}
 				writen += ("\n");
 				// writes the current profileList layout in this format (name : wins , losses) wins and losses to be repeated for each preset board.
@@ -471,12 +468,11 @@ public  class MainMenu {
 	 */
 	public static void loadProfile() {
 		try {
-			File file = new File ("SavedProfiles.txt");
+			File file = new File ("src/SavedProfiles.txt");
 			Scanner inputFromFile = new Scanner (file);
 			while (inputFromFile.hasNextLine()) {
-
 				Scanner inputFromLine = new Scanner (inputFromFile.nextLine());
-				readProfileLine(inputFromLine.nextLine());
+				allProfiles.add(readProfileLine(inputFromLine.nextLine()));
 				inputFromLine.close();
 			}
 			inputFromFile.close();
@@ -506,7 +502,6 @@ public  class MainMenu {
 	}
 
 	/**
-
 	 * Reads individual lines from the txt file.
 	 *
 	 * @param curLine the current line from the file reader in a String format.
@@ -520,23 +515,28 @@ public  class MainMenu {
 		int curSegment = 0;
 		Profile curProfile = new Profile(null, NUM_OF_PRESET_BOARDS);
 
-		while (curSegment < 7) {
+		while (curSegment < 3) {
 			curAttribute = "";
 
-			while(curLine.charAt(index) != ':' && index < curLine.length()) {
+			while(index < curLine.length() && curLine.charAt(index) != ':') {
 				curAttribute = curAttribute + curLine.charAt(index);
 				index ++;
 			}
 			if (curSegment == 0) {
 				curProfile = new Profile(curAttribute, NUM_OF_PRESET_BOARDS);
+			} else if (curSegment == 1){
+				for (int i = 0; i < NUM_OF_PRESET_BOARDS; i++) {
+					curProfile.setWins(Integer.parseInt(curAttribute.split(",")[i]), i);
+				}
+
 			} else {
-				curProfile.setWins(Integer.parseInt(curAttribute.split(",")[0]), curSegment - 1);
-				curProfile.setLosses(Integer.parseInt(curAttribute.split(",")[1]), curSegment - 1);
+				for (int i = 0; i < NUM_OF_PRESET_BOARDS; i++) {
+					curProfile.setLosses(Integer.parseInt(curAttribute.split(",")[i]), i);
+				}
 			}
 			index ++;
 			curSegment ++;
 		}
-
 		return(curProfile);
 	}
 
@@ -575,7 +575,8 @@ public  class MainMenu {
 		int BoardNum = curLeaderBoard.getPresetBoard();
 
 		for (int i = 0; i < curProfileList.size(); i++) {
-			printToScreen[i] = (curProfileList.get(i).getName() + ":" + curProfileList.get(i).getWins(BoardNum) + ":" + curProfileList.get(i).getLosses(BoardNum) + "\n");
+			printToScreen[i] = (curProfileList.get(i).getName() + ":" + curProfileList.get(i).getAllWins()[BoardNum]
+					+ ":" + curProfileList.get(i).getAllLosses()[BoardNum] + "\n");
 		}
 		return(printToScreen);
 	}
@@ -601,6 +602,14 @@ public  class MainMenu {
 				allProfiles.remove(i);
 			}
 		}
+	}
+
+	public static int getNumOfPresetBoards(){
+		return NUM_OF_PRESET_BOARDS;
+	}
+
+	public static ArrayList<Profile> getAllProfiles(){
+		return allProfiles;
 	}
 
 }

@@ -20,9 +20,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 
 public class Main extends Application {
     // Constants for the main window
+    TableView<Profile> leaderBoardTable;
+    TextField presetBoardInput;
+    ObservableList<Profile> leaderBoardList;
     private static final int MAIN_WINDOW_WIDTH = 720;
     private static final int MAIN_WINDOW_HEIGHT = 600;
     private static final String WINDOW_TITLE = "Fast and Curious!";
@@ -174,7 +182,7 @@ public class Main extends Application {
         availableAction.setLayoutY(440);
         availableAction.setPrefWidth(400);
 
-        Label playerTurnLabel = new Label("Player's turn");
+        Label playerTurnLabel = new Label("Player " + 1 + "'s turn");
         playerTurnLabel.setFont(new Font(30));
         playerTurnLabel.setLayoutX(520);
         playerTurnLabel.setLayoutY(100);
@@ -235,8 +243,7 @@ public class Main extends Application {
         Group board = new Group();
         Group player = new Group();
         //////
-        MainMenu.curGenPlayers(4);
-        MainMenu.loadPresetBoard(1);
+
 
         updateBoard(board);
         updatePlayer(player);
@@ -301,7 +308,30 @@ public class Main extends Application {
 
                     }
                 });
+                movePlayerButton.setOnAction(new EventHandler<ActionEvent>(){
+                    @Override
+                    public void handle(ActionEvent event) {
+                        Button moveLeftButton = new Button("Left");
+                        Button moveRightButton = new Button("Right");
+                        Button moveUpButton = new Button("Up");
+                        Button moveDownButton = new Button("Down");
+                        moveLeftButton.setLayoutX(330);
+                        moveLeftButton.setLayoutY(550);
+                        moveLeftButton.setPrefSize(60, 20);
+                        moveDownButton.setLayoutX(400);
+                        moveDownButton.setLayoutY(550);
+                        moveDownButton.setPrefSize(60, 20);
+                        moveRightButton.setLayoutX(470);
+                        moveRightButton.setLayoutY(550);
+                        moveRightButton.setPrefSize(60, 20);
+                        moveUpButton.setLayoutX(400);
+                        moveUpButton.setLayoutY(520);
+                        moveUpButton.setPrefSize(60, 20);
 
+                        game.getChildren().addAll(moveDownButton,moveLeftButton,moveRightButton,moveUpButton);
+
+                    }
+                });
                 endTurnButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
@@ -330,9 +360,43 @@ public class Main extends Application {
 
         Pane leaderboard = new Pane();
         leaderboardScreen = new Scene(leaderboard, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
-        Button mButton = new Button("Return to Main Menu");
-        mButton.setOnAction(e -> window.setScene(mainMenu));
-        leaderboard.getChildren().add(mButton); //ADDED BUTTON TO TEST NAVIGATION
+        MainMenu.loadProfile();
+        System.out.println(MainMenu.getAllProfiles().get(0).getName());
+        generateLeaderBoard();
+        leaderBoardTable = new TableView();
+        leaderBoardTable.setItems(getProfile());
+        Button exitTableButton = new Button("Return to Main Menu");
+        exitTableButton.setOnAction(e -> window.setScene(mainMenu));
+        Button presetBoardInput = new Button("Current Preset Board: " + (LeaderBoard.getPresetBoard() + 1));
+        presetBoardInput.setOnAction(e -> presetBoardInputClicked(presetBoardInput));
+        presetBoardInput.setMinWidth(200);
+
+        presetBoardInput.setLayoutX(140);
+        presetBoardInput.setLayoutY(0);
+
+        updateTable();
+
+        leaderBoardTable.setLayoutX(0);
+        leaderBoardTable.setLayoutY(30);
+
+        leaderboard.getChildren().add(leaderBoardTable);
+        leaderboard.getChildren().add(presetBoardInput);
+        leaderboard.getChildren().add(exitTableButton);
+
+        TableColumn<Profile, String> nameColumn = new TableColumn<>("Profile Name");
+        nameColumn.setMinWidth(200);
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
+
+        TableColumn<Profile, int[]> winsColumn = new TableColumn<>("Wins");
+        winsColumn.setMinWidth(200);
+        winsColumn.setCellValueFactory(new PropertyValueFactory<>("Wins"));
+
+        TableColumn<Profile, int[]> lossesColumn = new TableColumn<>("Losses");
+        lossesColumn.setMinWidth(200);
+        lossesColumn.setCellValueFactory(new PropertyValueFactory<>("Losses"));
+        leaderBoardTable.getColumns().addAll(nameColumn, winsColumn, lossesColumn);
+
+
         //SETUP/PROFILE
         Pane gameSetup = new Pane();
         setup = new Scene(gameSetup, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
@@ -369,20 +433,6 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 noplayersText.setText("2 players selected");
-            }
-        });
-
-        threePlayer.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                noplayersText.setText("3 players selected");
-            }
-        });
-
-        twoPlayer.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                noplayersText.setText("2 players selected");
                 threePlayer.setDisable(true);
                 fourPlayer.setDisable(true);
                 for (int count = 1; count < 3; count++) {
@@ -397,11 +447,10 @@ public class Main extends Application {
                     carButton.setPrefSize(80,80);
                     carButton.setGraphic(chooseCarView);
                     gameSetup.getChildren().add(carButton);
-
                 }
+                MainMenu.curGenPlayers(2);
             }
         });
-
         threePlayer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -422,6 +471,7 @@ public class Main extends Application {
                     gameSetup.getChildren().add(carButton);
 
                 }
+                MainMenu.curGenPlayers(3);
             }
         });
 
@@ -443,8 +493,8 @@ public class Main extends Application {
                     carButton.setPrefSize(80,80);
                     carButton.setGraphic(chooseCarView);
                     gameSetup.getChildren().add(carButton);
-
                 }
+                MainMenu.curGenPlayers(4);
             }
         });
 
@@ -468,7 +518,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 selectBoardText.setText("Preset board 1 selected");
-                MainMenu.loadPresetBoard(0);
+                MainMenu.loadPresetBoard(1);
             }
 
         });
@@ -476,7 +526,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 selectBoardText.setText("Preset board 2 selected");
-                MainMenu.loadPresetBoard(1);
+                MainMenu.loadPresetBoard(2);
             }
 
         });
@@ -484,7 +534,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 selectBoardText.setText("Preset board 3 selected");
-                MainMenu.loadPresetBoard(2);
+                MainMenu.loadPresetBoard(3);
             }
 
         });
@@ -500,6 +550,7 @@ public class Main extends Application {
                 // WHILE BOARD NOT LOADED, DO NOT CHANGE SCREEN
                 window.setScene(inGameScreen);
                 updateBoard(board);
+                updatePlayer(player);
             }
         });
         Button backButton = new Button("Back to Main Menu");
@@ -609,7 +660,7 @@ public class Main extends Application {
         //ICON
         window.getIcons().add(new Image("logo.png"));
         window.setTitle(WINDOW_TITLE);
-        window.setScene(inGameScreen);
+        window.setScene(mainMenu);
         window.show();
     }
 
@@ -717,11 +768,11 @@ public class Main extends Application {
             insertButton2.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    Board.insertTile(Board.getHeight() - 1, finalG, true);
+                    Board.insertTile(Board.getWidth() - 1, finalG, true);
                     updateBoard(board);
                 }
             });
-            insertButton2.setDisable(!Board.checkInsert(Board.getHeight() - 1, finalG, true));
+            insertButton2.setDisable(!Board.checkInsert(Board.getWidth() - 1, finalG, true));
             board.getChildren().add(insertButton2);
 
         }
@@ -764,6 +815,30 @@ public class Main extends Application {
                 board.getChildren().add(imageview);
             }
         }
+    }
+
+    public void presetBoardInputClicked(Button presetBoardInput) {
+        if (LeaderBoard.getPresetBoard() == MainMenu.getNumOfPresetBoards() - 1) {
+            LeaderBoard.setPresetBoard(0);
+        } else {
+            LeaderBoard.setPresetBoard(LeaderBoard.getPresetBoard()+1);
+        }
+        updateTable();
+        presetBoardInput.setText("Current Preset Board: " + (LeaderBoard.getPresetBoard() + 1));
+    }
+
+    public ObservableList<Profile> getProfile(){
+        leaderBoardList = FXCollections.observableArrayList(LeaderBoard.getProfileList());
+        return(leaderBoardList);
+    }
+
+    public void updateTable() {
+        leaderBoardTable.refresh();
+    }
+
+    public void generateLeaderBoard() {
+        MainMenu.loadPresetBoard(1);
+        new LeaderBoard(MainMenu.getAllProfiles(), 1);
     }
 
     public static void main(String[] args) {
