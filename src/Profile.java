@@ -13,7 +13,7 @@ public class Profile {
     public Profile(String name, int NUM_OF_PRESET_BOARDS) {
         this.name = name;
         wins = new int[NUM_OF_PRESET_BOARDS];
-        losses = new int[NUM_OF_PRESET_BOARDS];
+        losses= new int[NUM_OF_PRESET_BOARDS];
     }
 
     public int getWins(int index) {

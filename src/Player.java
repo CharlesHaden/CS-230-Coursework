@@ -80,7 +80,6 @@ public class Player {
 	public void setPlayerProfile(Profile playerProfile) {
 		this.playerProfile = playerProfile;
 	}
-
 	public Boolean getBacktrackUsed() {
 		return backtrackUsed;
 	}
@@ -102,7 +101,6 @@ public class Player {
 			playerHand.add(actionTile);
 		}
 	}
-
 	/**
 	 * Return temporarily stored floor tile in hand.
 	 *
@@ -138,7 +136,6 @@ public class Player {
 		}
 		playerHand.remove(actionTile);
 	}
-
 	/**
 	 * Updates the players last moves by assigning a new position one move ago and moving
 	 * the previous one move ago to two moves ago
