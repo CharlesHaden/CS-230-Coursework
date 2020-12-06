@@ -123,7 +123,6 @@ public class Main extends Application {
         Text paused = new Text(230, 150, "Game Paused");
         paused.setFont(new Font(40));
         pause.getChildren().add(paused);
-
         Button resumeButton = new Button("Resume game");
         resumeButton.setOnAction(e -> window.setScene(inGameScreen));
         resumeButton.setLayoutX(300);
@@ -313,6 +312,7 @@ public class Main extends Application {
                     public void handle(ActionEvent event) {
                         game.getChildren().remove(imageview);
                         storeActionButton.setDisable(true);
+
                         movePlayerButton.setDisable(false);
                         //movePlayerButton.setOnAction(e -> Player.makeMove(curBoard,e));
                         // ADD TILE TO PLAYER HAND
@@ -330,7 +330,6 @@ public class Main extends Application {
         Button mButton = new Button("Return to Main Menu");
         mButton.setOnAction(e -> window.setScene(mainMenu));
         leaderboard.getChildren().add(mButton); //ADDED BUTTON TO TEST NAVIGATION
-
         //SETUP/PROFILE
         Pane gameSetup = new Pane();
         setup = new Scene(gameSetup, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
@@ -347,6 +346,7 @@ public class Main extends Application {
         chooseCarText.setFont(new Font(20));
         gameSetup.getChildren().add(chooseCarText);
 
+
         Button twoPlayer = new Button("2");
         twoPlayer.setLayoutX(100);
         twoPlayer.setLayoutY(190);
@@ -362,6 +362,19 @@ public class Main extends Application {
         fourPlayer.setLayoutY(190);
         fourPlayer.setPrefSize(80,20);
         gameSetup.getChildren().add(fourPlayer);
+        twoPlayer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                noplayersText.setText("2 players selected");
+            }
+        });
+
+        threePlayer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                noplayersText.setText("3 players selected");
+            }
+        });
 
         twoPlayer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -593,17 +606,34 @@ public class Main extends Application {
         //ICON
         window.getIcons().add(new Image("logo.png"));
         window.setTitle(WINDOW_TITLE);
-        window.setScene(mainMenu);
+        window.setScene(inGameScreen);
         window.show();
     }
 
     public void updatePlayer(Group player) {
-
         if (player != null) {
             player.getChildren().clear();
         }
 
-
+        for (int i = 0; i < MainMenu.getCurGamePlayers().size(); i++) {
+            System.out.println("Size" + MainMenu.getCurGamePlayers().size());
+            System.out.println(i);
+            Player curPlayer = MainMenu.getCurGamePlayers().get(i);
+            String playerNo = "player";
+            System.out.println(playerNo + (i + 1) + ".png");
+            Image playerCarImage = new Image(playerNo + (i + 1) + ".png");
+            ImageView playerCarView = new ImageView(playerCarImage);
+            playerCarView.setFitWidth(40);
+            playerCarView.setFitHeight(40);
+            int[] position = curPlayer.getPlayerPosition();
+            System.out.println(curPlayer.getPlayerPosition()[0]);
+            System.out.println(position[0]);
+            playerCarView.setX(50 + (position[0] * 40));
+            playerCarView.setY(70 + (position[1] * 40));
+            playerCarView.setRotate(90 * (Board.getTile(curPlayer.getPlayerPosition()[0],
+                    curPlayer.getPlayerPosition()[1]).getOrientation()));
+            player.getChildren().add(playerCarView);
+        }
     }
 
     public void updateBoard(Group board){
@@ -692,7 +722,6 @@ public class Main extends Application {
             board.getChildren().add(insertButton2);
 
         }
-
         for (int i = 0; i < Board.getWidth(); i++ ) {
             for (int j = 0; j < Board.getHeight(); j++) {
                 ImageView imageview = new ImageView();

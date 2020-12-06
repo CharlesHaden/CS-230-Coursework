@@ -34,12 +34,16 @@ public class BacktrackTile extends ActionTile<Player> {
     }
 
     /**
-     * Checks to see if
+     * Checks to see if the tile one move ago and two moves ago aren't on fire, if at least one move ago isn't on fire,
+     * the backtrack tile is playable. Also not playable if the player has been backtracked before.
      *
      * @param player The player chosen to be returned 2 spaces.
      * @return
      */
     protected boolean isPlayable(Player player) {
+        if (player.getBacktrackUsed()) {
+            return false;
+        }
         int[][] lastMoves = player.getLastMoves();
         int[] oneMoveAgo = {lastMoves[0][0], lastMoves[0][1]};
         int[] twoMovesAgo = {lastMoves[1][0], lastMoves[1][1]};

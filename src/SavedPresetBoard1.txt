@@ -1,0 +1,14 @@
+40,40,40,9,9,9,9,9
+...
+10,10
+...
+2,2:Straight:true:North
+7,2:Straight:true:East
+2,7:Corner:true:South
+7,7:Straight:true:East
+4,5:Goal:true:East
+...
+1:0,0
+2:9,0
+3:0,9
+4:9,9
