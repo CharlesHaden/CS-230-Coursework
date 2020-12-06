@@ -123,7 +123,6 @@ public class Main extends Application {
         Text paused = new Text(230, 150, "Game Paused");
         paused.setFont(new Font(40));
         pause.getChildren().add(paused);
-
         Button resumeButton = new Button("Resume game");
         resumeButton.setOnAction(e -> window.setScene(inGameScreen));
         resumeButton.setLayoutX(300);
@@ -131,17 +130,27 @@ public class Main extends Application {
         resumeButton.setPrefSize(100,20);
         pause.getChildren().add(resumeButton); //ADDED BUTTON TO TEST NAVIGATION
 
-        Button saveGame = new Button("Save and Exit");
-        //NEED TO ADD SAVE FUNCTION
-        saveGame.setOnAction(e -> window.setScene(mainMenu));
-        saveGame.setLayoutX(300);
-        saveGame.setLayoutY(300);
-        saveGame.setPrefSize(100,20);
-        pause.getChildren().add(saveGame);
+        TextField saveGameTextField = new TextField();
+        saveGameTextField.setPromptText("Enter save name:");
+        saveGameTextField.setLayoutX(230);
+        saveGameTextField.setLayoutY(MAIN_WINDOW_HEIGHT/2);
+        pause.getChildren().add(saveGameTextField);
 
+        Button saveAndExitButton = new Button("Save and Exit");
+        saveAndExitButton.setLayoutX(350);
+        saveAndExitButton.setLayoutY(300);
+        saveAndExitButton.setPrefSize(100,20);
+        saveAndExitButton.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println(saveGameTextField.getText());
+                window.setScene(mainMenu);
+                MainMenu.saveBoard(saveGameTextField.getText()); 
+                //ADD STRING PARAMETER -> load game
+            }
+        });
+        pause.getChildren().add(saveAndExitButton);
 
-        MainMenu.curGenPlayers(4);
-        MainMenu.loadPresetBoard(1);
 
         //INGAME SCREEN
 
@@ -262,10 +271,8 @@ public class Main extends Application {
                 } else  {
                     ActionTile drawnActionTile = (ActionTile) drawnTile;
                     imageview.setImage(new Image(drawnActionTile.getActionTileType().toLowerCase().replaceAll(" ", "") + ".png"));
-                    insertPrompt.setText("Store the action and Move player");
                     insertTileButton.setDisable(true);
                     storeActionButton.setDisable(false);
-                    movePlayerButton.setDisable(false);
                     rotateLeft.setDisable(true);
                     rotateRight.setDisable(true);
                 }
@@ -305,6 +312,10 @@ public class Main extends Application {
                     public void handle(ActionEvent event) {
                         game.getChildren().remove(imageview);
                         storeActionButton.setDisable(true);
+
+                        movePlayerButton.setDisable(false);
+                        //movePlayerButton.setOnAction(e -> Player.makeMove(curBoard,e));
+                        // ADD TILE TO PLAYER HAND
                         // ADD IMAGE TO BOTTOM //
                     }
                 });
@@ -319,37 +330,6 @@ public class Main extends Application {
         Button mButton = new Button("Return to Main Menu");
         mButton.setOnAction(e -> window.setScene(mainMenu));
         leaderboard.getChildren().add(mButton); //ADDED BUTTON TO TEST NAVIGATION
-
-        //LOAD GAME
-        Pane loadGame = new Pane();
-        loadGameScreen = new Scene(loadGame, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
-        Button returnM = new Button("Return to Main Menu");
-        returnM.setOnAction(e -> window.setScene(mainMenu));
-
-        TextField loadGameText = new TextField();
-        loadGameText.setPromptText("Enter file name:");
-        loadGameText.setLayoutX(230);
-        loadGameText.setLayoutY(MAIN_WINDOW_HEIGHT/2);
-        loadGame.getChildren().add(loadGameText);
-        loadGame.getChildren().add(returnM);
-        Label loadGameLabel = new Label("Load Game");
-        loadGameLabel.setFont(new Font(30));
-        loadGameLabel.setLayoutX(230);
-        loadGameLabel.setLayoutY(210);
-        loadGame.getChildren().add(loadGameLabel);
-
-        Button loadGameButton = new Button("Load");
-        loadGameButton.setLayoutX(450);
-        loadGameButton.setLayoutY(MAIN_WINDOW_HEIGHT/2);
-        loadGameButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                MainMenu.loadBoard(loadGameText.getText());
-                System.out.println(Board.getTile(0, 0).getTileType());
-            }
-        });
-        loadGame.getChildren().add(loadGameButton);
-
         //SETUP/PROFILE
         Pane gameSetup = new Pane();
         setup = new Scene(gameSetup, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
@@ -362,6 +342,10 @@ public class Main extends Application {
         Text selectBoardText = new Text(100, 250, "Select preset Board");
         selectBoardText.setFont(new Font(20));
         gameSetup.getChildren().add(selectBoardText);
+        Text chooseCarText = new Text(100, 350, "Choose car for Player 1");
+        chooseCarText.setFont(new Font(20));
+        gameSetup.getChildren().add(chooseCarText);
+
 
         Button twoPlayer = new Button("2");
         twoPlayer.setLayoutX(100);
@@ -392,10 +376,72 @@ public class Main extends Application {
             }
         });
 
+        twoPlayer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                noplayersText.setText("2 players selected");
+                threePlayer.setDisable(true);
+                fourPlayer.setDisable(true);
+                for (int count = 1; count < 3; count++) {
+                    Image carImage = new Image("player"+ count+".png");
+                    System.out.println("player"+ count+".png");
+                    ImageView chooseCarView = new ImageView(carImage);
+                    chooseCarView.setFitHeight(50);
+                    chooseCarView.setFitWidth(50);
+                    Button carButton = new Button();
+                    carButton.setLayoutX((count*100));
+                    carButton.setLayoutY(370);
+                    carButton.setPrefSize(80,80);
+                    carButton.setGraphic(chooseCarView);
+                    gameSetup.getChildren().add(carButton);
+
+                }
+            }
+        });
+
+        threePlayer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                noplayersText.setText("3 players selected");
+                twoPlayer.setDisable(true);
+                fourPlayer.setDisable(true);
+                for (int count = 1; count < 4; count++) {
+                    Image carImage = new Image("player"+ count+".png");
+                    System.out.println("player"+ count+".png");
+                    ImageView chooseCarView = new ImageView(carImage);
+                    chooseCarView.setFitHeight(50);
+                    chooseCarView.setFitWidth(50);
+                    Button carButton = new Button();
+                    carButton.setLayoutX((count*100));
+                    carButton.setLayoutY(370);
+                    carButton.setPrefSize(80,80);
+                    carButton.setGraphic(chooseCarView);
+                    gameSetup.getChildren().add(carButton);
+
+                }
+            }
+        });
+
         fourPlayer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 noplayersText.setText("4 players selected");
+                twoPlayer.setDisable(true);
+                threePlayer.setDisable(true);
+                for (int count = 1; count < 5; count++) {
+                    Image carImage = new Image("player"+ count+".png");
+                    System.out.println("player"+ count+".png");
+                    ImageView chooseCarView = new ImageView(carImage);
+                    chooseCarView.setFitHeight(50);
+                    chooseCarView.setFitWidth(50);
+                    Button carButton = new Button();
+                    carButton.setLayoutX((count*100));
+                    carButton.setLayoutY(370);
+                    carButton.setPrefSize(80,80);
+                    carButton.setGraphic(chooseCarView);
+                    gameSetup.getChildren().add(carButton);
+
+                }
             }
         });
 
@@ -419,6 +465,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 selectBoardText.setText("Preset board 1 selected");
+                MainMenu.loadPresetBoard(0);
             }
 
         });
@@ -426,6 +473,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 selectBoardText.setText("Preset board 2 selected");
+                MainMenu.loadPresetBoard(1);
             }
 
         });
@@ -433,6 +481,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 selectBoardText.setText("Preset board 3 selected");
+                MainMenu.loadPresetBoard(2);
             }
 
         });
@@ -445,6 +494,7 @@ public class Main extends Application {
         startGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                // WHILE BOARD NOT LOADED, DO NOT CHANGE SCREEN
                 window.setScene(inGameScreen);
                 updateBoard(board);
             }
@@ -479,12 +529,46 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 MainMenu.newProfile(textfield.getText());
-                window.setScene(mainMenu);
-
+                createProfLabel.setText(textfield.getText() + " successfully created");
+                //System.out.println(allprofiles.size().getName);
+                //MainMenu.saveProfile();
             }
-
         });
         profilePane.getChildren().add(profileConfirm);
+
+        //LOAD GAME
+        Pane loadGame = new Pane();
+        loadGameScreen = new Scene(loadGame, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
+        Button returnM = new Button("Return to Main Menu");
+        returnM.setOnAction(e -> window.setScene(mainMenu));
+
+        TextField loadGameText = new TextField();
+        loadGameText.setPromptText("Enter file name:");
+        loadGameText.setLayoutX(230);
+        loadGameText.setLayoutY(MAIN_WINDOW_HEIGHT/2);
+        loadGame.getChildren().add(loadGameText);
+        loadGame.getChildren().add(returnM);
+        Label loadGameLabel = new Label("Load Game");
+        loadGameLabel.setFont(new Font(30));
+        loadGameLabel.setLayoutX(230);
+        loadGameLabel.setLayoutY(210);
+        loadGame.getChildren().add(loadGameLabel);
+
+        Button loadGameButton = new Button("Load");
+        loadGameButton.setLayoutX(450);
+        loadGameButton.setLayoutY(MAIN_WINDOW_HEIGHT/2);
+        loadGameButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                MainMenu.loadBoard(loadGameText.getText());
+                loadGameLabel.setText(loadGameText.getText() + " loaded successfully");
+                selectBoardText.setText("Saved board loaded");
+
+                System.out.println(Board.getTile(0, 0).getTileType());
+                
+            }
+        });
+        loadGame.getChildren().add(loadGameButton);
 
         //DELETE PROFILE
         Pane deletePane = new Pane();
@@ -513,7 +597,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 MainMenu.deleteProfile(deleteName.getText());
-                window.setScene(mainMenu);
+                deleteProfLabel.setText(deleteName.getText() + " successfully deleted");
             }
         });
         deletePane.getChildren().add(deleteConfirm);
@@ -527,7 +611,6 @@ public class Main extends Application {
     }
 
     public void updatePlayer(Group player) {
-
         if (player != null) {
             player.getChildren().clear();
         }
@@ -639,7 +722,6 @@ public class Main extends Application {
             board.getChildren().add(insertButton2);
 
         }
-
         for (int i = 0; i < Board.getWidth(); i++ ) {
             for (int j = 0; j < Board.getHeight(); j++) {
                 ImageView imageview = new ImageView();

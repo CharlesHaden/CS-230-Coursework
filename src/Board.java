@@ -1,15 +1,7 @@
 import java.util.Random;
 
-/**
- * Board class, stores and controls the current board data as a 2D array of tiles, as well as the silk bag.
- * This class is responsible for providing getter and setter methods for the tile objects
- * at specified coordinates, as given by the array indexes of the 2 dimensional array.
- * It also must allow for tiles to be inserted onto the board which which will shift all other tiles
- * along the axis of the board, meaning the items in the array will be shifted along accordingly.
- * @author Laurence
- */
-
 public class Board {
+
     private static FloorTile[][] tileList;
     private static int[] silkBag;
     private static int height;
@@ -18,55 +10,48 @@ public class Board {
     private static int boardNumber;
     private FloorTile tempFloorTile;
 
-    /**
-     * Constructor for Board class, width and height are used as variables in the class as well as to create the 2D array of floor tiles
-     * @param width Width of board,
-     * @param height Height of board
-     * @param bag Array of integers to represent the contents of the silk bag
-     * @param boardNumber Specifies which board we are currently using
-     */
-    public Board(int width, int height, int[] bag, int boardNumber) {
+
+    public Board(int width, int height, int[] bag){
         tileList = new FloorTile[width][height];
         silkBag = bag;
         this.height = height;
         this.width = width;
-        this.boardNumber = boardNumber;
     }
 
-    /**
-     * Used to set a specified position in the 2D array to a new tile
-     * @param curTile the specified FloorTile object
-     * @param x the specified x position in the 2D array
-     * @param y the specified y position in the 2D array
-     */
-    public static void setFloorTile(FloorTile curTile, int x, int y) {
+    public static void setFloorTile(FloorTile curTile, int x, int y){
         tileList[x][y] = curTile;
     }
 
-    /**
-     * buildBoard() fills in all of the null values in the 2D array, tileList, using data from silkBag
-     */
     public static void buildBoard() {
+        FloorTile curTile;
+        curTile = null;
+
+
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
+
                 if (tileList[i][j] == null) {
-                    tileList[i][j] = selectFromSilkBag();
+
+                    curTile = selectFromSilkBag();
+                    tileList[i][j] = (curTile);
                 }
             }
         }
     }
 
-    /**
-     * @return returns a FloorTile object by randomly selecting from silkBag, also specifies random orientation
-     */
-    private static FloorTile selectFromSilkBag() {
+    private static FloorTile selectFromSilkBag(){
         FloorTile curTile;
         curTile = null;// because of switch statement
+
         Random rand = new Random();
         int n = rand.nextInt(3);
-        if (silkBag[n] > 0) {
+        n += 1;
+
+        if (silkBag[n] > 0){
+
             int orientation = rand.nextInt(3);
             orientation += 1;
+
             switch (n) {
                 case 0:
                     curTile = new CornerTile(orientation);
@@ -77,9 +62,13 @@ public class Board {
                 case 2:
                     curTile = new TshapedTile(orientation);
                     break;
+                case 3:
+                    curTile = new GoalTile(orientation);
+                    break;
                 default:
                     System.out.println("Index error (out of range).");
             }
+
             silkBag[n] -= 1;
         }
         return curTile;
@@ -99,8 +88,10 @@ public class Board {
         silkBagTile = null;
         FloorTile[][] tempTileList = tileList;
         boolean frozenTileError = false;
+
         if (horizontal) {
             if (x == 0) {
+
                 //inserting from left
                 silkBagTile = tileList[width - 1][y];
                 for (int i = 0; i < width; i++) {
@@ -115,7 +106,8 @@ public class Board {
                         }
                     }
                 }
-            } else if (x == width - 1) {
+            }
+            else if (x == width - 1) {
                 //inserting from right
                 silkBagTile = tileList[0][y];
                 for (int i = 0; i < width; i++) {
@@ -130,7 +122,8 @@ public class Board {
                     }
                 }
             }
-        } else {
+        }
+        else{
             if (y == 0) {
                 //inserting from above
                 silkBagTile = tileList[x][height-1];
@@ -140,6 +133,7 @@ public class Board {
                         frozenTileError = true;
                     } else {
                         if (height - (i + 1) == 0) {
+
                             tileList[x][0] = tileToInsert;
                         } else {
                             tileList[x][height - (i + 1)] = tileList[x][height - (i + 2)];
@@ -169,7 +163,6 @@ public class Board {
         }
         else return false;
     }
-
     /**
      * This method is designed to check whether or not a row or a column can have tiles inserted into it
      * for the purposes of displaying insert buttons onto the screen.
@@ -218,14 +211,13 @@ public class Board {
         }
         else return false;
     }
-
-
     /**
      * addToSilkBag inserts a new tile into silkBag, which has been pushed off the board by inserting a tile
      * @param silkBagTile The tile object to be added, which is then correlated to an increase in one of the array indexes of silkbag
      */
     public static void addToSilkBag(FloorTile silkBagTile) {
         String tileType = silkBagTile.getFloorTileType();
+
         switch (tileType) {
             case "Corner":
                 silkBag[0] += 1;
@@ -236,26 +228,27 @@ public class Board {
             case "Tshaped":
                 silkBag[2] += 1;
                 break;
+            case "Goal":
+                silkBag[3] += 1;
+                break;
             default:
                 System.out.println("Index error (out of range).");
         }
     }
 
-    /**
-     * getTileFromSilkBag will return a random tile selected from silkBag, and then decrease the value of that index of silkBag by 1
-     * @return returns a Tile object, can either be an action or a floor tile
-     */
-    public static Tile getTileFromSilkBag() {
+    public static Tile getTileFromSilkBag(){
         Tile curTile;
         curTile = null;// because of switch statement
+
         Random rand = new Random();
-        int n = rand.nextInt(6);
+        int n = rand.nextInt(7);
         n += 1;
         if (silkBag[n] > 0) {
 
             int orientation = rand.nextInt(2);
 
             orientation += 1;
+
             switch (n) {
                 case 0:
                     curTile = new CornerTile(orientation);
@@ -267,15 +260,18 @@ public class Board {
                     curTile = new TshapedTile(orientation);
                     break;
                 case 3:
-                    curTile = new IceTile();
+                    curTile = new GoalTile(orientation);
                     break;
                 case 4:
-                    curTile = new FireTile();
+                    curTile = new IceTile();
                     break;
                 case 5:
-                    curTile = new DoubleMoveTile();
+                    curTile = new FireTile();
                     break;
                 case 6:
+                    curTile = new DoubleMoveTile();
+                    break;
+                case 7:
                     curTile = new BacktrackTile();
                     break;
                 default:
@@ -285,55 +281,22 @@ public class Board {
         }
         return curTile;
     }
-
-    /**
-     * Getter for the entire board
-     * @return type 2D array of FloorTile objects
-     */
-    public static FloorTile[][] getTiles() {
+    public static FloorTile[][] getTiles(){
         return tileList;
     }
 
-    /**
-     * getter for the silk bag array
-     * @return type int array
-     */
-    public static int[] getSilkBag() {
+    public static int[] getSilkBag(){
         return silkBag;
     }
-
-
-    /**
-     * getter for the width of the board
-     * @return type int
-     */
-    public static int getWidth() {
+    public static int getWidth(){
         return width;
     }
 
-
-    /**
-     * getter for the height of the board
-     * @return type int
-     */
-    public static int getHeight() {
+    public static int getHeight(){
         return height;
     }
 
-    /**
-     * getter for the board number
-     * @return type int
-     */
-    public static int getBoardNumber() {
-        return boardNumber;
-    }
-
-
-    /**
-     * getter for a tile specified by an x and y coordinate in tileList
-     * @return type FloorTile object
-     */
-    public static FloorTile getTile(int x, int y) {
+    public static FloorTile getTile(int x, int y){
         return tileList[x][y];
     }
 }
