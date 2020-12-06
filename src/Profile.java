@@ -3,7 +3,7 @@
  *
  * @author Charles Haden
  * @author Mathew Clarke
- */
+ **/
 
 public class Profile {
     private int[] wins;
@@ -16,16 +16,24 @@ public class Profile {
         losses= new int[NUM_OF_PRESET_BOARDS];
     }
 
-    public int getWins(int index) {
-        return wins[index];
+    public int getWins() {
+        return wins[LeaderBoard.getPresetBoard()];
+    }
+
+    public int[] getAllWins() {
+        return wins;
     }
 
     public void setWins(int wins, int index) {
         this.wins[index] = wins;
     }
 
-    public int getLosses(int index) {
-        return losses[index];
+    public int getLosses() {
+        return losses[LeaderBoard.getPresetBoard()];
+    }
+
+    public int[] getAllLosses() {
+        return losses;
     }
 
     public void setLosses(int losses, int index) {
@@ -36,8 +44,8 @@ public class Profile {
         return name;
     }
 
-    /**
-     * Changes the current name of a profile.
+    /** Changes the current name of a profile.
+     *
      * @param name
      */
     public void changeName(String name) {

@@ -20,9 +20,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 
 public class Main extends Application {
     // Constants for the main window
+    TableView<Profile> leaderBoardTable;
+    TextField presetBoardInput;
+    ObservableList<Profile> leaderBoardList;
     private static final int MAIN_WINDOW_WIDTH = 720;
     private static final int MAIN_WINDOW_HEIGHT = 600;
     private static final String WINDOW_TITLE = "Fast and Curious!";
@@ -330,9 +338,43 @@ public class Main extends Application {
 
         Pane leaderboard = new Pane();
         leaderboardScreen = new Scene(leaderboard, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
-        Button mButton = new Button("Return to Main Menu");
-        mButton.setOnAction(e -> window.setScene(mainMenu));
-        leaderboard.getChildren().add(mButton); //ADDED BUTTON TO TEST NAVIGATION
+        MainMenu.loadProfile();
+        System.out.println(MainMenu.getAllProfiles().get(0).getName());
+        generateLeaderBoard();
+        leaderBoardTable = new TableView();
+        leaderBoardTable.setItems(getProfile());
+        Button exitTableButton = new Button("Return to Main Menu");
+        exitTableButton.setOnAction(e -> window.setScene(mainMenu));
+        Button presetBoardInput = new Button("Current Preset Board: " + (LeaderBoard.getPresetBoard() + 1));
+        presetBoardInput.setOnAction(e -> presetBoardInputClicked(presetBoardInput));
+        presetBoardInput.setMinWidth(200);
+
+        presetBoardInput.setLayoutX(140);
+        presetBoardInput.setLayoutY(0);
+
+        updateTable();
+
+        leaderBoardTable.setLayoutX(0);
+        leaderBoardTable.setLayoutY(30);
+
+        leaderboard.getChildren().add(leaderBoardTable);
+        leaderboard.getChildren().add(presetBoardInput);
+        leaderboard.getChildren().add(exitTableButton);
+
+        TableColumn<Profile, String> nameColumn = new TableColumn<>("Profile Name");
+        nameColumn.setMinWidth(200);
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
+
+        TableColumn<Profile, int[]> winsColumn = new TableColumn<>("Wins");
+        winsColumn.setMinWidth(200);
+        winsColumn.setCellValueFactory(new PropertyValueFactory<>("Wins"));
+
+        TableColumn<Profile, int[]> lossesColumn = new TableColumn<>("Losses");
+        lossesColumn.setMinWidth(200);
+        lossesColumn.setCellValueFactory(new PropertyValueFactory<>("Losses"));
+        leaderBoardTable.getColumns().addAll(nameColumn, winsColumn, lossesColumn);
+
+
         //SETUP/PROFILE
         Pane gameSetup = new Pane();
         setup = new Scene(gameSetup, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
@@ -500,6 +542,7 @@ public class Main extends Application {
                 // WHILE BOARD NOT LOADED, DO NOT CHANGE SCREEN
                 window.setScene(inGameScreen);
                 updateBoard(board);
+                updatePlayer(player);
             }
         });
         Button backButton = new Button("Back to Main Menu");
@@ -764,6 +807,30 @@ public class Main extends Application {
                 board.getChildren().add(imageview);
             }
         }
+    }
+
+    public void presetBoardInputClicked(Button presetBoardInput) {
+        if (LeaderBoard.getPresetBoard() == MainMenu.getNumOfPresetBoards() - 1) {
+            LeaderBoard.setPresetBoard(0);
+        } else {
+            LeaderBoard.setPresetBoard(LeaderBoard.getPresetBoard()+1);
+        }
+        updateTable();
+        presetBoardInput.setText("Current Preset Board: " + (LeaderBoard.getPresetBoard() + 1));
+    }
+
+    public ObservableList<Profile> getProfile(){
+        leaderBoardList = FXCollections.observableArrayList(LeaderBoard.getProfileList());
+        return(leaderBoardList);
+    }
+
+    public void updateTable() {
+        leaderBoardTable.refresh();
+    }
+
+    public void generateLeaderBoard() {
+        MainMenu.loadPresetBoard(1);
+        new LeaderBoard(MainMenu.getAllProfiles(), 1);
     }
 
     public static void main(String[] args) {
