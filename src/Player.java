@@ -33,57 +33,121 @@ public class Player {
 		this.playerHand = playerHand;
 	}
 
+	/**
+	 * 
+	 * @return Returns the player number
+	 */
 	public int getPlayerNum() {
 		return playerNum;
 	}
 
+	/**
+	 * Sets the player number
+	 * @param playerNum
+	 */
 	public void setPlayerNum(int playerNum) {
 		this.playerNum = playerNum;
 	}
 
+	/**
+	 * @return Returns the orientation of the player: north, east, south or west
+	 */
 	public String orientation() {
 		return orientation;
 	}
 
+	/**
+	 * Sets the orientation of the player
+	 * @param orientation Orientation of the player: north, east, south or west
+	 */
 	public void setOrientation(String orientation) {
 		this.orientation = orientation;
 	}
 
+	/**
+	 * Gets the players last moves where:
+	 * [0][0] = x position one move ago
+	 * [0][1] = y position two moves ago
+	 * [1][0] = x position two moves ago
+	 * [1][1] = y position two moves ago
+	 * 
+	 * @return Returns an array of the players last two moves
+	 */
 	public int[][] getLastMoves() {
 		return lastMoves;
 	}
 
+	/**
+	 * Sets the players last moves
+	 * 
+	 * @param lastMoves
+	 */
 	public void setLastMoves(int[][] lastMoves) {
 		this.lastMoves = lastMoves;
 	}
 
+	/**
+	 * Returns the player position on the board where:
+	 * [0] = x and [1] = y
+	 */
 	public int[] getPlayerPosition() {
 		return playerPosition;
 	}
 
+	/**
+	 * Sets the players position on the board
+	 * 
+	 * @param playerPosition
+	 */
 	public void setPlayerPosition(int[] playerPosition) {
 		this.playerPosition = playerPosition;
 	}
 
+	/**
+	 * Returns an array lost of action tiles in the players hand
+	 * 
+	 * @return Returns array list of action tiles
+	 */
 	public ArrayList<ActionTile> getPlayerHand() {
 		return playerHand;
 	}
 
+	/**
+	 * Sets the array list of action tiles for player hand
+	 * @param playerHand Array list of action tiles which are playable
+	 */
 	public void setPlayerHand(ArrayList<ActionTile> playerHand) {
 		this.playerHand = playerHand;
 	}
 
+	/**
+	 * Gets the players profile associated with player
+	 * @return Returns a profile linked to player
+	 */
 	public Profile getPlayerProfile() {
 		return playerProfile;
 	}
 
+	/**
+	 * Sets the players profile
+	 * @param playerProfile The profile to be associated with player
+	 */
 	public void setPlayerProfile(Profile playerProfile) {
 		this.playerProfile = playerProfile;
 	}
+
+	/**
+	 * Gets weather or not the backtrack action has been used on the player
+	 * @return Returns true if it has been used
+	 */
 	public Boolean getBacktrackUsed() {
 		return backtrackUsed;
 	}
 
+	/**
+	 * Sets if the backtrack action has been used
+	 * @param backtrackUsed Set to true if it has been used on player
+	 */
 	public void setBacktrackUsed(Boolean backtrackUsed) {
 		this.backtrackUsed = backtrackUsed;
 	}
@@ -187,12 +251,6 @@ public class Player {
 	 */
 	public boolean movePlayer(int x, int y, int currentPath, int nextPath) {
 		Boolean moved = false;
-		FloorTile currentTile = (FloorTile) Board.getTile(playerPosition[0], playerPosition[1]);
-		boolean[] currentTileOpenPath = currentTile.getOrientedOpenPath();
-
-		FloorTile nextTile = (FloorTile) Board.getTile(x, y);
-		boolean[] nextTileOpenPath = nextTile.getOrientedOpenPath();
-
 		boolean playerAvailableToMove = playerCanMove(x, y, currentPath, nextPath);
 
 		if (playerAvailableToMove) {
