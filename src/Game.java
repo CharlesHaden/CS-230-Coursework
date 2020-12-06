@@ -3,6 +3,7 @@
  * Represents and maintains a current instance of a Game
  * @version 1.0.0
  * @author James Hatch
+ * @author Hyder Al-Hashimi
  */
 import java.util.ArrayList;
 
@@ -10,7 +11,6 @@ public class Game {
 
 	private static int turn;
 	private static ArrayList<Player> players;
-
 	private static Player curPlayer;
 
 
@@ -26,6 +26,10 @@ public class Game {
 	 */
 	public static int getTurn() {
 		return turn;
+	}
+
+	public static Player getCurPlayer() {
+		return curPlayer;
 	}
 
 	/**
@@ -65,16 +69,15 @@ public class Game {
 	 *
 	 * @return boolean - if win state of the game is true or false
 	 */
-
-
 	public static boolean checkWin() {
+		int curBoardNum = Board.getBoardNumber();
 		if (Board.getTile(curPlayer.getPlayerPosition()[0],
 				curPlayer.getPlayerPosition()[1]).getFloorTileType() == "Goal") {
 			Profile curPlayerProfile = curPlayer.getPlayerProfile();
-			curPlayerProfile.setWins(Board.getBoardNumber(), curPlayerProfile.getWins(Board.getBoardNumber(), curPlayerProfile.getWins()));
+			curPlayerProfile.setWins(curPlayerProfile.getWins(curBoardNum) + 1, curBoardNum);
 			for (Player player : players) {
 				if (player != curPlayer) {
-					// player.getPlayerProfile().setLosses(Board.getBoardNumber(), );
+					player.getPlayerProfile().setLosses(curPlayerProfile.getLosses(curBoardNum) + 1, curBoardNum);
 				}
 			}
 			return true;
@@ -82,7 +85,6 @@ public class Game {
 			return false;
 		}
 	}
-
 
 	/**
 	 * Method to set game players to a different/updated group of players
@@ -101,12 +103,13 @@ public class Game {
 	 * to update the number of remaining action-affected turns or reset the tile once affected turns has expired
 	 */
 	public static void update() {
-		curBoard = Board.getTiles()
-		for (int i = 0; i < curBoard.length(); i++) {
+		FloorTile[][] curBoard = Board.getTiles();
+		for (int i = 0; i < curBoard.length; i++) {
 			for (int j = 0; j < curBoard[i].length; j++) {
-				Tile.checkActionTurns(curBoard[i][j])
+				curBoard[i][j].checkActionTurns();
 			}
 		}
+
 	}
 }
 

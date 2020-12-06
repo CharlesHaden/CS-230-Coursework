@@ -116,11 +116,9 @@ public abstract class FloorTile extends Tile {
 
     /**
      * Decrements the turns left for each action, removing the status whe the duration is done.
-     *
-     * @param tile The tile to be checked.
      */
-    public void checkActionTurns(FloorTile tile) {
-        if (tile.getIsFrozen()) {
+    public void checkActionTurns() {
+        if (getIsFrozen()) {
             if (iceTurnsLeft > 0) {
                 iceTurnsLeft--;
             }
@@ -128,7 +126,7 @@ public abstract class FloorTile extends Tile {
                 setIsFrozen(false);
             }
         }
-        if (tile.getOnFire()) {
+        if (getOnFire()) {
             if (fireTurnsLeft > 0) {
                 fireTurnsLeft--;
             }
@@ -165,7 +163,7 @@ public abstract class FloorTile extends Tile {
     protected void setOnFire(boolean onFire) {
         this.isOnFire = onFire;
         if(isOnFire) {
-            //fireTurnsLeft = Game.getPlayers().size() * FIRE_TURN_ROTATIONS;
+            fireTurnsLeft = Game.getPlayers().size() * FIRE_TURN_ROTATIONS;
         }
     }
 
