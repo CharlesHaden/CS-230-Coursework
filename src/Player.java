@@ -157,22 +157,20 @@ public class Player {
 	 */
 	public void makeMove(String direction) {
 		boolean moved = false;
-		FloorTile currentTile = (FloorTile) Board.getTile(playerPosition[0], playerPosition[1]);
-		boolean[] currentTileOpenPath = currentTile.getOrientedOpenPath();
 
 		do {
 			switch (direction) {
 				case "Up":
-					moved = movePlayer(currentTileOpenPath, playerPosition[0], playerPosition[1] + 1, 0, 1);
+					moved = movePlayer(playerPosition[0], playerPosition[1] + 1, 0, 1);
 					break;
 				case "Down":
-					moved = movePlayer(currentTileOpenPath, playerPosition[0], playerPosition[1] - 1, 1, 0);
+					moved = movePlayer(playerPosition[0], playerPosition[1] - 1, 1, 0);
 					break;
 				case "Left":
-					moved = movePlayer(currentTileOpenPath, playerPosition[0] - 1, playerPosition[1], 2, 3);
+					moved = movePlayer(playerPosition[0] - 1, playerPosition[1], 2, 3);
 					break;
 				case "Right":
-					moved = movePlayer(currentTileOpenPath, playerPosition[0] + 1, playerPosition[1], 3, 2);
+					moved = movePlayer(playerPosition[0] + 1, playerPosition[1], 3, 2);
 					break;
 			}
 		} while (moved == false);
@@ -181,19 +179,21 @@ public class Player {
 
 	/**
 	 * Changes the players position to the new position
-	 * @param currentTileOpenPath Boolean array where {0,1,2,3} {UP,DOWN,LEFT,RIGHT}
 	 * @param x The x coordinate of the next tile
 	 * @param y The y coordinate of the next tile
 	 * @param currentPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the current tile
 	 * @param nextPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the next tile
 	 * @return Returns true if the player was able to move
 	 */
-	public boolean movePlayer(boolean[] currentTileOpenPath, int x, int y, int currentPath, int nextPath) {
+	public boolean movePlayer(int x, int y, int currentPath, int nextPath) {
 		Boolean moved = false;
+		FloorTile currentTile = (FloorTile) Board.getTile(playerPosition[0], playerPosition[1]);
+		boolean[] currentTileOpenPath = currentTile.getOrientedOpenPath();
+
 		FloorTile nextTile = (FloorTile) Board.getTile(x, y);
 		boolean[] nextTileOpenPath = nextTile.getOrientedOpenPath();
 
-		boolean playerAvailableToMove = playerCanMove(currentTileOpenPath, x, y, currentPath, nextPath);
+		boolean playerAvailableToMove = playerCanMove(x, y, currentPath, nextPath);
 
 		if (playerAvailableToMove) {
 			playerPosition[0] = x;
@@ -208,14 +208,16 @@ public class Player {
 
 	/**
 	 * Checks if the player can move. If player can move then returns true
-	 * @param currentTileOpenPath Boolean array where {0,1,2,3} {UP,DOWN,LEFT,RIGHT}
 	 * @param x The x coordinate of the next tile
 	 * @param y The y coordinate of the next tile
 	 * @param currentPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the current tile
 	 * @param nextPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the next tile
 	 * @return Returns true if the player was able to move
 	 */
-	public boolean playerCanMove(boolean[] currentTileOpenPath, int x, int y, int currentPath, int nextPath) {
+	public boolean playerCanMove(int x, int y, int currentPath, int nextPath) {
+		FloorTile currentTile = (FloorTile) Board.getTile(playerPosition[0], playerPosition[1]);
+		boolean[] currentTileOpenPath = currentTile.getOrientedOpenPath();
+
 		FloorTile nextTile = Board.getTile(x, y);
 		boolean[] nextTileOpenPath = nextTile.getOrientedOpenPath();
 		if ((currentTileOpenPath[currentPath]) && (nextTileOpenPath[nextPath])) {
