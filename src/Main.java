@@ -235,6 +235,9 @@ public class Main extends Application {
         Group board = new Group();
         Group player = new Group();
         //////
+        MainMenu.curGenPlayers(4);
+        MainMenu.loadPresetBoard(1);
+
         updateBoard(board);
         updatePlayer(player);
         //////
