@@ -136,6 +136,10 @@ public abstract class FloorTile extends Tile {
         }
     }
 
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
     /**
      * Gets the type of floor tile.
      *

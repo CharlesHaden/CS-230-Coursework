@@ -94,8 +94,7 @@ public class Board {
      * @return a boolean specifying whether or not the tile was successfully inserted, depending on fixed/frozen tiles
      */
     public static boolean insertTile(int x, int y, boolean horizontal) {
-        //FloorTile tileToInsert = Game.getCurPlayer().getTempFloorTile();
-        FloorTile tileToInsert = new StraightTile(2);
+        FloorTile tileToInsert = Game.getCurPlayer().getTempFloorTile();
         FloorTile silkBagTile;
         silkBagTile = null;
         FloorTile[][] tempTileList = new FloorTile[width][height];

@@ -16,6 +16,7 @@ public class Player {
 	private Profile playerProfile;
 	private Boolean backtrackUsed;
 	private FloorTile tempFloorTile;
+	private ActionTile tempActionTile;
 
 	/**
 	 * Constructs a player
@@ -33,57 +34,121 @@ public class Player {
 		this.playerHand = playerHand;
 	}
 
+	/**
+	 *
+	 * @return Returns the player number
+	 */
 	public int getPlayerNum() {
 		return playerNum;
 	}
 
+	/**
+	 * Sets the player number
+	 * @param playerNum
+	 */
 	public void setPlayerNum(int playerNum) {
 		this.playerNum = playerNum;
 	}
 
+	/**
+	 * @return Returns the orientation of the player: north, east, south or west
+	 */
 	public String orientation() {
 		return orientation;
 	}
 
+	/**
+	 * Sets the orientation of the player
+	 * @param orientation Orientation of the player: north, east, south or west
+	 */
 	public void setOrientation(String orientation) {
 		this.orientation = orientation;
 	}
 
+	/**
+	 * Gets the players last moves where:
+	 * [0][0] = x position one move ago
+	 * [0][1] = y position two moves ago
+	 * [1][0] = x position two moves ago
+	 * [1][1] = y position two moves ago
+	 *
+	 * @return Returns an array of the players last two moves
+	 */
 	public int[][] getLastMoves() {
 		return lastMoves;
 	}
 
+	/**
+	 * Sets the players last moves
+	 *
+	 * @param lastMoves
+	 */
 	public void setLastMoves(int[][] lastMoves) {
 		this.lastMoves = lastMoves;
 	}
 
+	/**
+	 * Returns the player position on the board where:
+	 * [0] = x and [1] = y
+	 */
 	public int[] getPlayerPosition() {
 		return playerPosition;
 	}
 
+	/**
+	 * Sets the players position on the board
+	 *
+	 * @param playerPosition
+	 */
 	public void setPlayerPosition(int[] playerPosition) {
 		this.playerPosition = playerPosition;
 	}
 
+	/**
+	 * Returns an array lost of action tiles in the players hand
+	 *
+	 * @return Returns array list of action tiles
+	 */
 	public ArrayList<ActionTile> getPlayerHand() {
 		return playerHand;
 	}
 
+	/**
+	 * Sets the array list of action tiles for player hand
+	 * @param playerHand Array list of action tiles which are playable
+	 */
 	public void setPlayerHand(ArrayList<ActionTile> playerHand) {
 		this.playerHand = playerHand;
 	}
 
+	/**
+	 * Gets the players profile associated with player
+	 * @return Returns a profile linked to player
+	 */
 	public Profile getPlayerProfile() {
 		return playerProfile;
 	}
 
+	/**
+	 * Sets the players profile
+	 * @param playerProfile The profile to be associated with player
+	 */
 	public void setPlayerProfile(Profile playerProfile) {
 		this.playerProfile = playerProfile;
 	}
+
+	/**
+	 * Gets weather or not the backtrack action has been used on the player
+	 * @return Returns true if it has been used
+	 */
 	public Boolean getBacktrackUsed() {
 		return backtrackUsed;
 	}
 
+	/**
+	 * Sets if the backtrack action has been used
+	 * @param backtrackUsed Set to true if it has been used on player
+	 */
 	public void setBacktrackUsed(Boolean backtrackUsed) {
 		this.backtrackUsed = backtrackUsed;
 	}
@@ -92,13 +157,16 @@ public class Player {
 	 * Draws a tile from the silk bag in board. If it is a floor tile then it can be inserted,
 	 * if it is an action tile then it is added to the players hand.
 	 */
-	public void drawTile() {
+	public String drawTile() {
 		Tile tile = Board.getTileFromSilkBag();
-		if (tile.getTileType().equals("Floor Tile")) {
+		if (tile.getTileType().equals("Floor")) {
 			tempFloorTile = (FloorTile) tile;
-		} else if (tile.getTileType().equals("Action Tile")) {
+			return "Floor";
+		} else {
 			ActionTile actionTile = (ActionTile) tile;
+			tempActionTile = (ActionTile) tile;
 			playerHand.add(actionTile);
+			return "Action";
 		}
 	}
 	/**
@@ -108,6 +176,15 @@ public class Player {
 	 */
 	public FloorTile getTempFloorTile() {
 		return tempFloorTile;
+	}
+
+	/**
+	 * Return temporarily stored action tile in hand.
+	 *
+	 * @return Temporary action tile.
+	 */
+	public ActionTile getTempActionTile() {
+		return tempActionTile;
 	}
 
 	/**
@@ -157,22 +234,20 @@ public class Player {
 	 */
 	public void makeMove(String direction) {
 		boolean moved = false;
-		FloorTile currentTile = (FloorTile) Board.getTile(playerPosition[0], playerPosition[1]);
-		boolean[] currentTileOpenPath = currentTile.getOrientedOpenPath();
 
 		do {
 			switch (direction) {
 				case "Up":
-					moved = movePlayer(currentTileOpenPath, playerPosition[0], playerPosition[1] + 1, 0, 1);
+					moved = movePlayer(playerPosition[0], playerPosition[1] + 1, 0, 1);
 					break;
 				case "Down":
-					moved = movePlayer(currentTileOpenPath, playerPosition[0], playerPosition[1] - 1, 1, 0);
+					moved = movePlayer(playerPosition[0], playerPosition[1] - 1, 1, 0);
 					break;
 				case "Left":
-					moved = movePlayer(currentTileOpenPath, playerPosition[0] - 1, playerPosition[1], 2, 3);
+					moved = movePlayer(playerPosition[0] - 1, playerPosition[1], 2, 3);
 					break;
 				case "Right":
-					moved = movePlayer(currentTileOpenPath, playerPosition[0] + 1, playerPosition[1], 3, 2);
+					moved = movePlayer(playerPosition[0] + 1, playerPosition[1], 3, 2);
 					break;
 			}
 		} while (moved == false);
@@ -181,19 +256,15 @@ public class Player {
 
 	/**
 	 * Changes the players position to the new position
-	 * @param currentTileOpenPath Boolean array where {0,1,2,3} {UP,DOWN,LEFT,RIGHT}
 	 * @param x The x coordinate of the next tile
 	 * @param y The y coordinate of the next tile
 	 * @param currentPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the current tile
 	 * @param nextPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the next tile
 	 * @return Returns true if the player was able to move
 	 */
-	public boolean movePlayer(boolean[] currentTileOpenPath, int x, int y, int currentPath, int nextPath) {
+	public boolean movePlayer(int x, int y, int currentPath, int nextPath) {
 		Boolean moved = false;
-		FloorTile nextTile = (FloorTile) Board.getTile(x, y);
-		boolean[] nextTileOpenPath = nextTile.getOrientedOpenPath();
-
-		boolean playerAvailableToMove = playerCanMove(currentTileOpenPath, x, y, currentPath, nextPath);
+		boolean playerAvailableToMove = playerCanMove(x, y, currentPath, nextPath);
 
 		if (playerAvailableToMove) {
 			playerPosition[0] = x;
@@ -208,14 +279,16 @@ public class Player {
 
 	/**
 	 * Checks if the player can move. If player can move then returns true
-	 * @param currentTileOpenPath Boolean array where {0,1,2,3} {UP,DOWN,LEFT,RIGHT}
 	 * @param x The x coordinate of the next tile
 	 * @param y The y coordinate of the next tile
 	 * @param currentPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the current tile
 	 * @param nextPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the next tile
 	 * @return Returns true if the player was able to move
 	 */
-	public boolean playerCanMove(boolean[] currentTileOpenPath, int x, int y, int currentPath, int nextPath) {
+	public boolean playerCanMove(int x, int y, int currentPath, int nextPath) {
+		FloorTile currentTile = (FloorTile) Board.getTile(playerPosition[0], playerPosition[1]);
+		boolean[] currentTileOpenPath = currentTile.getOrientedOpenPath();
+
 		FloorTile nextTile = Board.getTile(x, y);
 		boolean[] nextTileOpenPath = nextTile.getOrientedOpenPath();
 		if ((currentTileOpenPath[currentPath]) && (nextTileOpenPath[nextPath])) {
