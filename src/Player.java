@@ -281,6 +281,7 @@ public class Player {
 	 */
 	public boolean movePlayer(int x, int y, int currentPath, int nextPath, int prevX, int prevY) {
 		boolean playerAvailableToMove = playerCanMove(x, y, currentPath, nextPath);
+
 		if (playerAvailableToMove) {
 			playerPosition[0] = x;
 			playerPosition[1] = y;
@@ -300,6 +301,7 @@ public class Player {
 	 * @return Returns true if the player was able to move
 	 */
 	public boolean playerCanMove(int x, int y, int currentPath, int nextPath) {
+
 		FloorTile currentTile = Board.getTile(playerPosition[0], playerPosition[1]);
 		boolean[] currentTileOpenPath = currentTile.getOrientedOpenPath();
 		FloorTile nextTile = Board.getTile(x, y);
