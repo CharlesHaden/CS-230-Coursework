@@ -118,7 +118,7 @@ public abstract class FloorTile extends Tile {
      * Decrements the turns left for each action, removing the status whe the duration is done.
      */
     public void checkActionTurns() {
-        if (getIsFrozen()) {
+        if (isFrozen) {
             if (iceTurnsLeft > 0) {
                 iceTurnsLeft--;
             }
@@ -126,7 +126,7 @@ public abstract class FloorTile extends Tile {
                 setIsFrozen(false);
             }
         }
-        if (getOnFire()) {
+        if (isOnFire) {
             if (fireTurnsLeft > 0) {
                 fireTurnsLeft--;
             }

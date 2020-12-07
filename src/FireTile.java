@@ -18,7 +18,7 @@ public class FireTile extends ActionTile<int[]> {
     public void action(int[] chosenTile) {
         int col = chosenTile[0];
         int row = chosenTile[1];
-        for (int x = col-1; x < col+2; x++) {
+        for (int x = col - 1; x < col + 2; x++) {
             for (int y = row - 1; y < row + 2; y++) {
                 Board.getTile(x, y).setOnFire(true);
             }

@@ -14,7 +14,7 @@ abstract class ActionTile<T> extends Tile {
      * @return String of tile type.
      */
     public String getTileType() {
-        return "Action Tile";
+        return "Action";
     }
 
     /**

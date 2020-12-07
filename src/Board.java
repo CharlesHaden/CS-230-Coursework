@@ -258,41 +258,44 @@ public class Board {
     public static Tile getTileFromSilkBag() {
         Tile curTile;
         curTile = null;// because of switch statement
-        Random rand = new Random();
-        int n = rand.nextInt(6);
-        n += 1;
-        if (silkBag[n] > 0) {
+        int n = 0;
+        while (curTile == null){
+            Random rand = new Random();
+            n = rand.nextInt(6);
+            n += 1;
+            if (silkBag[n] > 0) {
 
-            int orientation = rand.nextInt(2);
+                int orientation = rand.nextInt(2);
 
-            orientation += 1;
-            switch (n) {
-                case 0:
-                    curTile = new CornerTile(orientation);
-                    break;
-                case 1:
-                    curTile = new StraightTile(orientation);
-                    break;
-                case 2:
-                    curTile = new TshapedTile(orientation);
-                    break;
-                case 3:
-                    curTile = new IceTile();
-                    break;
-                case 4:
-                    curTile = new FireTile();
-                    break;
-                case 5:
-                    curTile = new DoubleMoveTile();
-                    break;
-                case 6:
-                    curTile = new BacktrackTile();
-                    break;
-                default:
-                    System.out.println("Index error (out of range).   2");
+                orientation += 1;
+                switch (n) {
+                    case 0:
+                        curTile = new CornerTile(orientation);
+                        break;
+                    case 1:
+                        curTile = new StraightTile(orientation);
+                        break;
+                    case 2:
+                        curTile = new TshapedTile(orientation);
+                        break;
+                    case 3:
+                        curTile = new IceTile();
+                        break;
+                    case 4:
+                        curTile = new FireTile();
+                        break;
+                    case 5:
+                        curTile = new DoubleMoveTile();
+                        break;
+                    case 6:
+                        curTile = new BacktrackTile();
+                        break;
+                    default:
+                        System.out.println("Index error (out of range).");
+                }
             }
-            silkBag[n] -= 1;
         }
+        silkBag[n] -= 1;
         return curTile;
     }
 

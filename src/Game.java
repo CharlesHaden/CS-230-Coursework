@@ -108,10 +108,9 @@ public class Game {
 	 * to update the number of remaining action-affected turns or reset the tile once affected turns has expired
 	 */
 	public static void updateActions() {
-		FloorTile[][] curBoard = Board.getTiles();
-		for (int i = 0; i < curBoard.length; i++) {
-			for (int j = 0; j < curBoard[i].length; j++) {
-				curBoard[i][j].checkActionTurns();
+		for (int i = 0; i < Board.getWidth(); i++) {
+			for (int j = 0; j < Board.getHeight(); j++) {
+				Board.getTiles()[i][j].checkActionTurns();
 			}
 		}
 	}

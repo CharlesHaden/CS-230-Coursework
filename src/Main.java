@@ -27,6 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.scene.input.MouseEvent;
 
+
 import java.util.ArrayList;
 
 public class Main extends Application {
@@ -46,6 +47,10 @@ public class Main extends Application {
     Scene leaderboardScreen;
     Scene inGameScreen;
     Scene loadGameScreen;
+    int tileClickedX;
+    int tileClickedY;
+    boolean actionEvent;
+    String actionType;
 
     @Override
     public void start(Stage window) throws Exception {
@@ -141,6 +146,7 @@ public class Main extends Application {
         resumeButton.setPrefSize(100,20);
         pause.getChildren().add(resumeButton); //ADDED BUTTON TO TEST NAVIGATION
 
+
         TextField saveGameTextField = new TextField();
         saveGameTextField.setPromptText("Enter save name:");
         saveGameTextField.setLayoutX(230);
@@ -148,8 +154,8 @@ public class Main extends Application {
         pause.getChildren().add(saveGameTextField);
 
         Button saveAndExitButton = new Button("Save and Exit");
-        saveAndExitButton.setLayoutX(350);
-        saveAndExitButton.setLayoutY(300);
+        saveAndExitButton.setLayoutX(380);
+        saveAndExitButton.setLayoutY(MAIN_WINDOW_HEIGHT/2);
         saveAndExitButton.setPrefSize(100,20);
         saveAndExitButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
@@ -163,14 +169,21 @@ public class Main extends Application {
         pause.getChildren().add(saveAndExitButton);
 
 
-
-
         Group sideGame = new Group();
         Group board = new Group();
         Group player = new Group();
         Group mainGame = new Group();
         //////
 
+        Image imageDecline = new Image("pause.png");
+        Button pauseButton = new Button();
+        ImageView imageDeclineView = new ImageView(imageDecline);
+        imageDeclineView.setFitHeight(20);
+        imageDeclineView.setFitWidth(20);
+        pauseButton.setGraphic(imageDeclineView);
+        pauseButton.setPrefSize(100,20);
+        mainGame.getChildren().add(pauseButton);
+        pauseButton.setOnAction(e -> window.setScene(pauseMenu));
 
         //////
         mainGame.getChildren().add(board);
@@ -392,7 +405,7 @@ public class Main extends Application {
                 window.setScene(inGameScreen);
                 updateBoard(board);
                 updatePlayer(player);
-                updateSideGame(sideGame);
+                updateSideGame(sideGame, board);
             }
         });
         Button backButton = new Button("Back to Main Menu");
@@ -545,6 +558,7 @@ public class Main extends Application {
             insertButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
+                    actionType = "insert";//CHANGE THIS
                     Board.insertTile(finalG, 0, false);
                     updateBoard(board);
                 }
@@ -562,6 +576,7 @@ public class Main extends Application {
             insertButton2.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
+                    actionType = "insert";//CHANGE THIS
                     Board.insertTile(finalG, Board.getHeight() - 1, false);
                     updateBoard(board);
                 }
@@ -585,6 +600,7 @@ public class Main extends Application {
             insertButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
+                    actionType = "insert";//CHANGE THIS
                     Board.insertTile(0, finalG, true);
                     updateBoard(board);
                 }
@@ -602,6 +618,7 @@ public class Main extends Application {
             insertButton2.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
+                    actionType = "insert";//CHANGE THIS
                     Board.insertTile(Board.getWidth() - 1, finalG, true);
                     updateBoard(board);
                 }
@@ -672,42 +689,16 @@ public class Main extends Application {
 
     public void generateLeaderBoard() {
         MainMenu.loadPresetBoard(1);
+        System.out.println(Board.getSilkBag().length);
         new LeaderBoard(MainMenu.getAllProfiles(), 1);
     }
 
-    public void updateSideGame(Group sideGame) {
+    public void updateSideGame(Group sideGame, Group board) {
         //INGAME SCREEN
-
-        inGameScreen.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            FloorTile tileClicked;
-            public void handle(MouseEvent event) {
-                for (int i = 0; i < Board.getHeight(); i++) {
-                    for (int j = 0; j < Board.getWidth(); j++) {
-                        try {
-                            tileClicked = Board.getTile((int) ((event.getSceneX() / 40)) - 1,
-                                    ((int) ((event.getSceneY()) / 40) - 2));
-                            System.out.println(tileClicked.getFloorTileType());
-                        } catch (Exception e) {
-                            tileClicked = null;
-                        }
-                    }
-                }
-            }
-        });
 
         if (sideGame != null) {
             sideGame.getChildren().clear();
         }
-
-
-        Image imageDecline = new Image("pause.png");
-        Button pauseButton = new Button();
-        ImageView imageDeclineView = new ImageView(imageDecline);
-        imageDeclineView.setFitHeight(20);
-        imageDeclineView.setFitWidth(20);
-        pauseButton.setGraphic(imageDeclineView);
-        pauseButton.setPrefSize(100,20);
-        pauseButton.setOnAction(e -> window.setScene(pauseMenu));
 
         Label insertPrompt = new Label("Draw a tile");
         insertPrompt.setFont(new Font(10));
@@ -778,8 +769,11 @@ public class Main extends Application {
         rotateRight.setGraphic(arrowRview);
 
         ArrayList<ActionTile> curHand = Game.getCurPlayer().getPlayerHand();
+
+
         if (!curHand.isEmpty()) {
             for (int i = 0; i < curHand.size(); i++) {
+                int finali = i;
                 String curAction = curHand.get(i).getActionTileType();
                 switch (curAction) {
                     case "Fire":
@@ -792,6 +786,33 @@ public class Main extends Application {
                         fireButton.setLayoutX(80 + (i * 80));
                         fireButton.setLayoutY(550);
                         fireButton.setGraphic(fireButtonView);
+                        tileClickedX = -1;
+                        tileClickedY = -1;
+                        actionType = "fire";
+                        fireButton.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                inGameScreen.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                                    public void handle(MouseEvent event) {
+                                        if (actionType == "fire") {
+                                            try {
+                                                tileClickedX = ((int) ((event.getSceneX() / 40) - 1));
+                                                tileClickedY = ((int) ((event.getSceneY() / 40) - 2));
+                                                System.out.println(tileClickedX + " " + tileClickedY);
+                                                int[] chosenTile = new int[]{tileClickedX, tileClickedY};
+                                                curHand.get(finali).action(chosenTile);
+                                                updateBoard(board);
+                                                updateSideGame(sideGame, board);
+                                                System.out.println("test");
+                                            } catch (Exception e) {
+                                                tileClickedX = -1;
+                                                tileClickedY = -1;
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
                         System.out.println("fire");
                         sideGame.getChildren().add(fireButton);
                         break;
@@ -806,6 +827,34 @@ public class Main extends Application {
                         iceButton.setLayoutX(80 + (i * 80));
                         iceButton.setLayoutY(550);
                         iceButton.setGraphic(iceButtonView);
+                        tileClickedX = -1;
+                        tileClickedY = -1;
+                        actionType = "ice";
+                        iceButton.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                inGameScreen.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                                    public void handle(MouseEvent event) {
+                                        if (actionType == "ice") {
+                                            try {
+                                                tileClickedX = ((int) ((event.getSceneX() / 40) - 1));
+                                                tileClickedY = ((int) ((event.getSceneY() / 40) - 2));
+                                                System.out.println(tileClickedX + " " + tileClickedY);
+                                                int[] chosenTile = new int[]{tileClickedX, tileClickedY};
+                                                curHand.get(finali).action(chosenTile);
+                                                updateBoard(board);
+                                                updateSideGame(sideGame, board);
+                                                System.out.println("test2");
+                                            } catch (Exception e) {
+                                                tileClickedX = -1;
+                                                tileClickedY = -1;
+                                                System.out.println("test3");
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        });
                         System.out.println("ice");
                         sideGame.getChildren().add(iceButton);
                         break;
@@ -822,6 +871,7 @@ public class Main extends Application {
                         doubleButton.setGraphic(doubleButtonView);
                         System.out.println("double");
                         sideGame.getChildren().add(doubleButton);
+                        actionType = "double";
                         break;
 
                     case "Backtrack":
@@ -836,29 +886,33 @@ public class Main extends Application {
                         backButton.setGraphic(backButtonView);
                         sideGame.getChildren().add(backButton);
                         System.out.println("back");
+                        actionType = "backtrack";
                         break;
 
                         default:
                             System.out.println("didnt work");
                 }
             }
+            System.out.println(curHand.get(0).getActionTileType());
+
         }
 
         drawTile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 drawTile.setDisable(true);
-                String drawnTile = Game.getCurPlayer().drawTile();
+                String drawnTileType = Game.getCurPlayer().drawTile();
                 ImageView imageview = new ImageView();
-                if (drawnTile.equals("Floor")) {
+                if (drawnTileType.equals("Floor")) {
+                    FloorTile drawnTile = Game.getCurPlayer().getTempFloorTile();
                     imageview.setImage(new Image(Game.getCurPlayer().getTempFloorTile()
                             .getFloorTileType().toLowerCase() + ".png"));
                     insertPrompt.setText("Insert tile into board");
                     insertTileButton.setDisable(false);
                     rotateLeft.setDisable(false);
                     rotateRight.setDisable(false);
-
-                } else  {
+                    imageview.setRotate(imageview.getRotate() + (drawnTile.getOrientation() * 90));
+                } else {
                     imageview.setImage(new Image(Game.getCurPlayer().getTempActionTile()
                             .getActionTileType().toLowerCase().replaceAll(" ", "") + ".png"));
                     insertTileButton.setDisable(true);
@@ -872,6 +926,7 @@ public class Main extends Application {
                 imageview.setFitHeight(70);
                 imageview.setFitWidth(70);
                 imageview.setPreserveRatio(true);
+                movePlayerButton.setDisable(false);
                 sideGame.getChildren().add(imageview);
 
                 rotateRight.setOnAction(new EventHandler<ActionEvent>() {
@@ -879,7 +934,7 @@ public class Main extends Application {
                     public void handle(ActionEvent event) {
                         imageview.setRotate(imageview.getRotate() - 90);
                         FloorTile tempFloorTile = Game.getCurPlayer().getTempFloorTile();
-                        tempFloorTile.setOrientation((tempFloorTile.getOrientation() + 1) % 4);
+                        tempFloorTile.setOrientation((tempFloorTile.getOrientation() - 1) % 4);
                     }
                 });
                 rotateLeft.setOnAction(new EventHandler<ActionEvent>() {
@@ -887,7 +942,7 @@ public class Main extends Application {
                     public void handle(ActionEvent event) {
                         imageview.setRotate(imageview.getRotate() + 90);
                         FloorTile tempFloorTile = Game.getCurPlayer().getTempFloorTile();
-                        tempFloorTile.setOrientation((tempFloorTile.getOrientation() - 1) % 4);
+                        tempFloorTile.setOrientation((tempFloorTile.getOrientation() + 1) % 4);
                     }
                 });
                 movePlayerButton.setOnAction(new EventHandler<ActionEvent>(){
@@ -920,7 +975,9 @@ public class Main extends Application {
                         sideGame.getChildren().remove(imageview);
                         drawTile.setDisable(false);
                         Game.newTurn();
-                        updateSideGame(sideGame);
+                        Game.updateActions();
+                        updateSideGame(sideGame, board);
+                        updateBoard(board);
                     }
                 });
                 storeActionButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -930,7 +987,7 @@ public class Main extends Application {
                         storeActionButton.setDisable(true);
 
                         movePlayerButton.setDisable(false);
-                        updateSideGame(sideGame);
+                        updateSideGame(sideGame, board);
                         //movePlayerButton.setOnAction(e -> Player.makeMove(curBoard,e));
                         // ADD TILE TO PLAYER HAND
                         // ADD IMAGE TO BOTTOM //
@@ -940,7 +997,6 @@ public class Main extends Application {
             }
         });
 
-        sideGame.getChildren().add(pauseButton);
         sideGame.getChildren().add(endTurnButton);
         sideGame.getChildren().add(drawTile);
         sideGame.getChildren().add(movePlayerButton);
@@ -953,6 +1009,7 @@ public class Main extends Application {
         sideGame.getChildren().add(rotateRight);
         sideGame.getChildren().add(rotateLeft);
     }
+
 
     public static void main(String[] args) {
         launch(args);
