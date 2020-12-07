@@ -15,7 +15,7 @@ public class DoubleMoveTile extends ActionTile<Player> {
 
     public void action(Player player) {
         if (isPlayable(player)) {
-           //player.makeMove(); //need to add some event
+            player.setDoubleMoveAvailable(true);
         }
     }
 
@@ -29,7 +29,11 @@ public class DoubleMoveTile extends ActionTile<Player> {
     }
 
     protected boolean isPlayable(Player player) {
-        return true;
+        if (player.checkAtleastOnePath()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

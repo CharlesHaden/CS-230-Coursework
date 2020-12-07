@@ -70,7 +70,6 @@ public  class MainMenu {
 							if (Integer.parseInt(curLine.split(":")[0]) < curGamePlayers.size() + 1) {
 								playerPos = curLine.split(":")[1].split(",");
 								intPlayerPos = new int[] {Integer.parseInt(playerPos[0]),Integer.parseInt(playerPos[1])};
-								System.out.println("Player " + intPlayerPos[0] + " " + intPlayerPos[1]);
 								curGamePlayers.get(Integer.parseInt(curLine.split(":")[0]) - 1).setPlayerPosition(intPlayerPos);
 							}
 							break;
@@ -95,7 +94,7 @@ public  class MainMenu {
 	public static void saveBoard(String fileName) {
 		try {
 			// 	safely creating the files
-			File SavedBoard = new File ( fileName + ".txt");
+			File SavedBoard = new File ("src/" + fileName + ".txt");
 			if (SavedBoard.exists()) {
 				if(!SavedBoard.delete()) {
 					System.out.println("File present, but unable to delete.");
@@ -112,19 +111,19 @@ public  class MainMenu {
 			String orientation = "";
 			FloorTile curTile;
 
-			for (int i = 0; i < 7; i++){
+			for (int i = 0; i < 8; i++){
 				Writer.write(Board.getSilkBag()[i] + ",");
 			}
 
-			Writer.write(".../n");
+			Writer.write("\n...\n");
 
-			Writer.write(Board.getBoardNumber() + "/n");
+			Writer.write(Board.getBoardNumber() + "\n");
 
-			Writer.write(".../n");
+			Writer.write("...\n");
 
-			Writer.write(Board.getWidth() + "," + Board.getHeight() + "/n");
+			Writer.write(Board.getWidth() + "," + Board.getHeight() + "\n");
 
-			Writer.write(".../n");
+			Writer.write("...\n");
 
 			for (int X = 0; X < (Board.getTiles()).length; X++){
 				for (int Y = 0; Y < (Board.getTiles()[X]).length; Y++){
@@ -148,12 +147,12 @@ public  class MainMenu {
 					}
 
 					// writes the current board layout in this format (X,Y : Tile Type : Fixed or not : Orientation)
-					Writer.write("\n" + X + "," + Y + ":" + curTile.getTileType() + curTile.getFixed() + ":" + orientation + "\n");
+					Writer.write(X + "," + Y + ":" + curTile.getFloorTileType() + ":" + curTile.getFixed() + ":" + orientation + "\n");
 				}
 			}
 
 			// writes ... to show that the file is now onto players
-			Writer.write(".../n");
+			Writer.write("...\n");
 
 			// writes players
 			for (int i = 0; i < (Game.getPlayers()).size(); i++){
@@ -168,9 +167,9 @@ public  class MainMenu {
 				Writer.write(":" + curPlayer.getPlayerPosition()[0] + "," + curPlayer.getPlayerPosition()[1] + "\n");
 			}
 			// writes ... to show that the file is now onto turn
-			Writer.write(".../n");
-			Writer.write(Game.getTurn());
-
+			Writer.write("...\n");
+			String bufferturn = Integer.toString(Game.getTurn());
+			Writer.write(bufferturn);
 			Writer.close();
 		} catch (IOException e) {
 			System.out.println("An error occurred.");
@@ -239,7 +238,6 @@ public  class MainMenu {
 				inputFromLine.close();
 			}
 			new Game(curPlayers);
-
 			while (Game.getTurn() != turn) {
 				Game.newTurn();
 			}
@@ -328,7 +326,7 @@ public  class MainMenu {
 			curSegment ++;
 		}
 		for(int i = 0; i < allProfiles.size(); i++) {
-			if (allProfiles.get(i).getName() == playerName) {
+			if (allProfiles.get(i).getName().equals(playerName)) {
 				newPlayer = new Player(playerNum, "", new int[0][0], new int[]{X,Y}, playerHand);
 				newPlayer.setPlayerProfile(allProfiles.get(i));
 			}

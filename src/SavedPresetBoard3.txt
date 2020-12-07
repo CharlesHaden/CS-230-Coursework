@@ -5,10 +5,10 @@
 3,3:Straight:true:North
 4,3:Straight:true:East
 3,4:Corner:true:South
-4,4:Straight:true:East
+4,5:Straight:true:East
 5,5:Goal:true:East
 ...
-1:0,0
+1:4,5
 2:0,3
 3:2,0
-4:2,3
+4:3,0

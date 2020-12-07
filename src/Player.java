@@ -17,6 +17,7 @@ public class Player {
 	private Boolean backtrackUsed;
 	private FloorTile tempFloorTile;
 	private ActionTile tempActionTile;
+	private boolean doubleMoveAvailable;
 
 	/**
 	 * Constructs a player
@@ -32,6 +33,8 @@ public class Player {
 		this.lastMoves = lastMoves;
 		this.playerPosition = playerPosition;
 		this.playerHand = playerHand;
+		this.backtrackUsed = false;
+		this.doubleMoveAvailable = false;
 	}
 
 	/**
@@ -79,12 +82,13 @@ public class Player {
 	}
 
 	/**
-	 * Sets the players last moves
-	 *
-	 * @param lastMoves
+	 * Sets the players last moves as default.
 	 */
-	public void setLastMoves(int[][] lastMoves) {
-		this.lastMoves = lastMoves;
+	public void setLastMoves() {
+		lastMoves[0][0] = playerPosition[0];
+		lastMoves[0][1] = playerPosition[1];
+		lastMoves[1][0] = playerPosition[0];
+		lastMoves[1][1] = playerPosition[1];
 	}
 
 	/**
@@ -295,17 +299,18 @@ public class Player {
 	 * @return Returns true if the player was able to move
 	 */
 	public boolean playerCanMove(int x, int y, int currentPath, int nextPath) {
-
-		FloorTile currentTile = Board.getTile(playerPosition[0], playerPosition[1]);
-		boolean[] currentTileOpenPath = currentTile.getOrientedOpenPath();
-		FloorTile nextTile = Board.getTile(x, y);
-		boolean[] nextTileOpenPath = nextTile.getOrientedOpenPath();
- 		System.out.println(currentTile.getOrientedOpenPath()[0] + " " + currentTile.getOrientedOpenPath()[1] + " " + currentTile.getOrientedOpenPath()[2] + " " + currentTile.getOrientedOpenPath()[3]);
-		System.out.println(nextTileOpenPath[0] + " " + nextTileOpenPath[1] + " " + nextTileOpenPath[2] + " " + nextTileOpenPath[3]);
-		if ((currentTileOpenPath[currentPath]) && (nextTileOpenPath[nextPath] &&
-				!nextTile.getOnFire()) && !(checkForPlayers(x, y))) {
+		try {
+			FloorTile currentTile = Board.getTile(playerPosition[0], playerPosition[1]);
+			boolean[] currentTileOpenPath = currentTile.getOrientedOpenPath();
+			FloorTile nextTile = Board.getTile(x, y);
+			boolean[] nextTileOpenPath = nextTile.getOrientedOpenPath();
+			if ((currentTileOpenPath[currentPath]) && (nextTileOpenPath[nextPath] &&
+					!nextTile.getOnFire()) && !(checkForPlayers(x, y))) {
 				return true;
-		} else {
+			} else {
+				return false;
+			}
+		}catch (Exception e){
 			return false;
 		}
 	}
@@ -332,4 +337,22 @@ public class Player {
 		return playerOnTile;
 	}
 
+	public boolean getDoubleMoveAvailable(){
+		return doubleMoveAvailable;
+	}
+
+	public void setDoubleMoveAvailable(boolean doubleMove){
+		doubleMoveAvailable = doubleMove;
+	}
+
+	public boolean checkAtleastOnePath() {
+		if (playerCanMove(playerPosition[0] - 1, playerPosition[1], 3, 1) ||
+				playerCanMove(playerPosition[0] + 1, playerPosition[1], 1, 3) ||
+				playerCanMove(playerPosition[0], playerPosition[1] + 1, 2, 0) ||
+				playerCanMove(playerPosition[0], playerPosition[1] - 1, 0, 2)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

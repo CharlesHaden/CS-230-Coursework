@@ -17,9 +17,10 @@ public class BacktrackTile extends ActionTile<Player> {
      */
     public void action(Player player) {
         int[][] lastMoves = player.getLastMoves();
-        int[] oneMoveAgo = {lastMoves[0][0], lastMoves[0][1]};
+        //int[] oneMoveAgo = {lastMoves[0][0], lastMoves[0][1]};
         int[] twoMovesAgo = {lastMoves[1][0], lastMoves[1][1]};
         if(isPlayable(player)) {
+            System.out.println(twoMovesAgo[0] + " " + twoMovesAgo[1]);
             player.setPlayerPosition(twoMovesAgo);
         }
     }
@@ -43,16 +44,18 @@ public class BacktrackTile extends ActionTile<Player> {
     protected boolean isPlayable(Player player) {
         if (player.getBacktrackUsed()) {
             return false;
-        }
-        int[][] lastMoves = player.getLastMoves();
-        int[] oneMoveAgo = {lastMoves[0][0], lastMoves[0][1]};
-        int[] twoMovesAgo = {lastMoves[1][0], lastMoves[1][1]};
-        if (Board.getTile(twoMovesAgo[0], twoMovesAgo[1]).getOnFire() == true) {
-            return false;
-        } else if (player.getLastMoves() == null) {
-            return false;
         } else {
-            return true;
+            int[][] lastMoves = player.getLastMoves();
+            //int[] oneMoveAgo = {lastMoves[0][0], lastMoves[0][1]};
+            int[] twoMovesAgo = {lastMoves[1][0], lastMoves[1][1]};
+            System.out.println(twoMovesAgo[0] + " " + twoMovesAgo[1]);
+            if (Board.getTile(twoMovesAgo[0], twoMovesAgo[1]).getOnFire()) {
+                return false;
+            } else if (player.getLastMoves() == null) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 

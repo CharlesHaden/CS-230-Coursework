@@ -58,9 +58,14 @@ public class Main extends Application {
         //MAIN MENU
         Pane root = new Pane();
         mainMenu = new Scene(root, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
-        Text title = new Text(160, 100, WINDOW_TITLE);
-        title.setFont(new Font(50));
-        root.getChildren().add(title);
+
+        Image mainLogoImage = new Image("logo.png");
+        ImageView mainLogoView = new ImageView(mainLogoImage);
+        mainLogoView.setFitWidth(330);
+        mainLogoView.setFitHeight(170);
+        mainLogoView.setX(190);
+        mainLogoView.setY(30);
+        root.getChildren().add(mainLogoView);
 
         //CREATE BUTTONS
         Button playButton = new Button("Play");
@@ -132,6 +137,7 @@ public class Main extends Application {
         messageOtD.setWrapText(true);
         root.getChildren().add(messageOtD);
 
+
         //PAUSE MENU
 
         Pane pause = new Pane();
@@ -160,7 +166,6 @@ public class Main extends Application {
         saveAndExitButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event) {
-                System.out.println(saveGameTextField.getText());
                 window.setScene(mainMenu);
                 MainMenu.saveBoard(saveGameTextField.getText()); 
                 //ADD STRING PARAMETER -> load game
@@ -192,13 +197,11 @@ public class Main extends Application {
 
         inGameScreen = new Scene(mainGame, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
 
-
         //LEADERBOARD
 
         Pane leaderboard = new Pane();
         leaderboardScreen = new Scene(leaderboard, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
         MainMenu.loadProfile();
-        System.out.println(MainMenu.getAllProfiles().get(0).getName());
         generateLeaderBoard();
         leaderBoardTable = new TableView();
         leaderBoardTable.setItems(getProfile());
@@ -307,6 +310,52 @@ public class Main extends Application {
 
         });
 
+        TextField loadProfTextField1 = new TextField();
+        loadProfTextField1.setPromptText("Enter player 1 profile:");
+        loadProfTextField1.setLayoutX(100);
+        loadProfTextField1.setLayoutY(400);
+        gameSetup.getChildren().add(loadProfTextField1);
+
+        Button loadProfButton1 = new Button("Load Profile");
+        loadProfButton1.setLayoutX(250);
+        loadProfButton1.setLayoutY(400);
+        gameSetup.getChildren().add(loadProfButton1);
+
+        loadProfButton1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                for (int i = 0; i < MainMenu.getAllProfiles().size(); i++) {
+                    if (MainMenu.getAllProfiles().get(i).getName().equals(loadProfTextField1.getText())) {
+                        MainMenu.getCurGamePlayers().get(0).setPlayerProfile(MainMenu.getAllProfiles().get(i));
+                    }
+
+                }
+            }
+        });
+
+        TextField loadProfTextField2 = new TextField();
+        loadProfTextField2.setPromptText("Enter player 2 profile:");
+        loadProfTextField2.setLayoutX(100);
+        loadProfTextField2.setLayoutY(450);
+        gameSetup.getChildren().add(loadProfTextField2);
+
+        Button loadProfButton2 = new Button("Load Profile");
+        loadProfButton2.setLayoutX(250);
+        loadProfButton2.setLayoutY(450);
+        gameSetup.getChildren().add(loadProfButton2);
+
+        loadProfButton2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                for (int i = 0; i < MainMenu.getAllProfiles().size(); i++) {
+                    if (MainMenu.getAllProfiles().get(i).getName().equals(loadProfTextField2.getText())) {
+                        MainMenu.getCurGamePlayers().get(1).setPlayerProfile(MainMenu.getAllProfiles().get(i));
+                    }
+
+                }
+            }
+        });
+
         Button twoPlayer = new Button("2");
         twoPlayer.setLayoutX(100);
         twoPlayer.setLayoutY(190);
@@ -329,18 +378,6 @@ public class Main extends Application {
                 presetBoard1.setDisable(false);
                 presetBoard2.setDisable(false);
                 presetBoard3.setDisable(false);
-                for (int count = 1; count < 3; count++) {
-                    Image carImage = new Image("player" + count + ".png");
-                    ImageView chooseCarView = new ImageView(carImage);
-                    chooseCarView.setFitHeight(50);
-                    chooseCarView.setFitWidth(50);
-                    Button carButton = new Button();
-                    carButton.setLayoutX((count*100));
-                    carButton.setLayoutY(370);
-                    carButton.setPrefSize(80,80);
-                    carButton.setGraphic(chooseCarView);
-                    gameSetup.getChildren().add(carButton);
-                }
                 MainMenu.curGenPlayers(2);
             }
         });
@@ -351,20 +388,28 @@ public class Main extends Application {
                 presetBoard1.setDisable(false);
                 presetBoard2.setDisable(false);
                 presetBoard3.setDisable(false);
-                for (int count = 1; count < 4; count++) {
-                    Image carImage = new Image("player" + count + ".png");
-                    ImageView chooseCarView = new ImageView(carImage);
-                    chooseCarView.setFitHeight(50);
-                    chooseCarView.setFitWidth(50);
-                    Button carButton = new Button();
-                    carButton.setLayoutX((count*100));
-                    carButton.setLayoutY(370);
-                    carButton.setPrefSize(80,80);
-                    carButton.setGraphic(chooseCarView);
-                    gameSetup.getChildren().add(carButton);
+                TextField loadProfTextField3 = new TextField();
+                loadProfTextField3.setPromptText("Enter player 3 profile:");
+                loadProfTextField3.setLayoutX(350);
+                loadProfTextField3.setLayoutY(400);
+                gameSetup.getChildren().add(loadProfTextField3);
 
-                }
+                Button loadProfButton3 = new Button("Load Profile");
+                loadProfButton3.setLayoutX(480);
+                loadProfButton3.setLayoutY(400);
+                gameSetup.getChildren().add(loadProfButton3);
                 MainMenu.curGenPlayers(3);
+                loadProfButton3.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        for (int i = 0; i < MainMenu.getAllProfiles().size(); i++) {
+                            if (MainMenu.getAllProfiles().get(i).getName().equals(loadProfTextField3.getText())) {
+                                MainMenu.getCurGamePlayers().get(2).setPlayerProfile(MainMenu.getAllProfiles().get(i));
+                            }
+
+                        }
+                    }
+                });
             }
         });
 
@@ -375,22 +420,54 @@ public class Main extends Application {
                 presetBoard1.setDisable(false);
                 presetBoard2.setDisable(false);
                 presetBoard3.setDisable(false);
-                for (int count = 1; count < 5; count++) {
-                    Image carImage = new Image("player"+ count+".png");
-                    ImageView chooseCarView = new ImageView(carImage);
-                    chooseCarView.setFitHeight(50);
-                    chooseCarView.setFitWidth(50);
-                    Button carButton = new Button();
-                    carButton.setLayoutX((count*100));
-                    carButton.setLayoutY(370);
-                    carButton.setPrefSize(80,80);
-                    carButton.setGraphic(chooseCarView);
-                    gameSetup.getChildren().add(carButton);
-                }
+                TextField loadProfTextField3 = new TextField();
+                loadProfTextField3.setPromptText("Enter player 3 profile:");
+                loadProfTextField3.setLayoutX(350);
+                loadProfTextField3.setLayoutY(400);
+                gameSetup.getChildren().add(loadProfTextField3);
+
+                Button loadProfButton3 = new Button("Load Profile");
+                loadProfButton3.setLayoutX(480);
+                loadProfButton3.setLayoutY(400);
+                gameSetup.getChildren().add(loadProfButton3);
+
+                loadProfButton3.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        for (int i = 0; i < MainMenu.getAllProfiles().size(); i++) {
+                            if (MainMenu.getAllProfiles().get(i).getName().equals(loadProfTextField3.getText())) {
+                                MainMenu.getCurGamePlayers().get(2).setPlayerProfile(MainMenu.getAllProfiles().get(i));
+                            }
+
+                        }
+                    }
+                });
+
+                TextField loadProfTextField4 = new TextField();
+                loadProfTextField4.setPromptText("Enter player 4 profile:");
+                loadProfTextField4.setLayoutX(350);
+                loadProfTextField4.setLayoutY(450);
+                gameSetup.getChildren().add(loadProfTextField4);
+
+                Button loadProfButton4 = new Button("Load Profile");
+                loadProfButton4.setLayoutX(480);
+                loadProfButton4.setLayoutY(450);
+                gameSetup.getChildren().add(loadProfButton4);
                 MainMenu.curGenPlayers(4);
+
+                loadProfButton4.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        for (int i = 0; i < MainMenu.getAllProfiles().size(); i++) {
+                            if (MainMenu.getAllProfiles().get(i).getName().equals(loadProfTextField4.getText())) {
+                                MainMenu.getCurGamePlayers().get(3).setPlayerProfile(MainMenu.getAllProfiles().get(i));
+                            }
+
+                        }
+                    }
+                });
             }
         });
-
 
 
         Button startGame = new Button("Start game");
@@ -403,7 +480,7 @@ public class Main extends Application {
             public void handle(ActionEvent event) {
                 // WHILE BOARD NOT LOADED, DO NOT CHANGE SCREEN
                 window.setScene(inGameScreen);
-                updateBoard(board);
+                updateBoard(board, sideGame, player);
                 updatePlayer(player);
                 updateSideGame(sideGame, board, player);
             }
@@ -439,8 +516,6 @@ public class Main extends Application {
             public void handle(ActionEvent event) {
                 MainMenu.newProfile(textfield.getText());
                 createProfLabel.setText(textfield.getText() + " successfully created");
-                //System.out.println(allprofiles.size().getName);
-                //MainMenu.saveProfile();
             }
         });
         profilePane.getChildren().add(profileConfirm);
@@ -517,27 +592,30 @@ public class Main extends Application {
     }
 
     public void updatePlayer(Group player) {
-        if (player != null) {
-            player.getChildren().clear();
-        }
-
-        for (int i = 0; i < Game.getPlayers().size(); i++) {
-            Player curPlayer = Game.getPlayers().get(i);
-            String playerNo = "player";
-            Image playerCarImage = new Image(playerNo + (i + 1) + ".png");
-            ImageView playerCarView = new ImageView(playerCarImage);
-            playerCarView.setFitWidth(40);
-            playerCarView.setFitHeight(40);
-            int[] position = curPlayer.getPlayerPosition();
-            playerCarView.setX(50 + (position[0] * 40));
-            playerCarView.setY(70 + (position[1] * 40));
-            playerCarView.setRotate(90 * (Board.getTile(curPlayer.getPlayerPosition()[0],
-                    curPlayer.getPlayerPosition()[1]).getOrientation()));
-            player.getChildren().add(playerCarView);
+        if (Game.checkWin()) {
+            System.out.println("YOU WON!");
+        } else {
+            if (player != null) {
+                player.getChildren().clear();
+            }
+            for (int i = 0; i < Game.getPlayers().size(); i++) {
+                Player curPlayer = Game.getPlayers().get(i);
+                String playerNo = "player";
+                Image playerCarImage = new Image(playerNo + (i + 1) + ".png");
+                ImageView playerCarView = new ImageView(playerCarImage);
+                playerCarView.setFitWidth(40);
+                playerCarView.setFitHeight(40);
+                int[] position = curPlayer.getPlayerPosition();
+                playerCarView.setX(50 + (position[0] * 40));
+                playerCarView.setY(70 + (position[1] * 40));
+                playerCarView.setRotate(90 * (Board.getTile(curPlayer.getPlayerPosition()[0],
+                        curPlayer.getPlayerPosition()[1]).getOrientation()));
+                player.getChildren().add(playerCarView);
+            }
         }
     }
 
-    public void updateBoard(Group board){
+    public void updateBoard(Group board, Group sideGame, Group player){
 
         if (board != null) {
             board.getChildren().clear();
@@ -560,7 +638,9 @@ public class Main extends Application {
                 public void handle(ActionEvent event) {
                     actionType = "insert";//CHANGE THIS
                     Board.insertTile(finalG, 0, false);
-                    updateBoard(board);
+                    updateBoard(board, sideGame, player);
+                    insertButton.setDisable(true);
+
                 }
             });
             insertButton.setDisable(!Board.checkInsert(g, 0, false));
@@ -578,7 +658,8 @@ public class Main extends Application {
                 public void handle(ActionEvent event) {
                     actionType = "insert";//CHANGE THIS
                     Board.insertTile(finalG, Board.getHeight() - 1, false);
-                    updateBoard(board);
+                    updateBoard(board, sideGame, player);
+                    insertButton2.setDisable(true);
                 }
             });
             insertButton2.setDisable(!Board.checkInsert(g, Board.getHeight() - 1, false));
@@ -602,7 +683,8 @@ public class Main extends Application {
                 public void handle(ActionEvent event) {
                     actionType = "insert";//CHANGE THIS
                     Board.insertTile(0, finalG, true);
-                    updateBoard(board);
+                    updateBoard(board, sideGame, player);
+                    insertButton.setDisable(true);
                 }
             });
             insertButton.setDisable(!Board.checkInsert(0, finalG, true));
@@ -620,7 +702,8 @@ public class Main extends Application {
                 public void handle(ActionEvent event) {
                     actionType = "insert";//CHANGE THIS
                     Board.insertTile(Board.getWidth() - 1, finalG, true);
-                    updateBoard(board);
+                    updateBoard(board, sideGame, player);
+                    insertButton.setDisable(true);
                 }
             });
             insertButton2.setDisable(!Board.checkInsert(Board.getWidth() - 1, finalG, true));
@@ -689,7 +772,6 @@ public class Main extends Application {
 
     public void generateLeaderBoard() {
         MainMenu.loadPresetBoard(1);
-        System.out.println(Board.getSilkBag().length);
         new LeaderBoard(MainMenu.getAllProfiles(), 1);
     }
 
@@ -699,6 +781,7 @@ public class Main extends Application {
         if (sideGame != null) {
             sideGame.getChildren().clear();
         }
+
 
         Label insertPrompt = new Label("Draw a tile");
         insertPrompt.setFont(new Font(10));
@@ -729,24 +812,15 @@ public class Main extends Application {
         playAction.setDisable(true);
         Button movePlayerButton = new Button("Move player");
         movePlayerButton.setPrefSize(90, 20);
-        movePlayerButton.setLayoutX(610);
+        movePlayerButton.setLayoutX(580);
         movePlayerButton.setLayoutY(400);
         movePlayerButton.setDisable(true);
-        Button insertTileButton = new Button("Insert Tile");
-        insertTileButton.setPrefSize(90, 20);
-        insertTileButton.setLayoutX(520);
-        insertTileButton.setLayoutY(400);
-        insertTileButton.setDisable(true);
-        Button storeActionButton = new Button("Store Action");
-        storeActionButton.setPrefSize(90, 20);
-        storeActionButton.setLayoutX(565);
-        storeActionButton.setLayoutY(374);
-        storeActionButton.setDisable(true);
 
         Button endTurnButton = new Button("End turn");
         endTurnButton.setPrefSize(90, 20);
         endTurnButton.setLayoutX(580);
         endTurnButton.setLayoutY(550);
+        endTurnButton.setDisable(true);
 
         Image arrowLeft = new Image("clockwisearrow.png");
         Button rotateLeft = new Button();
@@ -798,12 +872,10 @@ public class Main extends Application {
                                             try {
                                                 tileClickedX = ((int) ((event.getSceneX() / 40) - 1));
                                                 tileClickedY = ((int) ((event.getSceneY() / 40) - 2));
-                                                System.out.println(tileClickedX + " " + tileClickedY);
                                                 int[] chosenTile = new int[]{tileClickedX, tileClickedY};
                                                 curHand.get(finali).action(chosenTile);
-                                                updateBoard(board);
+                                                updateBoard(board, sideGame, player);
                                                 updateSideGame(sideGame, board, player);
-                                                System.out.println("test");
                                             } catch (Exception e) {
                                                 tileClickedX = -1;
                                                 tileClickedY = -1;
@@ -813,7 +885,6 @@ public class Main extends Application {
                                 });
                             }
                         });
-                        System.out.println("fire");
                         sideGame.getChildren().add(fireButton);
                         break;
 
@@ -839,23 +910,19 @@ public class Main extends Application {
                                             try {
                                                 tileClickedX = ((int) ((event.getSceneX() / 40) - 1));
                                                 tileClickedY = ((int) ((event.getSceneY() / 40) - 2));
-                                                System.out.println(tileClickedX + " " + tileClickedY);
                                                 int[] chosenTile = new int[]{tileClickedX, tileClickedY};
                                                 curHand.get(finali).action(chosenTile);
-                                                updateBoard(board);
+                                                updateBoard(board,sideGame,player);
                                                 updateSideGame(sideGame, board, player);
-                                                System.out.println("test2");
                                             } catch (Exception e) {
                                                 tileClickedX = -1;
                                                 tileClickedY = -1;
-                                                System.out.println("test3");
                                             }
                                         }
                                     }
                                 });
                             }
                         });
-                        System.out.println("ice");
                         sideGame.getChildren().add(iceButton);
                         break;
 
@@ -869,9 +936,13 @@ public class Main extends Application {
                         doubleButton.setLayoutX(80 + (i * 80));
                         doubleButton.setLayoutY(550);
                         doubleButton.setGraphic(doubleButtonView);
-                        System.out.println("double");
                         sideGame.getChildren().add(doubleButton);
                         actionType = "double";
+                        doubleButton.setOnAction(new EventHandler<ActionEvent>() {
+                            public void handle(ActionEvent event) {
+                                Game.getCurPlayer().setDoubleMoveAvailable(true);
+                            }
+                            });
                         break;
 
                     case "Backtrack":
@@ -885,15 +956,44 @@ public class Main extends Application {
                         backButton.setLayoutY(550);
                         backButton.setGraphic(backButtonView);
                         sideGame.getChildren().add(backButton);
-                        System.out.println("back");
+                        tileClickedX = -1;
+                        tileClickedY = -1;
                         actionType = "backtrack";
+                        backButton.setOnAction(new EventHandler<ActionEvent>() {
+                        public void handle(ActionEvent event) {
+                            inGameScreen.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                                public void handle(MouseEvent event) {
+                                    if (actionType == "backtrack") {
+                                        try {
+                                            tileClickedX = ((int) ((event.getSceneX() / 40) - 1));
+                                            tileClickedY = ((int) ((event.getSceneY() / 40) - 2));
+
+                                            for (int selectedPlayer = 0; selectedPlayer < 4; selectedPlayer++){
+                                                if (Game.getPlayers().get(selectedPlayer).getPlayerPosition()[0] ==
+                                                        tileClickedX && Game.getPlayers().get(selectedPlayer)
+                                                        .getPlayerPosition()[1] == tileClickedY){
+                                                    curHand.get(finali).action(Game.getPlayers().get(selectedPlayer));
+
+                                                }
+                                            }
+                                            updatePlayer(player);
+                                            updateBoard(board, sideGame, player);
+                                            updateSideGame(sideGame, board, player);
+                                        } catch (Exception e) {
+                                            tileClickedX = -1;
+                                            tileClickedY = -1;
+                                        }
+                                    }
+                            }
+                        });
+                    }
+                });
                         break;
 
                         default:
-                            System.out.println("didnt work");
+
                 }
             }
-            System.out.println(curHand.get(0).getActionTileType());
 
         }
 
@@ -903,22 +1003,22 @@ public class Main extends Application {
                 drawTile.setDisable(true);
                 String drawnTileType = Game.getCurPlayer().drawTile();
                 ImageView imageview = new ImageView();
+                movePlayerButton.setDisable(false);
                 if (drawnTileType.equals("Floor")) {
                     FloorTile drawnTile = Game.getCurPlayer().getTempFloorTile();
                     imageview.setImage(new Image(Game.getCurPlayer().getTempFloorTile()
                             .getFloorTileType().toLowerCase() + ".png"));
                     insertPrompt.setText("Insert tile into board");
-                    insertTileButton.setDisable(false);
+                    endTurnButton.setDisable(true);
                     rotateLeft.setDisable(false);
                     rotateRight.setDisable(false);
                     imageview.setRotate(imageview.getRotate() + (drawnTile.getOrientation() * 90));
                 } else {
                     imageview.setImage(new Image(Game.getCurPlayer().getTempActionTile()
                             .getActionTileType().toLowerCase().replaceAll(" ", "") + ".png"));
-                    insertTileButton.setDisable(true);
-                    storeActionButton.setDisable(false);
                     rotateLeft.setDisable(true);
                     rotateRight.setDisable(true);
+
                 }
 
                 imageview.setX(574);
@@ -926,7 +1026,6 @@ public class Main extends Application {
                 imageview.setFitHeight(70);
                 imageview.setFitWidth(70);
                 imageview.setPreserveRatio(true);
-                movePlayerButton.setDisable(false);
                 sideGame.getChildren().add(imageview);
 
                 rotateRight.setOnAction(new EventHandler<ActionEvent>() {
@@ -945,9 +1044,20 @@ public class Main extends Application {
                         tempFloorTile.setOrientation((tempFloorTile.getOrientation() + 1) % 4);
                     }
                 });
-                movePlayerButton.setOnAction(new EventHandler<ActionEvent>(){
+                int movesAvailable = 1;
+                if (!Game.getCurPlayer().checkAtleastOnePath()) {
+                    movesAvailable--;
+                    endTurnButton.setDisable(false);
+                }
+                if (Game.getCurPlayer().getDoubleMoveAvailable()){
+                    movesAvailable++;
+                }
+                for (int movesRemaining = 0; movesRemaining < movesAvailable; movesRemaining++) {
+
+                    movePlayerButton.setOnAction(new EventHandler<ActionEvent>() {
                     int playerX = Game.getCurPlayer().getPlayerPosition()[0];
                     int playerY = Game.getCurPlayer().getPlayerPosition()[1];
+
                     @Override
                     public void handle(ActionEvent event) {
                         Button moveLeftButton = new Button("Left");
@@ -962,11 +1072,17 @@ public class Main extends Application {
                             @Override
                             public void handle(ActionEvent event) {
                                 Game.getCurPlayer().makeMove("Left");
-                                Game.newTurn();
-                                Game.updateActions();
                                 updatePlayer(player);
-                                updateSideGame(sideGame, board, player);
-                                updateBoard(board);
+                                if (!Game.getCurPlayer().getDoubleMoveAvailable()) {
+                                    Game.newTurn();
+                                    Game.updateActions();
+                                    updateBoard(board, sideGame, player);
+                                    updateSideGame(sideGame, board, player);
+
+                                } else {
+                                    updateSideGame(sideGame, board, player);
+                                    updatePlayer(player);
+                                }
                             }
                         });
                         moveDownButton.setLayoutX(400);
@@ -977,11 +1093,17 @@ public class Main extends Application {
                             @Override
                             public void handle(ActionEvent event) {
                                 Game.getCurPlayer().makeMove("Down");
-                                Game.newTurn();
-                                Game.updateActions();
                                 updatePlayer(player);
-                                updateSideGame(sideGame, board, player);
-                                updateBoard(board);
+                                if (!Game.getCurPlayer().getDoubleMoveAvailable()) {
+                                    Game.newTurn();
+                                    Game.updateActions();
+                                    updateBoard(board, sideGame, player);
+                                    updateSideGame(sideGame, board, player);
+                                    updatePlayer(player);
+                                } else {
+                                    updateSideGame(sideGame, board, player);
+                                    updatePlayer(player);
+                                }
                             }
                         });
                         moveRightButton.setLayoutX(470);
@@ -992,11 +1114,17 @@ public class Main extends Application {
                             @Override
                             public void handle(ActionEvent event) {
                                 Game.getCurPlayer().makeMove("Right");
-                                Game.newTurn();
-                                Game.updateActions();
                                 updatePlayer(player);
-                                updateSideGame(sideGame, board, player);
-                                updateBoard(board);
+                                if (!Game.getCurPlayer().getDoubleMoveAvailable()) {
+                                    Game.newTurn();
+                                    Game.updateActions();
+                                    updateBoard(board, sideGame, player);
+                                    updateSideGame(sideGame, board, player);
+                                    updatePlayer(player);
+                                } else {
+                                    updateSideGame(sideGame, board, player);
+                                    updatePlayer(player);
+                                }
                             }
                         });
                         moveUpButton.setLayoutX(400);
@@ -1007,17 +1135,25 @@ public class Main extends Application {
                             @Override
                             public void handle(ActionEvent event) {
                                 Game.getCurPlayer().makeMove("Up");
-                                Game.newTurn();
-                                Game.updateActions();
                                 updatePlayer(player);
-                                updateSideGame(sideGame, board, player);
-                                updateBoard(board);
+                                if (!Game.getCurPlayer().getDoubleMoveAvailable()) {
+                                    Game.newTurn();
+                                    Game.updateActions();
+                                    updateBoard(board, sideGame, player);
+                                    updateSideGame(sideGame, board, player);
+                                    updatePlayer(player);
+                                } else {
+                                    updateSideGame(sideGame, board, player);
+                                    updatePlayer(player);
+                                }
                             }
                         });
                         sideGame.getChildren().addAll(moveDownButton,moveLeftButton,moveRightButton,moveUpButton);
-
                     }
                 });
+                Game.getCurPlayer().setDoubleMoveAvailable(false);
+                }
+
                 endTurnButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
@@ -1026,31 +1162,15 @@ public class Main extends Application {
                         Game.newTurn();
                         Game.updateActions();
                         updateSideGame(sideGame, board, player);
-                        updateBoard(board);
+                        updateBoard(board, sideGame, player);
                     }
                 });
-                storeActionButton.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        sideGame.getChildren().remove(imageview);
-                        storeActionButton.setDisable(true);
-
-                        movePlayerButton.setDisable(false);
-                        updateSideGame(sideGame, board, player);
-                        //movePlayerButton.setOnAction(e -> Player.makeMove(curBoard,e));
-                        // ADD TILE TO PLAYER HAND
-                        // ADD IMAGE TO BOTTOM //
-                    }
-                });
-
             }
         });
 
         sideGame.getChildren().add(endTurnButton);
         sideGame.getChildren().add(drawTile);
         sideGame.getChildren().add(movePlayerButton);
-        sideGame.getChildren().add(insertTileButton);
-        sideGame.getChildren().add(storeActionButton);
         sideGame.getChildren().add(playAction);
         sideGame.getChildren().add(availableAction);
         sideGame.getChildren().add(playerTurnLabel);

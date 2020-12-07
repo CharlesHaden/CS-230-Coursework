@@ -98,6 +98,9 @@ public class Game {
 	 */
 	public static void setPlayers(ArrayList<Player> newPlayers) {
 		players = newPlayers;
+		for (Player player: players) {
+			player.setLastMoves();
+		}
 	}
 
 	/**
