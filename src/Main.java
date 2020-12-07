@@ -405,7 +405,7 @@ public class Main extends Application {
                 window.setScene(inGameScreen);
                 updateBoard(board);
                 updatePlayer(player);
-                updateSideGame(sideGame, board);
+                updateSideGame(sideGame, board, player);
             }
         });
         Button backButton = new Button("Back to Main Menu");
@@ -693,7 +693,7 @@ public class Main extends Application {
         new LeaderBoard(MainMenu.getAllProfiles(), 1);
     }
 
-    public void updateSideGame(Group sideGame, Group board) {
+    public void updateSideGame(Group sideGame, Group board, Group player) {
         //INGAME SCREEN
 
         if (sideGame != null) {
@@ -802,7 +802,7 @@ public class Main extends Application {
                                                 int[] chosenTile = new int[]{tileClickedX, tileClickedY};
                                                 curHand.get(finali).action(chosenTile);
                                                 updateBoard(board);
-                                                updateSideGame(sideGame, board);
+                                                updateSideGame(sideGame, board, player);
                                                 System.out.println("test");
                                             } catch (Exception e) {
                                                 tileClickedX = -1;
@@ -843,7 +843,7 @@ public class Main extends Application {
                                                 int[] chosenTile = new int[]{tileClickedX, tileClickedY};
                                                 curHand.get(finali).action(chosenTile);
                                                 updateBoard(board);
-                                                updateSideGame(sideGame, board);
+                                                updateSideGame(sideGame, board, player);
                                                 System.out.println("test2");
                                             } catch (Exception e) {
                                                 tileClickedX = -1;
@@ -955,16 +955,43 @@ public class Main extends Application {
                         moveLeftButton.setLayoutX(330);
                         moveLeftButton.setLayoutY(550);
                         moveLeftButton.setPrefSize(60, 20);
+                        moveLeftButton.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                Game.getCurPlayer().makeMove("Left");
+                                updatePlayer(player);
+                            }
+                        });
                         moveDownButton.setLayoutX(400);
                         moveDownButton.setLayoutY(550);
                         moveDownButton.setPrefSize(60, 20);
+                        moveDownButton.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                Game.getCurPlayer().makeMove("Down");
+                                updatePlayer(player);
+                            }
+                        });
                         moveRightButton.setLayoutX(470);
                         moveRightButton.setLayoutY(550);
                         moveRightButton.setPrefSize(60, 20);
+                        moveRightButton.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                Game.getCurPlayer().makeMove("Right");
+                                updatePlayer(player);
+                            }
+                        });
                         moveUpButton.setLayoutX(400);
                         moveUpButton.setLayoutY(520);
                         moveUpButton.setPrefSize(60, 20);
-
+                        moveUpButton.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                Game.getCurPlayer().makeMove("Up");
+                                updatePlayer(player);
+                            }
+                        });
                         sideGame.getChildren().addAll(moveDownButton,moveLeftButton,moveRightButton,moveUpButton);
 
                     }
@@ -976,7 +1003,7 @@ public class Main extends Application {
                         drawTile.setDisable(false);
                         Game.newTurn();
                         Game.updateActions();
-                        updateSideGame(sideGame, board);
+                        updateSideGame(sideGame, board, player);
                         updateBoard(board);
                     }
                 });
@@ -987,7 +1014,7 @@ public class Main extends Application {
                         storeActionButton.setDisable(true);
 
                         movePlayerButton.setDisable(false);
-                        updateSideGame(sideGame, board);
+                        updateSideGame(sideGame, board, player);
                         //movePlayerButton.setOnAction(e -> Player.makeMove(curBoard,e));
                         // ADD TILE TO PLAYER HAND
                         // ADD IMAGE TO BOTTOM //

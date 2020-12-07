@@ -31,6 +31,7 @@ public abstract class FloorTile extends Tile {
         this.orientation = orientation;
         this.fixed = false;
         this.openPath = openPath;
+        orientedOpenPath = new boolean[4];
         setOrientedOpenPath();
     }
 
@@ -45,6 +46,7 @@ public abstract class FloorTile extends Tile {
         this.orientation = orientation;
         this.fixed = fixed;
         this.openPath = openPath;
+        orientedOpenPath = new boolean[4];
         setOrientedOpenPath();
     }
 
@@ -54,7 +56,7 @@ public abstract class FloorTile extends Tile {
      * @return array of open paths.
      */
     public boolean[] getOpenPath(){
-        return openPath;
+        return  openPath;
     }
 
     /**
@@ -178,10 +180,10 @@ public abstract class FloorTile extends Tile {
         for (int i = 0; i < orientation; i++) {
             boolean first = openPath[0];
             int j;
-            for (j = 0; j < openPath.length-1; j++) {
-                openPath[j] = openPath[j+1];
+            for (j = 0; j < openPath.length - 1; j++) {
+                orientedOpenPath[j] = openPath[j+1];
             }
-            openPath[j] = first;
+            orientedOpenPath[j] = first;
         }
     }
 

@@ -234,20 +234,37 @@ public class Player {
 	 */
 	public void makeMove(String direction) {
 		boolean moved = false;
-
+		int tempX = playerPosition[0];
+		int tempY = playerPosition[1];
 		do {
 			switch (direction) {
 				case "Up":
-					moved = movePlayer(playerPosition[0], playerPosition[1] + 1, 0, 1);
+					if (Board.getTile(tempX, tempY - 1) != null) {
+						System.out.println("up");
+						moved = movePlayer(tempX, tempY - 1, 0, 1, tempX, tempX);
+						System.out.println(movePlayer(tempX, tempY - 1, 0, 1, tempX, tempX));
+					}
 					break;
 				case "Down":
-					moved = movePlayer(playerPosition[0], playerPosition[1] - 1, 1, 0);
+					if (Board.getTile(tempX, tempY + 1) != null) {
+						System.out.println("down");
+						moved = movePlayer(tempX, tempY + 1, 1, 0, tempX, tempX);
+						System.out.println(movePlayer(tempX, tempY + 1, 1, 0, tempX, tempX));
+					}
 					break;
 				case "Left":
-					moved = movePlayer(playerPosition[0] - 1, playerPosition[1], 2, 3);
+					if (Board.getTile(tempX - 1, tempY) != null) {
+						System.out.println("left");
+						moved = movePlayer(tempX - 1, tempY, 2, 3, tempX, tempX);
+						System.out.println(movePlayer(tempX - 1, tempY, 2, 3, tempX, tempX));
+					}
 					break;
 				case "Right":
-					moved = movePlayer(playerPosition[0] + 1, playerPosition[1], 3, 2);
+					if (Board.getTile(tempX + 1, tempY) != null) {
+						System.out.println("right");
+						moved = movePlayer(tempX + 1, tempY, 3, 2, tempX, tempX);
+						System.out.println(movePlayer(tempX + 1, tempY, 3, 2, tempX, tempX));
+					}
 					break;
 			}
 		} while (moved == false);
@@ -262,19 +279,16 @@ public class Player {
 	 * @param nextPath The position of the boolean in the array {UP,DOWN,LEFT,RIGHT} of the next tile
 	 * @return Returns true if the player was able to move
 	 */
-	public boolean movePlayer(int x, int y, int currentPath, int nextPath) {
-		Boolean moved = false;
+	public boolean movePlayer(int x, int y, int currentPath, int nextPath, int prevX, int prevY) {
 		boolean playerAvailableToMove = playerCanMove(x, y, currentPath, nextPath);
-
 		if (playerAvailableToMove) {
 			playerPosition[0] = x;
 			playerPosition[1] = y;
-			moved = true;
+			updateLastMoves(prevX, prevY);
+			return true;
 		} else {
-			moved = false;
+			return false;
 		}
-
-		return moved;
 	}
 
 	/**
@@ -286,19 +300,19 @@ public class Player {
 	 * @return Returns true if the player was able to move
 	 */
 	public boolean playerCanMove(int x, int y, int currentPath, int nextPath) {
-		FloorTile currentTile = (FloorTile) Board.getTile(playerPosition[0], playerPosition[1]);
+		FloorTile currentTile = Board.getTile(playerPosition[0], playerPosition[1]);
 		boolean[] currentTileOpenPath = currentTile.getOrientedOpenPath();
-
 		FloorTile nextTile = Board.getTile(x, y);
 		boolean[] nextTileOpenPath = nextTile.getOrientedOpenPath();
-		if ((currentTileOpenPath[currentPath]) && (nextTileOpenPath[nextPath])) {
-			if ((!nextTile.getOnFire()) && (checkForPlayers(x, y))) {
+ 		System.out.println(currentTile.getOrientedOpenPath()[0] + " " + currentTile.getOrientedOpenPath()[1] + " " + currentTile.getOrientedOpenPath()[2] + " " + currentTile.getOrientedOpenPath()[3]);
+		System.out.println(nextTileOpenPath[0] + " " + nextTileOpenPath[1] + " " + nextTileOpenPath[2] + " " + nextTileOpenPath[3]);
+
+		if ((currentTileOpenPath[currentPath]) && (nextTileOpenPath[nextPath] &&
+				!nextTile.getOnFire()) && (checkForPlayers(x, y))) {
 				return true;
-			}
 		} else {
 			return false;
 		}
-		return false;
 	}
 
 	/**
@@ -320,7 +334,6 @@ public class Player {
 				playerOnTile = false;
 			}
 		}
-
 		return playerOnTile;
 	}
 
