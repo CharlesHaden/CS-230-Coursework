@@ -1,4 +1,3 @@
-
 /**
  * Game.java
  * Represents and maintains a current instance of a Game
@@ -14,10 +13,10 @@ public class Game {
 	private static ArrayList<Player> players;
 	private static Player curPlayer;
 
-
 	public Game(ArrayList<Player> players) {
 		this.players = players;
 		turn = 0; //assigns turn counter to 0 at the start of play
+		curPlayer = players.get(0);
 	}
 
 	/**
@@ -88,6 +87,10 @@ public class Game {
 		}
 	}
 
+	public static void setCurPlayer(Player curPlayer) {
+		Game.curPlayer = curPlayer;
+	}
+
 	/**
 	 * Method to set game players to a different/updated group of players
 	 *
@@ -104,13 +107,11 @@ public class Game {
 	 * loops through each tile in the list and utilises checkActionTurns method in FloorTile...
 	 * to update the number of remaining action-affected turns or reset the tile once affected turns has expired
 	 */
-	public static void update() {
-		FloorTile[][] curBoard = Board.getTiles();
-		for (int i = 0; i < curBoard.length; i++) {
-			for (int j = 0; j < curBoard[i].length; j++) {
-				curBoard[i][j].checkActionTurns();
+	public static void updateActions() {
+		for (int i = 0; i < Board.getWidth(); i++) {
+			for (int j = 0; j < Board.getHeight(); j++) {
+				Board.getTiles()[i][j].checkActionTurns();
 			}
 		}
-
 	}
 }

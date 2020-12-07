@@ -31,6 +31,7 @@ public abstract class FloorTile extends Tile {
         this.orientation = orientation;
         this.fixed = false;
         this.openPath = openPath;
+        orientedOpenPath = new boolean[4];
         setOrientedOpenPath();
     }
 
@@ -45,6 +46,7 @@ public abstract class FloorTile extends Tile {
         this.orientation = orientation;
         this.fixed = fixed;
         this.openPath = openPath;
+        orientedOpenPath = new boolean[4];
         setOrientedOpenPath();
     }
 
@@ -54,7 +56,7 @@ public abstract class FloorTile extends Tile {
      * @return array of open paths.
      */
     public boolean[] getOpenPath(){
-        return openPath;
+        return  openPath;
     }
 
     /**
@@ -118,7 +120,7 @@ public abstract class FloorTile extends Tile {
      * Decrements the turns left for each action, removing the status whe the duration is done.
      */
     public void checkActionTurns() {
-        if (getIsFrozen()) {
+        if (isFrozen) {
             if (iceTurnsLeft > 0) {
                 iceTurnsLeft--;
             }
@@ -126,7 +128,7 @@ public abstract class FloorTile extends Tile {
                 setIsFrozen(false);
             }
         }
-        if (getOnFire()) {
+        if (isOnFire) {
             if (fireTurnsLeft > 0) {
                 fireTurnsLeft--;
             }
@@ -134,6 +136,10 @@ public abstract class FloorTile extends Tile {
                 setOnFire(false);
             }
         }
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
     }
 
     /**
@@ -174,10 +180,10 @@ public abstract class FloorTile extends Tile {
         for (int i = 0; i < orientation; i++) {
             boolean first = openPath[0];
             int j;
-            for (j = 0; j < openPath.length-1; j++) {
-                openPath[j] = openPath[j+1];
+            for (j = 0; j < openPath.length - 1; j++) {
+                orientedOpenPath[j] = openPath[j+1];
             }
-            openPath[j] = first;
+            orientedOpenPath[j] = first;
         }
     }
 
