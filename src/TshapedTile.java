@@ -1,5 +1,5 @@
 /**
- * A T-shaped floor tile, with default open path at the East, South and .
+ * A T-shaped floor tile, with default open path at the East, South and West.
  *
  * @author Nim Man
  * @author Hyder Al-Hashimi

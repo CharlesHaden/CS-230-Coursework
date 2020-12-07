@@ -13,7 +13,7 @@ public class CornerTile extends FloorTile {
      * @param orientation Orientation of tile on board.
      */
     public CornerTile(int orientation) {
-        super(orientation, new boolean[] {false, true, true, false});
+        super(orientation, new boolean[] {true, true, false, false});
     }
 
     /**

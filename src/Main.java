@@ -946,6 +946,8 @@ public class Main extends Application {
                     }
                 });
                 movePlayerButton.setOnAction(new EventHandler<ActionEvent>(){
+                    int playerX = Game.getCurPlayer().getPlayerPosition()[0];
+                    int playerY = Game.getCurPlayer().getPlayerPosition()[1];
                     @Override
                     public void handle(ActionEvent event) {
                         Button moveLeftButton = new Button("Left");
@@ -954,42 +956,62 @@ public class Main extends Application {
                         Button moveDownButton = new Button("Down");
                         moveLeftButton.setLayoutX(330);
                         moveLeftButton.setLayoutY(550);
+                        moveLeftButton.setDisable(!Game.getCurPlayer().playerCanMove(playerX - 1, playerY, 3, 1));
                         moveLeftButton.setPrefSize(60, 20);
                         moveLeftButton.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Game.getCurPlayer().makeMove("Left");
+                                Game.newTurn();
+                                Game.updateActions();
                                 updatePlayer(player);
+                                updateSideGame(sideGame, board, player);
+                                updateBoard(board);
                             }
                         });
                         moveDownButton.setLayoutX(400);
                         moveDownButton.setLayoutY(550);
                         moveDownButton.setPrefSize(60, 20);
+                        moveDownButton.setDisable(!Game.getCurPlayer().playerCanMove(playerX, playerY + 1, 2, 0));
                         moveDownButton.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Game.getCurPlayer().makeMove("Down");
+                                Game.newTurn();
+                                Game.updateActions();
                                 updatePlayer(player);
+                                updateSideGame(sideGame, board, player);
+                                updateBoard(board);
                             }
                         });
                         moveRightButton.setLayoutX(470);
                         moveRightButton.setLayoutY(550);
                         moveRightButton.setPrefSize(60, 20);
+                        moveRightButton.setDisable(!Game.getCurPlayer().playerCanMove(playerX + 1, playerY, 1, 3));
                         moveRightButton.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Game.getCurPlayer().makeMove("Right");
+                                Game.newTurn();
+                                Game.updateActions();
                                 updatePlayer(player);
+                                updateSideGame(sideGame, board, player);
+                                updateBoard(board);
                             }
                         });
                         moveUpButton.setLayoutX(400);
                         moveUpButton.setLayoutY(520);
                         moveUpButton.setPrefSize(60, 20);
+                        moveUpButton.setDisable(!Game.getCurPlayer().playerCanMove(playerX , playerY - 1, 0, 2));
                         moveUpButton.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Game.getCurPlayer().makeMove("Up");
+                                Game.newTurn();
+                                Game.updateActions();
                                 updatePlayer(player);
+                                updateSideGame(sideGame, board, player);
+                                updateBoard(board);
                             }
                         });
                         sideGame.getChildren().addAll(moveDownButton,moveLeftButton,moveRightButton,moveUpButton);

@@ -558,7 +558,7 @@ public  class MainMenu {
 
 	public static void curGenPlayers(int numOfPlayers){
 		for (int i = 0; i < numOfPlayers; i++ ) {
-			curGamePlayers.add(i, (new Player((i + 1),"North", new int[0][0],
+			curGamePlayers.add(i, (new Player((i + 1),"North", new int[2][2],
 					new int[0], new ArrayList<ActionTile>())));
 		}
 		new Game(curGamePlayers);

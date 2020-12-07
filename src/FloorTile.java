@@ -177,13 +177,16 @@ public abstract class FloorTile extends Tile {
      * Orientates the tile to get new open path.
      */
     protected void setOrientedOpenPath() {
+        for (int i = 0; i < openPath.length; i++) {
+           orientedOpenPath[i] = openPath[i];
+        }
         for (int i = 0; i < orientation; i++) {
-            boolean first = openPath[0];
+            boolean last = orientedOpenPath[openPath.length - 1];
             int j;
-            for (j = 0; j < openPath.length - 1; j++) {
-                orientedOpenPath[j] = openPath[j+1];
+            for (j = openPath.length - 1; j > 0; j--) {
+                orientedOpenPath[j] = orientedOpenPath[j - 1];
             }
-            orientedOpenPath[j] = first;
+            orientedOpenPath[0] = last;
         }
     }
 

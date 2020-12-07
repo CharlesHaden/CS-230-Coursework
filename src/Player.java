@@ -221,11 +221,11 @@ public class Player {
 	 */
 	public void updateLastMoves(int x, int y) {
 		//changes one position ago to two positions ago
-		lastMoves[1][0] = lastMoves[0][0];
-		lastMoves[1][1] = lastMoves[0][1];
-		//sets x,y one position ago
-		lastMoves[0][0] = x;
-		lastMoves[0][1] = y;
+        lastMoves[1][0] = lastMoves[0][0];
+        lastMoves[1][1] = lastMoves[0][1];
+        //sets x,y one position ago
+        lastMoves[0][0] = x;
+        lastMoves[0][1] = y;
 	}
 
 	/**
@@ -240,30 +240,22 @@ public class Player {
 			switch (direction) {
 				case "Up":
 					if (Board.getTile(tempX, tempY - 1) != null) {
-						System.out.println("up");
-						moved = movePlayer(tempX, tempY - 1, 0, 1, tempX, tempX);
-						System.out.println(movePlayer(tempX, tempY - 1, 0, 1, tempX, tempX));
+						moved = movePlayer(tempX, tempY - 1, 0, 2, tempX, tempX);
 					}
 					break;
 				case "Down":
 					if (Board.getTile(tempX, tempY + 1) != null) {
-						System.out.println("down");
-						moved = movePlayer(tempX, tempY + 1, 1, 0, tempX, tempX);
-						System.out.println(movePlayer(tempX, tempY + 1, 1, 0, tempX, tempX));
+						moved = movePlayer(tempX, tempY + 1, 2, 0, tempX, tempX);
 					}
 					break;
 				case "Left":
 					if (Board.getTile(tempX - 1, tempY) != null) {
-						System.out.println("left");
-						moved = movePlayer(tempX - 1, tempY, 2, 3, tempX, tempX);
-						System.out.println(movePlayer(tempX - 1, tempY, 2, 3, tempX, tempX));
+						moved = movePlayer(tempX - 1, tempY, 3, 1, tempX, tempX);
 					}
 					break;
 				case "Right":
 					if (Board.getTile(tempX + 1, tempY) != null) {
-						System.out.println("right");
-						moved = movePlayer(tempX + 1, tempY, 3, 2, tempX, tempX);
-						System.out.println(movePlayer(tempX + 1, tempY, 3, 2, tempX, tempX));
+						moved = movePlayer(tempX + 1, tempY, 1, 3, tempX, tempX);
 					}
 					break;
 			}
@@ -292,6 +284,8 @@ public class Player {
 		}
 	}
 
+
+
 	/**
 	 * Checks if the player can move. If player can move then returns true
 	 * @param x The x coordinate of the next tile
@@ -308,9 +302,8 @@ public class Player {
 		boolean[] nextTileOpenPath = nextTile.getOrientedOpenPath();
  		System.out.println(currentTile.getOrientedOpenPath()[0] + " " + currentTile.getOrientedOpenPath()[1] + " " + currentTile.getOrientedOpenPath()[2] + " " + currentTile.getOrientedOpenPath()[3]);
 		System.out.println(nextTileOpenPath[0] + " " + nextTileOpenPath[1] + " " + nextTileOpenPath[2] + " " + nextTileOpenPath[3]);
-
 		if ((currentTileOpenPath[currentPath]) && (nextTileOpenPath[nextPath] &&
-				!nextTile.getOnFire()) && (checkForPlayers(x, y))) {
+				!nextTile.getOnFire()) && !(checkForPlayers(x, y))) {
 				return true;
 		} else {
 			return false;
