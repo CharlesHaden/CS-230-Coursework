@@ -3,20 +3,22 @@ import java.io.*;
 
 public class MessageOfTheDay {
 
-    public void getMessage() throws Exception {
+    public String getMessage() throws IOException{
         URL url = new URL("http://cswebcat.swansea.ac.uk/puzzle");
         try {
             URLConnection con = url.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine = in.readLine();
             in.close();
-            solvePuzzle(inputLine);
-        } catch (Exception e) {
-            System.out.println("wrong");
+            return solvePuzzle(inputLine);
+        } catch (IOException e) {
+            System.out.println (e.toString());
+            System.out.println("Could not connect to URL to obtain puzzle");
+            return null;
         }
     }
 
-    public void solvePuzzle(String msg) {
+    public String solvePuzzle(String msg) throws IOException{
         char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
         String puzzleString = msg;
         char[] puzzleStringChar = puzzleString.toCharArray();
@@ -38,11 +40,11 @@ public class MessageOfTheDay {
         puzzleString = new String(puzzleStringChar);
         puzzleString = "CS-230" +   puzzleString;
         puzzleString = puzzleString + puzzleString.length();
-        System.out.println(puzzleString);;
         try {
-            completeMessage(puzzleString);
+            return completeMessage(puzzleString);
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return "";
         }
     }
 
@@ -55,18 +57,19 @@ public class MessageOfTheDay {
         return 0;
     }
 
-    public String completeMessage(String msg) throws MalformedURLException {
+    public String completeMessage(String msg) throws IOException {
         URL url = new URL("http://cswebcat.swansea.ac.uk/message?solution=" + msg);
         try {
             URLConnection con = url.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine = in.readLine();
             in.close();
-            System.out.println(inputLine);
             return inputLine;
-        } catch (Exception e) {
-            return null;
+        } catch (IOException e) {
+            System.out.println (e.toString());
+            System.out.println("Could not connect to URL to obtain message");
         }
+        return null;
     }
 
 }
